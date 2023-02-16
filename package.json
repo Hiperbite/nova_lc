@@ -54,6 +54,7 @@
         "sequelize-paginate": "^1.1.6",
         "sequelize-typescript": "^2.1.5",
         "sequelize-typescript-paginate": "^1.1.0",
+        "sqlite3": "^5.1.4",
         "uuid": "^9.0.0",
         "winston": "^3.8.2",
         "zod": "^3.20.2"
