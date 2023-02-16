@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Employee, Contact } from "../../models/index";
-import { EmployeeRepository } from "../../repository/index";
+import { Student, Contact } from "../../models/index";
+import { StudentRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 interface IApi {
   create(req: Request, res: Response): Response;
@@ -8,44 +8,44 @@ interface IApi {
   find(req: Request, res: Response): Response;
   findBy(req: Request, res: Response): Response;
 }
-class EmployeeApi {
-  constructor(private repo: IRepository<Employee>){};
+class StudentApi {
+  constructor(private repo: IRepository<Student>){};
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
 
-    const employee: Employee | void = await this.repo.create(body);
+    const student: Student | void = await this.repo.create(body);
 
-    return res.json(employee);
+    return res.json(student);
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { body } = req;
 
-    const employee = await this.repo.update({ ...body, id });
+    const student = await this.repo.update({ ...body, id });
 
-    const updatedEmployee = await this.repo.one(id);
+    const updatedStudent = await this.repo.one(id);
 
-    await updatedEmployee?.update(body, { returning: true });
+    await updatedStudent?.update(body, { returning: true });
 
-    return res.json(updatedEmployee);
+    return res.json(updatedStudent);
   };
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query } = req;
 
-    const employee: Employee | undefined = await this.repo.one(
+    const student: Student | undefined = await this.repo.one(
       id,
       query
     );
-    return res.json(employee);
+    return res.json(student);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const employees: Array<Employee> | undefined =
+    const students: Array<Student> | undefined =
       await this.repo.all({});
-    return res.json(employees);
+    return res.json(students);
   };
 }
 
-export default new EmployeeApi(new EmployeeRepository());
-export { EmployeeApi };
+export default new StudentApi(new StudentRepository());
+export { StudentApi };

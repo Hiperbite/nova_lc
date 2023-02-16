@@ -3,7 +3,7 @@ import {
   ModelCtor,
   Repository as Repo,
 } from "sequelize-typescript";
-import sequelize, { Employee } from "../models/index";
+import sequelize from "../models/index";
 
 export default class Repository<T extends M> {
   repo: Repo<T>;
@@ -37,9 +37,9 @@ export default class Repository<T extends M> {
     return data ?? undefined;
   };
 
-  public createOne = async (data: any, transaction: any = null): Promise<T | undefined | any> => {
+  public createOne = async (data: any, options: any = null): Promise<T | undefined | any> => {
     try {
-      return await this.repo.create(data, { transaction });
+      return await this.Model.create(data, options);
     } catch (err: any) {
       if (err.errors)
         throw err.errors.map(
@@ -67,7 +67,7 @@ export default class Repository<T extends M> {
     }
   };
 
-  public updateOne = async (data: any): Promise<Employee | any> => {
+  public updateOne = async (data: any): Promise<T | any> => {
     const { ["id"]: _, ...d } = data;
     const { id } = data;
     const model = await this.repo.update(d, { where: { id }, returning: true });

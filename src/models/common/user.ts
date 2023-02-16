@@ -12,9 +12,10 @@ import {
   ForeignKey,
   HasOne,
 } from "sequelize-typescript";
-import { Contact, Employee, Model } from "../";
+import { Contact, Person, Model } from "../";
 //import passwordComplexity from "joi-password-complexity";
 import bcrypt from "bcrypt";
+import sendEmail from '../../application/mailler';
 // import Notify from "../app/Notify";
 // import authRepo from "../repository/auth.repo";
 @Table({
@@ -78,11 +79,11 @@ export default class User extends Model {
   })
   verified?: boolean;
 
-  @ForeignKey(() => Employee)
-  employeeId?: string;
+  @ForeignKey(() => Person)
+  personId?: string;
 
-  @HasOne(() => Employee)
-  employee?: Employee;
+  @HasOne(() => Person)
+  person?: Person;
 
   //TODO: fix password compare
   passwordCompare = async (password: string) => {
@@ -109,6 +110,15 @@ export default class User extends Model {
       uppercase: true,
     };
   };
+
+  @BeforeCreate
+  static sendMail = async (user: User) =>
+    await sendEmail({
+      to: user.email,
+      from: "test@example.com",
+      subject: "Verify your email",
+      text: `verification code: ${user.verificationCode}. Id: ${user.id}`,
+    });
 
   @BeforeUpdate
   @BeforeSave

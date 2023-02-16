@@ -15,7 +15,7 @@ import {
       type: DataType.UUID,
       primaryKey: true,
     })
-    id?: string;
+    id?: string=uuidv4();
   
     @Column({
       type: DataType.BOOLEAN,
@@ -24,13 +24,11 @@ import {
   
     @BeforeCreate
     static prepare = (model: Model) => {
-      model.id = uuidv4();
       model.isActive = false;
     };
   
     @BeforeUpdate
     static prepareUpdate = (model: Model) => {
-      model.id ||= uuidv4();
-      model.isActive ||= true;
+      
     };
   }

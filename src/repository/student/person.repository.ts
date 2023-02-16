@@ -23,9 +23,9 @@ class PersonRepository extends Repository<Person> implements IRepository<Person>
         return person;
     };
 
-    create = async (data: any, transaction:any=null): Promise<Person | undefined> => {
+    create = async (data: any): Promise<Person | undefined> => {
         
-        const person = await this.createOne(data,{transaction});
+        const person = await this.createOne(data);
         return person;
     };
 

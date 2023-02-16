@@ -1,5 +1,5 @@
 import { createPaypackSchema, updatePaypackSchema } from './payroll/paypack.schema';
-import { CreateEmployeeInput, createEmployeeSchema, UpdateEmployeeInput, updateEmployeeSchema } from './employee/employee.schema';
+import { CreateStudentInput, createStudentSchema, UpdateStudentInput, updateStudentSchema } from './student/student.schema';
 import { createTransactionTypeSchema, updateTransactionTypeSchema } from './payroll/transaction-type.schema';
 import { CreateSessionInput, createSessionSchema } from "./common/auth.schema";
 import {
@@ -28,10 +28,10 @@ export {
     verifyUserSchema,
     resetPasswordSchema,
 
-    CreateEmployeeInput,
-    createEmployeeSchema,
-    UpdateEmployeeInput,
-    updateEmployeeSchema,
+    CreateStudentInput,
+    createStudentSchema,
+    UpdateStudentInput,
+    updateStudentSchema,
 
     createTransactionTypeSchema,
     updateTransactionTypeSchema,

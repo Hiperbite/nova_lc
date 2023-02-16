@@ -1,4 +1,4 @@
-import { Employee, Paypack, TransactionType, User } from "../../models/index";
+import { Paypack, TransactionType, User } from "../../models/index";
 import IRepository from "../irepository";
 import Repository from "../repository";
 
@@ -19,7 +19,7 @@ class PaypackRepository
 
   private defaultOptions = async () => ({
     attributes: Object.keys(await Paypack.describe()),
-    include: [{model:Employee,attributes:['code','firstName','lastName','birthDate','roleId']}, TransactionType],
+    //include: [{model:,attributes:['code','firstName','lastName','birthDate','roleId']}, TransactionType],
   });
 
   one = async (

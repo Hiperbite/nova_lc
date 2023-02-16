@@ -16,6 +16,7 @@ class SequenceApp {
 
 enum CODES {
   EMPLOYEE = "EMPLOYEE",
+  REGISTRATION= "REGISTRATION",
 }
 
 export default SequenceApp;

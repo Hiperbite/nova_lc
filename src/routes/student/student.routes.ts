@@ -1,25 +1,25 @@
 
 import express from "express";
-import employeeApi, { EmployeeApi } from "../../api/employee/employee.api";
+import studentApi, { StudentApi } from "../../api/student/student.api";
 
 import validateResource from "../../application/middleware/validateResource";
 import {
-  createEmployeeSchema,
-  updateEmployeeSchema,
+  createStudentSchema,
+  updateStudentSchema,
 } from "../../application/schema/index";
 
 
 const router = express.Router();
-const api: EmployeeApi = employeeApi;
+const api: StudentApi = studentApi;
 router.post(
   "/",
-  validateResource(createEmployeeSchema),
+  validateResource(createStudentSchema),
   api.create
 );
 
 router.put(
   "/:id",
-  validateResource(updateEmployeeSchema),
+  validateResource(updateStudentSchema),
   api.update
 );
 

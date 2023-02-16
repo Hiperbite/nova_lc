@@ -6,11 +6,12 @@ import {
   HasMany,
   ForeignKey,
   BelongsTo,
+  HasOne,
 } from "sequelize-typescript";
-import { Address, Contact, Document, Model } from "../index";
+import { Address, Contact, Document, Model, User } from "../index";
 //import passwordComplexity from "joi-password-complexity";
 import bcrypt from "bcrypt";
-import { MaritalstatusType } from './student';
+import { GenderType, MaritalstatusType } from '../students/student';
 // import Notify from "../app/Notify";
 // import authRepo from "../repository/auth.repo";
 @Table({
@@ -59,18 +60,12 @@ export default class Person extends Model {
         allowNull: false,
       })
       nationality!: string;
-
-      @Column({
-        type: DataType.STRING,
-        allowNull: false,
-      })
-      bithPlace!: string;
     
       @Column({
         type: DataType.STRING,
         allowNull: false,
       })
-      gender!: string;
+      gender!: GenderType;
     
       @Column({
         type: DataType.VIRTUAL,
@@ -110,12 +105,15 @@ export default class Person extends Model {
       @BelongsTo(()=>Address)
       livingAddres?: Address
 
+      @ForeignKey(()=>User)
+      userId?: string;
+      
+      @HasOne(()=>User)
+      user?: User
+
       @HasMany(() => Contact)
       contacts!: Contact[];
-    
-      @HasMany(() => Address)
-      address?: Address[];
-    
+        
       @HasMany(() => Document)
       documents?: Document[];
   };

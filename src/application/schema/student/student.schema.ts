@@ -1,14 +1,14 @@
 import { any, array, z, object, string, TypeOf, boolean } from "zod";
-import { createPersonSchema } from './person.schema';
+import { createPersonSchema } from '../common/person.schema';
 
-export const createEmployeeSchema = object({
+export const createStudentSchema = object({
   body: object({
     isActive: boolean(),
     person: createPersonSchema
   })
 });
 
-export const updateEmployeeSchema = object({
+export const updateStudentSchema = object({
   body: object({
     firstName: string({
       required_error: "First name is required",
@@ -31,7 +31,7 @@ export const updateEmployeeSchema = object({
 });
 
 
-export type CreateEmployeeInput = TypeOf<typeof createEmployeeSchema>["body"];
+export type CreateStudentInput = TypeOf<typeof createStudentSchema>["body"];
 
-export type UpdateEmployeeInput = TypeOf<typeof updateEmployeeSchema>["body"];
+export type UpdateStudentInput = TypeOf<typeof updateStudentSchema>["body"];
 

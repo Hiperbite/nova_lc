@@ -28,6 +28,6 @@ export default class Sequence extends Model {
 
   @BeforeCreate
   static createSequence = async (sequence: Sequence) => {
-    sequence.sequence = 1;
+    sequence.sequence = 0;
   };
 }

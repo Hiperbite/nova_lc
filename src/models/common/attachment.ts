@@ -6,7 +6,7 @@ import {
     BelongsTo,
     ForeignKey
   } from "sequelize-typescript";
-  import { Employee, Model, User } from "../index";
+  import { Model, User } from "../index";
   const TYPES = ['Default',
     'AVATAR',
     'SIM',
@@ -48,9 +48,4 @@ import {
       return TYPES[this.type ?? 0];
     }
     
-    @ForeignKey(() => Employee)
-    employeeId?: string;
-  
-    @BelongsTo(() => Employee)
-    employee?: Employee;
   }

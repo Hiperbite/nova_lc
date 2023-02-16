@@ -27,12 +27,15 @@ import {
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 
-type MaritalstatusType =
+export type MaritalstatusType =
   | "SINGLE"
   | "MARRIED"
   | "DIVORCED"
   | "WIDOWED"
   | "OTHER";
+export type GenderType =
+  | "M"
+  | "F";
 
 @Table({
   timestamps: true,
@@ -44,10 +47,11 @@ export default class Student extends Model {
     //     allowNull: false,
   })
   code!: string;
-  @ForeignKey(() => User)
-  userId?: string;
 
-  @HasOne(() => User)
+  @ForeignKey(() => Person)
+  personId?: string;
+
+  @BelongsTo(() => Person)
   person?: Person;
 
   @ForeignKey(() => Role)
@@ -67,20 +71,17 @@ export default class Student extends Model {
 
   @BelongsTo(() => Department)
   department?: Department;
+    
+  @BelongsTo(()=>Registration)
+  registration?:Registration;
 
-  @HasMany(() => Payroll)
-  payrolls?: Payroll[];
-
-  @HasMany(() => Paypack)
-  paypacks?: Paypack[];
+  @ForeignKey(()=>Registration)
+  registrationId?:string;
 
   @BeforeCreate
   @BeforeSave
   static initModel = async (student: Student) => {
-    if (student.code === undefined) {
-      student.update({ code: await SequenceApp.count(CODES.EMPLOYEE) });
-    }
+    let code = await SequenceApp.count(CODES.EMPLOYEE);
+    student.code = 'E'+String(code).padStart(6, '0');
   };
 }
-
-export { MaritalstatusType };

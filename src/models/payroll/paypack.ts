@@ -7,7 +7,7 @@ import {
     HasMany,
   } from "sequelize-typescript";
   
-  import {  Employee, Model, Transaction, TransactionType } from "../index";
+  import {   Model, Transaction, TransactionType } from "../index";
   
   @Table({
     timestamps: true,
@@ -25,12 +25,6 @@ import {
       allowNull: true,
     })
     descriptions?: string;
-
-    @ForeignKey(() => Employee)
-    employeeId?: string;
-  
-    @BelongsTo(() => Employee)
-    employee?: Employee;
 
     @ForeignKey(() => TransactionType)
     transactionTypeId?: string

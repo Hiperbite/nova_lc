@@ -6,7 +6,7 @@ import {
     BelongsTo,
 } from "sequelize-typescript";
 
-import { Employee, Model, Person, User } from "../index";
+import { Model, Person, User } from "../index";
 
 @Table({
     timestamps: true,
@@ -40,19 +40,5 @@ export default class Address extends Model {
     personId?: string;
 
     @BelongsTo(() => Person)
-    person?: Person;
-
-    /*
-    constructor(data?: any) {
-      super()
-      const { address, province, city, longitude,mapUrl, latitude, descriptions } = data;
-      this.address = address
-      this.province = province
-      this.city = city
-      this.mapUrl = mapUrl
-      this.longitude = longitude
-      this.latitude = latitude
-      this.descriptions = descriptions
-    }
-    */
+    person?: Person;  
 }

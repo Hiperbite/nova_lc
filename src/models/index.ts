@@ -5,10 +5,10 @@ import User from "./common/user";
 import Token from "./common/token";
 import Session from "./common/session";
 
-import Address from "./students/address";
-import Contact from "./students/contact";
-import Employee from "./students/student";
-import Attachment from "./students/attachment";
+import Address from "./common/address";
+import Contact from "./common/contact";
+import Student from "./students/student";
+import Attachment from "./common/attachment";
 
 import dotenv from "dotenv";
 import Role from "./students/role";
@@ -22,34 +22,34 @@ import TransactionType from "./payroll/transactionType";
 import Paypack from "./payroll/paypack";
 import Sequence from "./common/sequence";
 import Document from "./document/document";
-import Person from "./students/person";
+import Person from "./common/person";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const sequelize = new Sequelize({
-  //dialect: "mariadb",
-  dialect: 'sqlite',
+  dialect: "mariadb",
+  //dialect: 'sqlite',
   storage: './database.sqlite',
   host: DB_HOST,
   username: DB_USER,
   password: DB_PASSWORD,
   database: DB_NAME,
   logging: true,
-  models: [Contact, User, Token, Session, Employee,
+  models: [Contact, User, Token, Session, Student,
     Address, Attachment, Role, Category, Department,
     Payroll, Transaction, TransactionType, Paypack, Sequence,Person, Document, ]
 });
 
 const Repo = sequelize.getRepository;
-sequelize.sync({ alter: true, force: true })
+sequelize.sync({ alter: true, force: false })
 
 export default sequelize;
 
 export {
   sequelize,
   Repo,
-  Model,Contact, User, Token, Session, Employee,
+  Model,Contact, User, Token, Session, Student,
   Address, Attachment, Role, Category, Department,
   Payroll, Transaction, TransactionType, Paypack, Sequence, Document, Person
 };
