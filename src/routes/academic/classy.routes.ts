@@ -1,6 +1,6 @@
 
 import express from "express";
-import api from "../../api/student/student.api";
+import api from "../../api/academic/classy.api";
 
 import validateResource from "../../application/middleware/validateResource";
 import {
@@ -13,13 +13,13 @@ const router = express.Router()
 
 .post(
   "/",
-  validateResource(createStudentSchema),
+  // validateResource(createStudentSchema),
   api.create
 )
 
 .put(
   "/:id",
-  validateResource(updateStudentSchema),
+  // validateResource(updateStudentSchema),
   api.update
 )
 

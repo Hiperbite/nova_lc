@@ -1,6 +1,6 @@
 import { Paypack, TransactionType, User } from "../../models/index";
 import IRepository from "../irepository";
-import Repository from "../repository";
+import Repository, { Paginate } from "../repository";
 
 class PaypackRepository
   extends Repository<Paypack>
@@ -78,5 +78,8 @@ class PaypackRepository
   clear = async () => {
     return true;
   };
+  paginated = async (
+    options: any
+  ): Promise<Paginate<Paypack> | undefined> => this.paginate(Paypack, options)
 }
 export default PaypackRepository;

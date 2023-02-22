@@ -1,11 +1,11 @@
 import { Payroll } from "../../models/index";
 
 import IRepository from "../irepository";
-import Repository from "../repository";
+import Repository, { Paginate } from "../repository";
 
 class PayrollRepository
   extends Repository<Payroll>
-  implements IRepository<Payroll>
+  //implements IRepository<Payroll>
 {
   /*oneBy(query: any): Promise<Payroll | undefined> {
     throw new Error("Method not implemented.");
@@ -74,5 +74,9 @@ class PayrollRepository
   clear = async () => {
     return true;
   };
+
+  paginated = async (
+    options: any
+  ): Promise<Paginate<Payroll> | undefined> => this.paginate(Payroll, options)
 }
 export default PayrollRepository;

@@ -7,7 +7,7 @@ import {
     ForeignKey,
     HasMany
 } from "sequelize-typescript";
-import { Model, Student, User } from "../index";
+import { AcademicPeriod, AcademicShift, ClassyRoom, Model, EnrollmentConfirmation, Student, User } from "../index";
 
 @Table({
     timestamps: true,
@@ -25,15 +25,27 @@ export default class Classy extends Model {
     @Column({
         type: DataType.STRING,
     })
-    desciptions?: string
+    descriptions?: string
 
     @BelongsTo(() => ClassyRoom)
     classyRoom?: ClassyRoom;
 
     @ForeignKey(() => ClassyRoom)
-    classyRoomId?: string;;
+    classyRoomId?: string; 
 
-    @HasMany(() => Student)
-    students?: Student[]
+    @HasMany(() => EnrollmentConfirmation)
+    enrollmentConfirmations?: EnrollmentConfirmation[]
+    
+    @BelongsTo(() => AcademicPeriod)
+    academicPeriod?: AcademicPeriod
+
+    @ForeignKey(() => AcademicPeriod)
+    academicPeriodId?: AcademicPeriod
+    
+    @BelongsTo(() => AcademicShift)
+    academicShift?: AcademicShift
+
+    @ForeignKey(() => AcademicShift)
+    academicShiftId?: AcademicShift
 
 }

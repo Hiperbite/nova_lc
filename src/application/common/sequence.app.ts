@@ -15,7 +15,8 @@ class SequenceApp {
 }
 
 enum CODES {
-  EMPLOYEE = "EMPLOYEE",
+  STUDENT = "STUDENT",
+  ENROLLMENT = "ENROLLMENT",
   REGISTRATION= "REGISTRATION",
 }
 

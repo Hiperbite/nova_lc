@@ -5,43 +5,43 @@ import {
     DataType,
     BelongsTo,
     ForeignKey,
-    HasMany,
-    BelongsToMany,
     BeforeCreate,
-    BeforeSave
+    BeforeSave,
+    HasMany
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
-import { Model, Student, User } from "../index";
+import { EnrollmentConfirmation, Model, Student, User } from "../index";
 
 @Table({
     timestamps: true,
     tableName: "Registrations",
 })
-export default class Registration extends Model {
-
-    @AllowNull(false)
-    @Column({
-        type: DataType.STRING,
-        allowNull: true,
-    })
-    code?: string;
+export default class Enrollment extends Model {
 
     @Column({
         type: DataType.STRING,
+        //     allowNull: false,
     })
-    desciptions?: string
+    code!: string;
+
+    @Column({
+        type: DataType.STRING,
+    })
+    descriptions?: string
 
     @BelongsTo(() => Student)
-    student?: Student;
+    student!: Student;
 
     @ForeignKey(() => Student)
-    studentId?: string;
+    studentId!: string;
 
+    @HasMany(()=>EnrollmentConfirmation)
+    enrollmentConfirmations?:EnrollmentConfirmation[]
+    
     @BeforeCreate
     @BeforeSave
     static initModel = async (student: Student) => {
-        let code = await SequenceApp.count(CODES.REGISTRATION);
-        student.code = 'E' + String(code).padStart(6, '0');
+        let code = await SequenceApp.count(CODES.ENROLLMENT);
+        student.code = String(code).padStart(6, '0');
     };
-
 }

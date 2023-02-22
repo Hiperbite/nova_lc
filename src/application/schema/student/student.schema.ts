@@ -3,7 +3,7 @@ import { createPersonSchema } from '../common/person.schema';
 
 export const createStudentSchema = object({
   body: object({
-    isActive: boolean(),
+    isActive: boolean().optional(),
     person: createPersonSchema
   })
 });

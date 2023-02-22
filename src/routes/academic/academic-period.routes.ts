@@ -1,6 +1,5 @@
-
 import express from "express";
-import api from "../../api/student/student.api";
+import api from "../../api/academic/academic-period.api";
 
 import validateResource from "../../application/middleware/validateResource";
 import {
@@ -8,18 +7,17 @@ import {
   updateStudentSchema,
 } from "../../application/schema/index";
 
-
 const router = express.Router()
 
 .post(
   "/",
-  validateResource(createStudentSchema),
+  // validateResource(createStudentSchema),
   api.create
 )
 
 .put(
   "/:id",
-  validateResource(updateStudentSchema),
+  // validateResource(updateStudentSchema),
   api.update
 )
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Student, Contact } from "../../models/index";
-import { StudentRepository } from "../../repository/index";
+import { Classy, Contact } from "../../models/index";
+import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
 interface IApi {
@@ -9,44 +9,44 @@ interface IApi {
   find(req: Request, res: Response): Response;
   findBy(req: Request, res: Response): Response;
 }
-class StudentApi {
-  constructor(private repo: IRepository<Student>){};
+class ClassyApi {
+  constructor(private repo: IRepository<Classy>){};
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
 
-    const student: Student | void = await this.repo.create(body);
+    const classy: Classy | void = await this.repo.create(body);
 
-    return res.json(student);
+    return res.json(classy);
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { body } = req;
 
-    const student = await this.repo.update({ ...body, id });
+    const classy = await this.repo.update({ ...body, id });
 
-    const updatedStudent = await this.repo.one(id);
+    const updatedClassy = await this.repo.one(id);
 
-    await updatedStudent?.update(body, { returning: true });
+    await updatedClassy?.update(body, { returning: true });
 
-    return res.json(updatedStudent);
+    return res.json(updatedClassy);
   };
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query } = req;
 
-    const student: Student | undefined = await this.repo.one(
+    const classy: Classy | undefined = await this.repo.one(
       id,
       query
     );
-    return res.json(student);
+    return res.json(classy);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const students: Paginate<Student> | undefined =
-      await this.repo.paginated(req.query);
-    return res.json(students);
+    const classys: Paginate<Classy> | undefined =
+      await this.repo.paginated({});
+    return res.json(classys);
   };
 }
 
-export default new StudentApi(new StudentRepository());
-export { StudentApi };
+export default new ClassyApi(new Repository(Classy));
+export { ClassyApi };

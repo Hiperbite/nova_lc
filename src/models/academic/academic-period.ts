@@ -7,7 +7,7 @@ import {
     ForeignKey,
     HasMany
   } from "sequelize-typescript";
-  import { Model, Student, User } from "../index";
+  import { Classy, Model, Student, User } from "../index";
   
   @Table({
     timestamps: true,
@@ -25,7 +25,7 @@ import {
     @Column({
       type: DataType.STRING,
     })
-    desciptions?:string
+    descriptions?:string
 
     @HasMany(()=>Classy)
     classys?: Classy[]

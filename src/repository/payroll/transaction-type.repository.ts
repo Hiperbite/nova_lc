@@ -2,7 +2,7 @@ import sendEmail from "../../application/mailler";
 import { Contact, TransactionType, User } from "../../models/index";
 import { UserRepository } from "../index";
 import IRepository from "../irepository";
-import Repository from "../repository";
+import Repository, { Paginate } from "../repository";
 
 class TransactionTypeRepository
   extends Repository<TransactionType>
@@ -80,5 +80,9 @@ class TransactionTypeRepository
   clear = async () => {
     return true;
   };
+
+  paginated = async (
+    options: any
+  ): Promise<Paginate<TransactionType> | undefined> => this.paginate(TransactionType, options)
 }
 export default TransactionTypeRepository;

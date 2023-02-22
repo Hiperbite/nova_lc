@@ -2,7 +2,7 @@
 import sendEmail from "../../application/mailler";
 import { Contact, User } from "../../models/index";
 import IRepository from "../irepository";
-import Repository from "../repository";
+import Repository, { Paginate } from "../repository";
 
 
 class UserRepository extends Repository<User> implements IRepository<User> {
@@ -73,5 +73,8 @@ class UserRepository extends Repository<User> implements IRepository<User> {
     clear = async () => {
         return true;
     };
+    paginated = async (
+        options: any
+      ): Promise<Paginate<User> | undefined> => this.paginate(User, options)
 }
 export default new UserRepository();

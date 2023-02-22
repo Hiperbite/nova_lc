@@ -7,7 +7,7 @@ import {
     ForeignKey,
     HasMany
 } from "sequelize-typescript";
-import { Model, Student, User } from "../index";
+import { Classy, Model, Student, User } from "../index";
 
 @Table({
     timestamps: true,
@@ -25,7 +25,7 @@ export default class AcademicShift extends Model {
     @Column({
         type: DataType.STRING,
     })
-    desciptions?: string
+    descriptions?: string
 
     @Column({
         type: DataType.INTEGER,

@@ -23,6 +23,12 @@ import Paypack from "./payroll/paypack";
 import Sequence from "./common/sequence";
 import Document from "./document/document";
 import Person from "./common/person";
+import AcademicPeriod from "./academic/academic-period";
+import AcademicShift from "./academic/academic-shift";
+import ClassyRoom from "./academic/classy-room";
+import Classy from "./academic/classy";
+import EnrollmentConfirmation from "./students/enrollment-confirmation";
+import Enrollment from "./students/enrollment";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -38,7 +44,9 @@ const sequelize = new Sequelize({
   logging: true,
   models: [Contact, User, Token, Session, Student,
     Address, Attachment, Role, Category, Department,
-    Payroll, Transaction, TransactionType, Paypack, Sequence,Person, Document, ]
+    Payroll, Transaction, TransactionType, Paypack, Sequence,Person, Document, 
+  AcademicPeriod, AcademicShift, ClassyRoom, Classy, EnrollmentConfirmation, Enrollment
+  ]
 });
 
 const Repo = sequelize.getRepository;
@@ -51,5 +59,7 @@ export {
   Repo,
   Model,Contact, User, Token, Session, Student,
   Address, Attachment, Role, Category, Department,
-  Payroll, Transaction, TransactionType, Paypack, Sequence, Document, Person
+  Payroll, Transaction, TransactionType, Paypack, Sequence, Document, Person,
+
+  AcademicPeriod, AcademicShift, ClassyRoom, Classy, EnrollmentConfirmation, Enrollment
 };

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AnyZodObject } from "zod";
+import { validatePaginateQuery } from "../schema/default";
 
 const validateResource =
   (schema: AnyZodObject) =>
@@ -10,6 +11,8 @@ const validateResource =
         query: req.query,
         params: req.params,
       });
+      if(!validatePaginateQuery(req.query))
+        throw 'Error validatePaginateQueryQuery validation'
       next();
     } catch (e: any) {
       return res.status(400).send(e.errors);

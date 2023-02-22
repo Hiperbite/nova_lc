@@ -23,9 +23,12 @@ import {
   Paypack,
   User,
   Person,
+  Enrollment,
 } from "../index";
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
+
+import { v4 as uuidv4 } from "uuid";
 
 export type MaritalstatusType =
   | "SINGLE"
@@ -72,16 +75,13 @@ export default class Student extends Model {
   @BelongsTo(() => Department)
   department?: Department;
     
-  @BelongsTo(()=>Registration)
-  registration?:Registration;
-
-  @ForeignKey(()=>Registration)
-  registrationId?:string;
+  @HasOne(()=>Enrollment)
+  enrollment?:Enrollment;
 
   @BeforeCreate
   @BeforeSave
   static initModel = async (student: Student) => {
-    let code = await SequenceApp.count(CODES.EMPLOYEE);
-    student.code = 'E'+String(code).padStart(6, '0');
+    let code = await SequenceApp.count(CODES.STUDENT);
+    student.code = uuidv4().substring(5, 9).toUpperCase()+String(code).padStart(8, '0');
   };
 }

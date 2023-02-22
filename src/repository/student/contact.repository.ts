@@ -1,3 +1,4 @@
+import { Paginate } from './../repository';
 
 import { Contact } from "../../models/index";
 import IRepository from "../irepository";
@@ -80,5 +81,9 @@ class ContactRepository extends Repository<Contact> implements IRepository<Conta
     clear = async () => {
         return true;
     };
+
+    paginated = async (
+        options: any
+      ): Promise<Paginate<Contact> | undefined> => this.paginate(Contact, options)
 }
 export default new ContactRepository();

@@ -1,7 +1,7 @@
 
 import { Person } from "../../models/index";
 import IRepository from "../irepository";
-import Repository from "../repository";
+import Repository, { Paginate } from "../repository";
 
 class PersonRepository extends Repository<Person> implements IRepository<Person> {
    
@@ -80,5 +80,8 @@ class PersonRepository extends Repository<Person> implements IRepository<Person>
     clear = async () => {
         return true;
     };
+    paginated = async (
+        options: any
+      ): Promise<Paginate<Person> | undefined> => this.paginate(Person, options)
 }
 export default new PersonRepository();

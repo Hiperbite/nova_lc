@@ -4,12 +4,14 @@ import {
   Repository as Repo,
 } from "sequelize-typescript";
 import sequelize from "../models/index";
+import IRepository from "./irepository";
 
-export default class Repository<T extends M> {
+export default class DefaultRepository<T extends M> implements IRepository<T> {
   repo: Repo<T>;
   constructor(private Model: ModelCtor<T>) {
     this.repo = sequelize.getRepository(Model);
   }
+
   protected t: any;
   protected startTransaction = async () => this.t = this.t ?? await sequelize.transaction();
   private refactorOptions = async ({
@@ -30,14 +32,14 @@ export default class Repository<T extends M> {
       exclude,
     };
   };
-  public findOne = async (id: string, opts: any = {}): Promise<T | undefined> => {
+  public one = async (id: string, opts: any = {}): Promise<T | undefined> => {
     const options = await this.refactorOptions(opts);
-    const data = await this.repo.findByPk(id, options);
+    const data = await this.Model.findByPk(id, options);
 
     return data ?? undefined;
   };
 
-  public createOne = async (data: any, options: any = null): Promise<T | undefined | any> => {
+  public create = async (data: any, options: any = {}): Promise<T | undefined | any> => {
     try {
       return await this.Model.create(data, options);
     } catch (err: any) {
@@ -63,19 +65,19 @@ export default class Repository<T extends M> {
             validatorArgs,
           })
         );
-      else throw err;
+      else return undefined;
     }
   };
 
-  public updateOne = async (data: any): Promise<T | any> => {
+  public update = async (data: any): Promise<T | any> => {
     const { ["id"]: _, ...d } = data;
     const { id } = data;
-    const model = await this.repo.update(d, { where: { id }, returning: true });
+    const model = await this.Model.update(d, { where: { id }, returning: true });
     return model ? 1 : 0;
   };
 
-  public deleteBy = async (id: any | string): Promise<boolean> => {
-    const model = await this.repo.destroy({
+  public delete = async (id: any | string): Promise<boolean> => {
+    const model = await this.Model.destroy({
       where: { id },
       truncate: true,
     });
@@ -83,9 +85,9 @@ export default class Repository<T extends M> {
     return model == 1;
   };
 
-  public findOneBy = async (options: any): Promise<any> => {
+  public oneBy = async (options: any): Promise<any> => {
     try {
-      const data: M | undefined = await this.repo.findOne(options);
+      const data: M | undefined = await this.Model.findOne(options);
       return data;
     } catch (e) {
       const x = e;
@@ -93,20 +95,20 @@ export default class Repository<T extends M> {
     }
   };
 
-  public findAll = async (options: any): Promise<T[] | any> => {
+  public all = async (options: any): Promise<T[] | any> => {
     const { where, include, attributes, limit = 6, offset = 0 } = options;
-    const data: T[] = await this.repo.findAll({
+    const data: T[] = await this.Model.findAll({
       where,
       include,
-      attributes:attributes ? (attributes).split(','):undefined,
-      offset:Number(offset),
-      limit:Number(limit),
+      attributes,
+      offset,
+      limit,
     });
     return data;
   };
-  public findAllBy = async (options: any): Promise<T[] | undefined> => {
+  public allBy = async (options: any): Promise<T[] | undefined> => {
     const { where, include, attributes, limit = 6, offset = 0 } = options;
-    return await this.repo.findAll({
+    return await this.Model.findAll({
       where,
       attributes,
       include,
@@ -114,6 +116,7 @@ export default class Repository<T extends M> {
       limit,
     });
   };
+
   public paginate = async (
     Model: ModelCtor<T>,
     options: any
@@ -122,7 +125,7 @@ export default class Repository<T extends M> {
       where,
       attributes,
       include,
-      exclude=[],
+      exclude,
       pageSize = 6,
       page = 1,
       order = [["createdAt", "DESC"]],
@@ -138,7 +141,7 @@ export default class Repository<T extends M> {
           : (Number(page) - 1) * limit;
 
     return new Paginate(
-      await this.repo.findAll({
+      await this.Model.findAll({
         where,
         attributes: attributes
           ? attributes
@@ -156,23 +159,23 @@ export default class Repository<T extends M> {
     );
   };
 
-  public findFirst = async (): Promise<T | undefined> => {
-    const object = await this.repo.findOne({ order: [["createdAt", "DESC"]] });
+  public first = async (): Promise<T | undefined> => {
+    const object = await this.Model.findOne({ order: [["createdAt", "DESC"]] });
     return object ?? undefined;
   };
 
-  public findLast = async (): Promise<T | undefined> => {
-    const object = await this.repo.findOne({ order: [["createdAt", "ASC"]] });
+  public last = async (): Promise<T | undefined> => {
+    const object = await this.Model.findOne({ order: [["createdAt", "ASC"]] });
     return object ?? undefined;
   };
 
-  public disableBy = async (
+  public disable = async (
     id: any
   ): Promise<T | undefined | number | any> =>
-    await this.repo.update({ isActive: false }, { where: { id } });
+    await this.Model.update({ isActive: false }, { where: { id } });
 
-  public enableBy = async (id: any): Promise<T | undefined | number | any> =>
-    await this.repo.update({ isActive: false }, { where: { id } });
+  public enable = async (id: any): Promise<T | undefined | number | any> =>
+    await this.Model.update({ isActive: false }, { where: { id } });
 
   public clear = function (Model: ModelCtor<T>) {
     //  - Delete all the records from the collection
@@ -180,10 +183,13 @@ export default class Repository<T extends M> {
 
   public size = async (options: any): Promise<number> => {
     const { where } = options;
-    return await this.repo.count({ where });
+    return await this.Model.count({ where });
   };
 
   public classOf = (className: string) => eval(className);
+  paginated = async (
+    options: any
+  ): Promise<Paginate<T> | undefined> => this.paginate(this.Model, options)
 }
 
 export class Paginate<T> {

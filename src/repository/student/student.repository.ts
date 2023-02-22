@@ -1,8 +1,8 @@
 import sendEmail from "../../application/mailler";
-import sequelize, { Address,Document, Contact, Person, Student, User } from "../../models/index";
+import sequelize, { Address, Document, Contact, Person, Student, User, Enrollment } from "../../models/index";
 import { UserRepository } from "../index";
 import IRepository from "../irepository";
-import Repository from "../repository";
+import Repository, { Paginate } from "../repository";
 import contactRepository from "./contact.repository";
 import PersonRepository from "./person.repository";
 
@@ -17,12 +17,18 @@ export default class StudentRepository
 
   private defaultOptions = async () => ({
     attributes: Object.keys(await Student.describe()),
-    include: [{
-      model: Person, include: [Contact,Document, User, { model: Address, as: 'birthPlaceAddres' }, {
-        model: Address
-        , as: 'livingAddres'
+    include: [
+      Enrollment,
+      {
+        model: Person, include: [
+          Contact,
+          Document,
+          User,
+          { model: Address, as: 'birthPlaceAddres' },
+          {
+            model: Address, as: 'livingAddres'
+          }]
       }]
-    }]
   });
 
   one = async (
@@ -52,7 +58,7 @@ export default class StudentRepository
 
       return student;
     } catch (e: any) {
-      console.log(e);
+     return  e;
     }
     return undefined;
   };
@@ -68,15 +74,15 @@ export default class StudentRepository
 
 
   all = async (opts: any = {}): Promise<Student[] | undefined> => {
-    const options = { include: null, attributes: null };
+    const options = { include: [Person], attributes: null, ...opts };
 
-    const data: Student[] | undefined = await this.findAll(options);
+    const data: Student[] | undefined = await this.findAllBy(options);
     return data;
   };
 
   allBy = async (query: any): Promise<Student[] | undefined> => {
     const where = query;
-    const options = { include: null, attributes: {}, where };
+    const options = { include: [Person], attributes: {}, where };
 
     const data: Student[] | undefined = await this.findAll({});
     return data;
@@ -91,6 +97,10 @@ export default class StudentRepository
   delete = (data: any): Promise<any> => {
     throw new Error("Method not implemented.");
   }
+
+  paginated = async (
+    options: any
+  ): Promise<Paginate<Student> | undefined> => this.paginate(Student, {...options,include: [Person]})
 }
 
 //export default StudentRepository;
