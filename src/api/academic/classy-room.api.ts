@@ -16,17 +16,17 @@ class ClassyRoomApi {
 
     const classRoom: ClassyRoom | void = await this.repo.create(body);
 
-    return res.json(classRoom);
+    return res.send(201).json(classRoom);
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { body } = req;
 
-    const classRoom = await this.repo.update({ ...body, id });
+    const classRoom = await this.repo.update({ ...body, id }, { returning: true });
 
     const updatedClassyRoom = await this.repo.one(id);
 
-    await updatedClassyRoom?.update(body, { returning: true });
+    const success = await updatedClassyRoom?.update(body, { returning: true });
 
     return res.json(updatedClassyRoom);
   };

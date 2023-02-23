@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Classy, Contact } from "../../models/index";
+import { AcademicPeriod, AcademicShift, Classy, ClassyRoom, Contact, EnrollmentConfirmation } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -10,7 +10,7 @@ interface IApi {
   findBy(req: Request, res: Response): Response;
 }
 class ClassyApi {
-  constructor(private repo: IRepository<Classy>){};
+  constructor(private repo: IRepository<Classy>) { };
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
@@ -23,7 +23,7 @@ class ClassyApi {
     const { id } = req.params;
     const { body } = req;
 
-    const classy = await this.repo.update({ ...body, id });
+    // const classy = await this.repo.update({ ...body, id });
 
     const updatedClassy = await this.repo.one(id);
 
@@ -33,17 +33,19 @@ class ClassyApi {
   };
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
-    const { query } = req;
+    const { query: opts } = req;
+    const include = [AcademicShift, ClassyRoom, AcademicPeriod,EnrollmentConfirmation];
 
     const classy: Classy | undefined = await this.repo.one(
       id,
-      query
+      { ...opts, include }
     );
     return res.json(classy);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
+    const include = [AcademicShift, ClassyRoom, EnrollmentConfirmation];
     const classys: Paginate<Classy> | undefined =
-      await this.repo.paginated({});
+      await this.repo.paginated({ ...req.query, include });
     return res.json(classys);
   };
 }

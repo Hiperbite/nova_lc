@@ -27,6 +27,11 @@ import {
     })
     descriptions?:string
 
+    @Column({
+      type: DataType.INTEGER,
+    })
+    size?:number
+
     @HasMany(()=>Classy)
     classys?: Classy[]
     

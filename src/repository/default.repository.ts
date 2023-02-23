@@ -16,7 +16,7 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
   protected startTransaction = async () => this.t = this.t ?? await sequelize.transaction();
   private refactorOptions = async ({
     attributes: attr,
-    exclude = "",
+    exclude = [],
     include,
   }: any): Promise<any> => {
     const modelAttrs = Object.keys(await this.Model.describe());
@@ -69,11 +69,17 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
     }
   };
 
-  public update = async (data: any): Promise<T | any> => {
+  public update = async (data: any, opts: any = {}): Promise<T | any> => {
     const { ["id"]: _, ...d } = data;
     const { id } = data;
-    const model = await this.Model.update(d, { where: { id }, returning: true });
-    return model ? 1 : 0;
+    try {
+      const model = await this.Model.update(d, { where: { id }, returning: true, ...opts });
+      return model ? 1 : 0;
+    } catch (e: any) {
+
+      return e;
+    }
+
   };
 
   public delete = async (id: any | string): Promise<boolean> => {
@@ -136,9 +142,7 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
     const offset =
       Number(page) < 1
         ? 0
-        : Number(page) > limit
-          ? limit
-          : (Number(page) - 1) * limit;
+        :  (Number(page) - 1) * limit;
 
     return new Paginate(
       await this.Model.findAll({
