@@ -39,8 +39,11 @@ export default class StudentRepository
     const student: Student | undefined = await this.findOne(id, options);
     return student;
   };
-  oneBy = (query: any): Promise<Student | undefined> => {
-    throw new Error("Method not implemented.");
+  oneBy = async (query: any): Promise<Student | undefined> => {
+   
+    const options = { ...(await this.defaultOptions())};
+    const student: Student | undefined = await this.findOneBy(query);
+    return student;
   }
 
   create = async (data: any): Promise<Student | undefined> => {

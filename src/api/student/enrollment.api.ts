@@ -13,7 +13,7 @@ class EnrollmentApi {
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
-    const existAny = await this.repo.oneBy({ studentId: body.studentId });
+    const existAny = await this.repo.oneBy({where:{ studentId: body.studentId }});
     if (existAny?.id === undefined) {
 
       const enrollment: Enrollment | void = await this.repo.create(body, { include: [EnrollmentConfirmation] });
