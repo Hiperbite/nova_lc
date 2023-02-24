@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { Student, Contact } from "../../models/index";
+import { Op } from "sequelize";
+import { Student, Contact, Person } from "../../models/index";
 import { StudentRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -10,7 +11,7 @@ interface IApi {
   findBy(req: Request, res: Response): Response;
 }
 class StudentApi {
-  constructor(private repo: IRepository<Student>) {}
+  constructor(private repo: IRepository<Student>) { }
 
   create = async (req: Request, res: Response): Promise<Response | any> => {
     const { body } = req;
@@ -36,15 +37,44 @@ class StudentApi {
 
     const student: Student | undefined = await this.repo.one(id, query);
     if (!student) {
-      throw {message:"User not found", code: 404};
+      throw { message: "User not found", code: 404 };
     }
     return res.json(student);
   };
   findBy = async (req: Request, res: Response): Promise<Response | void> => {
-    const students: Paginate<Student> | undefined = await this.repo.paginated(
-      req.query
-    );
-    return res.json(students);
+    const { q } = req.query
+    if (q) {
+      try {
+
+        const students: any | Paginate<Student> | undefined = await this.repo.all(
+          {
+            subQuery: false,
+            where: {
+              [Op.or]: [
+                { ['$person.lastName$']: { [Op.like]: `%${q}%` } },
+
+                { ['$person.firstName$']: { [Op.like]: `%${q}%` } },
+                { ['$code$']: { [Op.like]: `%${q}%` } }
+              ]
+            },
+
+            include:
+              [Person,
+
+              ]
+          }
+        );
+        return res.json(students);
+
+      } catch (error) {
+        const xxx = error
+      }
+    } else {
+      const students: Paginate<Student> | undefined = await this.repo.paginated(
+        req.query
+      );
+      return res.json(students);
+    }
   };
 }
 
