@@ -95,13 +95,17 @@ export async function forgotPasswordHandler(
   user.passwordResetCode = passwordResetCode;
 
   await user.save();
-
+try {
   await sendEmail({
     to: user.email,
-    from: "test@example.com",
+    from: "test@hiperbite.com",
     subject: "Reset your password",
     text: `Password reset code: ${passwordResetCode}. Id ${user.id}`,
   });
+} catch (error) {
+  const err=error
+}
+  
 
   log.debug(`Password reset email sent to ${email}`);
 
@@ -133,6 +137,15 @@ export async function resetPasswordHandler(
   await user.save();
 
   return res.send("Successfully updated password");
+}
+
+export async function getusers(
+  req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
+  res: Response
+) {
+  const users = await User.findAll();
+
+  return res.send(users);
 }
 
 export async function getCurrentUserHandler(req: Request, res: Response) {

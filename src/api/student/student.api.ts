@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Student, Contact } from "../../models/index";
 import { StudentRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
@@ -10,16 +10,15 @@ interface IApi {
   findBy(req: Request, res: Response): Response;
 }
 class StudentApi {
-  constructor(private repo: IRepository<Student>){};
+  constructor(private repo: IRepository<Student>) {}
 
-  create = async (req: Request, res: Response): Promise<Response> => {
+  create = async (req: Request, res: Response): Promise<Response | any> => {
     const { body } = req;
 
     const student: Student | void = await this.repo.create(body);
-
     return res.json(student);
   };
-  update = async (req: Request, res: Response): Promise<Response> => {
+  update = async (req: Request, res: Response): Promise<Response | void> => {
     const { id } = req.params;
     const { body } = req;
 
@@ -31,19 +30,20 @@ class StudentApi {
 
     return res.json(updatedStudent);
   };
-  find = async (req: Request, res: Response): Promise<Response> => {
+  find = async (req: Request, res: Response): Promise<Response | void> => {
     const { id } = req.params;
     const { query } = req;
 
-    const student: Student | undefined = await this.repo.one(
-      id,
-      query
-    );
+    const student: Student | undefined = await this.repo.one(id, query);
+    if (!student) {
+      throw {message:"User not found", code: 404};
+    }
     return res.json(student);
   };
-  findBy = async (req: Request, res: Response): Promise<Response> => {
-    const students: Paginate<Student> | undefined =
-      await this.repo.paginated(req.query);
+  findBy = async (req: Request, res: Response): Promise<Response | void> => {
+    const students: Paginate<Student> | undefined = await this.repo.paginated(
+      req.query
+    );
     return res.json(students);
   };
 }

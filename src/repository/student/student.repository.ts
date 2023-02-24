@@ -1,5 +1,13 @@
 import sendEmail from "../../application/mailler";
-import sequelize, { Address, Document, Contact, Person, Student, User, Enrollment } from "../../models/index";
+import sequelize, {
+  Address,
+  Document,
+  Contact,
+  Person,
+  Student,
+  User,
+  Enrollment,
+} from "../../models/index";
 import { UserRepository } from "../index";
 import IRepository from "../irepository";
 import Repository, { Paginate } from "../repository";
@@ -10,25 +18,29 @@ export default class StudentRepository
   extends Repository<Student>
   implements IRepository<Student>
 {
-
-  constructor() { super(Student); }
+  constructor() {
+    super(Student);
+  }
   //protected t: any;
-
 
   private defaultOptions = async () => ({
     attributes: Object.keys(await Student.describe()),
     include: [
       Enrollment,
       {
-        model: Person, include: [
+        model: Person,
+        include: [
           Contact,
           Document,
           User,
-          { model: Address, as: 'birthPlaceAddres' },
+          { model: Address, as: "birthPlaceAddres" },
           {
-            model: Address, as: 'livingAddres'
-          }]
-      }]
+            model: Address,
+            as: "livingAddres",
+          },
+        ],
+      },
+    ],
   });
 
   one = async (
@@ -37,6 +49,7 @@ export default class StudentRepository
   ): Promise<Student | undefined> => {
     const options = { ...(await this.defaultOptions()), attributes };
     const student: Student | undefined = await this.findOne(id, options);
+    
     return student;
   };
   oneBy = async (query: any): Promise<Student | undefined> => {
@@ -47,23 +60,18 @@ export default class StudentRepository
   }
 
   create = async (data: any): Promise<Student | undefined> => {
-    await this.startTransaction()
-    try {
-      const options = await this.defaultOptions();
+    await this.startTransaction();
+    const options = await this.defaultOptions();
 
-      data.person.user = {
-        password: null,
-        username: `${data.person.firstName.toLowerCase()}.${data.person.lastName.toLowerCase()}`,
-        email: data.person?.contacts[0].descriptions,
-        role: "ROLE_USER",
-      }
-      const student = await this.createOne(data, options);
+    data.person.user = {
+      password: null,
+      username: `${data.person.firstName.toLowerCase()}.${data.person.lastName.toLowerCase()}`,
+      email: data.person?.contacts[0].descriptions,
+      role: "ROLE_USER",
+    };
+    const student = await this.createOne(data, options);
 
-      return student;
-    } catch (e: any) {
-     return  e;
-    }
-    return undefined;
+    return student;
   };
 
   update = async (data: any): Promise<Student | undefined> => {
@@ -74,7 +82,6 @@ export default class StudentRepository
   deleteOne = async (data: any): Promise<boolean> => {
     return await this.deleteBy(data.id);
   };
-
 
   all = async (opts: any = {}): Promise<Student[] | undefined> => {
     const options = { include: [Person], attributes: null, ...opts };
@@ -95,15 +102,15 @@ export default class StudentRepository
   last = async (): Promise<Student | undefined> => await this.last();
   disable = async (data: any): Promise<Student | undefined> =>
     await this.disableBy(data.id);
-  enable = async (data: any): Promise<Student | undefined> => await this.enableBy(data.id);
+  enable = async (data: any): Promise<Student | undefined> =>
+    await this.enableBy(data.id);
 
   delete = (data: any): Promise<any> => {
     throw new Error("Method not implemented.");
-  }
+  };
 
-  paginated = async (
-    options: any
-  ): Promise<Paginate<Student> | undefined> => this.paginate(Student, {...options,include: [Person]})
+  paginated = async (options: any): Promise<Paginate<Student> | undefined> =>
+    this.paginate(Student, { ...options, include: [Person] });
 }
 
 //export default StudentRepository;
