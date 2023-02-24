@@ -3,6 +3,7 @@ import {
   createUserHandler,
   forgotPasswordHandler,
   getCurrentUserHandler,
+  getusers,
   resetPasswordHandler,
   verifyUserHandler,
 } from "../../api/common/user.api";
@@ -24,6 +25,10 @@ router.post(
   "/",
   validateResource(createUserSchema),
   asyncHandler(createUserHandler)
+);
+router.get(
+  "/",
+  asyncHandler(getusers)
 );
 
 router.post(
