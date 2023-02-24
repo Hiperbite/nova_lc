@@ -1,4 +1,3 @@
-
 import express from "express";
 import api from "../../api/student/student.api";
 
@@ -8,29 +7,18 @@ import {
   updateStudentSchema,
 } from "../../application/schema/index";
 
+const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
-const router = express.Router()
+const router = express
+  .Router()
 
-.post(
-  "/",
-  validateResource(createStudentSchema),
-  api.create
-)
+  .post("/", validateResource(createStudentSchema), asyncHandler(api.create))
 
-.put(
-  "/:id",
-  validateResource(updateStudentSchema),
-  api.update
-)
+  .put("/:id", validateResource(updateStudentSchema), asyncHandler(api.update))
 
-.get(
-  "/:id",
-  api.find
-)
+  .get("/:id", asyncHandler(api.find))
 
-.get(
-  "/",
-  api.findBy
-);
+  .get("/", asyncHandler(api.findBy));
 
 export default router;

@@ -6,14 +6,18 @@ import {
 import validateResource from "../../application/middleware/validateResource";
 import { createSessionSchema } from "../../application/schema";
 
-const router = express.Router();
+const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+// asyncHandler(
+const router = express
+  .Router()
 
-router.post(
-  "/",
-  validateResource(createSessionSchema),
-  createSessionHandler
-);
+  .post(
+    "/",
+    validateResource(createSessionSchema),
+    asyncHandler(createSessionHandler)
+  )
 
-router.post("/refresh", refreshAccessTokenHandler);
+  .post("/refresh", asyncHandler(refreshAccessTokenHandler));
 
 export default router;

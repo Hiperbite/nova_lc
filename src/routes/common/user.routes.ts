@@ -15,24 +15,27 @@ import {
   verifyUserSchema,
 } from "../../application/schema";
 
+const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
+  // asyncHandler(
 const router = express.Router();
 
 router.post(
   "/",
   validateResource(createUserSchema),
-  createUserHandler
+  asyncHandler(createUserHandler)
 );
 
 router.post(
   "/verify/:id/:verificationCode",
   validateResource(verifyUserSchema),
-  verifyUserHandler
+  asyncHandler(verifyUserHandler)
 );
 
 router.post(
   "/forgotpassword",
   validateResource(forgotPasswordSchema),
-  forgotPasswordHandler
+  asyncHandler(forgotPasswordHandler)
 );
 
 router.post(
@@ -41,6 +44,6 @@ router.post(
   resetPasswordHandler
 );
 
-router.get("/me", requireUser, getCurrentUserHandler);
+router.get("/me", requireUser, asyncHandler(getCurrentUserHandler));
 
 export default router;
