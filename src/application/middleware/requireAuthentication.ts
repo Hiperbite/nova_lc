@@ -5,12 +5,12 @@ const requireAuthentication = (
   res: Response,
   next: NextFunction
 ) => {
-  const whiteList = ["/auth"];
+  const whiteList = ["/auth","/users/forgotpassword", "/users/resetpassword"];
 
   if (whiteList.includes(req.url)) {
     return next();
   }
-  
+
   const user = res.locals.user;
 
   if (!user) {

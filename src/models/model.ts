@@ -5,6 +5,7 @@ import {
   BeforeCreate,
   BeforeUpdate,
   AfterUpdate,
+  AfterSave,
 } from "sequelize-typescript";
 
 import _ from "lodash";
@@ -32,6 +33,7 @@ export default class Model extends Main {
   static prepareUpdate = (model: Model) => {};
 
   @AfterUpdate
+  @AfterSave
   static afterModelUpdate = (model: Model) => {
     const before = model.previous();
     const obj = Object.keys(before).map((k) => ({ [k]: model.dataValues[k] }));
