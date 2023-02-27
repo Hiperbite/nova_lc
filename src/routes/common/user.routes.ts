@@ -7,7 +7,7 @@ import {
   resetPasswordHandler,
   verifyUserHandler,
 } from "../../api/common/user.api";
-import requireUser from "../../application/middleware/requireUser";
+import requireUser from "../../application/middleware/requireAuthentication";
 import validateResource from "../../application/middleware/validateResource";
 import {
   createUserSchema,

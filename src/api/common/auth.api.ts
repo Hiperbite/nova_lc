@@ -47,6 +47,7 @@ export async function createSessionHandler(
     return res.status(status).send({
         accessToken,
         refreshToken,
+        user:user.dto(),
     });
 }
 

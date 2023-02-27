@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 import {
   Table,
   AllowNull,
@@ -15,7 +15,7 @@ import {
 import { Contact, Person, Model } from "../";
 //import passwordComplexity from "joi-password-complexity";
 import bcrypt from "bcrypt";
-import sendEmail from '../../application/mailler';
+import sendEmail from "../../application/mailler";
 // import Notify from "../app/Notify";
 // import authRepo from "../repository/auth.repo";
 @Table({
@@ -23,7 +23,7 @@ import sendEmail from '../../application/mailler';
   tableName: "Users",
 })
 export default class User extends Model {
-  @Unique({ name: 'username', msg: 'username_should_be_unique' }) // add this line
+  @Unique({ name: "username", msg: "username_should_be_unique" }) // add this line
   @AllowNull(false)
   @Column({
     type: DataType.STRING,
@@ -53,7 +53,7 @@ export default class User extends Model {
     type: DataType.TEXT,
     allowNull: true,
   })
-  salt?: string;;
+  salt?: string;
 
   @Column({
     type: DataType.TEXT,
@@ -87,18 +87,17 @@ export default class User extends Model {
 
   //TODO: fix password compare
   passwordCompare = async (password: string) => {
-
     const myPassword = this.password ?? "";
     const verified = await bcrypt.compare(password, myPassword);
 
     return verified;
-  }
+  };
   @BeforeSave
   @BeforeCreate
   static initVer = async (user: User) => {
     user.verificationCode = uuid().substring(5, 12).toUpperCase();
     user.verified = true;
-  }
+  };
 
   @BeforeSave
   @BeforeCreate
@@ -124,8 +123,7 @@ export default class User extends Model {
   @BeforeSave
   @BeforeCreate
   static hashPassword = async (user: User) => {
-
-    if ((user.changed() || []).filter(x => x === 'password').length === 0)
+    if ((user.changed() || []).filter((x) => x === "password").length === 0)
       return;
 
     const saltRounds = 10;
@@ -142,12 +140,13 @@ export default class User extends Model {
     }
   };
 
-
-  static privateFields = [
-    "password",
-    "__v",
-    "verificationCode",
-    "passwordResetCode",
+  privateFields: string[] = [
+    "id",
+    "username",
+    "email",
+    "role",
     "verified",
+    "personId",
+    "person",
   ];
 }

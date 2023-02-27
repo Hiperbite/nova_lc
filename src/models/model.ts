@@ -1,4 +1,3 @@
-
 import {
   Model as Main,
   Column,
@@ -8,11 +7,11 @@ import {
   AfterUpdate,
 } from "sequelize-typescript";
 
+import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import { Track } from "./index";
 
 export default class Model extends Main {
-
   @Column({
     type: DataType.UUID,
     primaryKey: true,
@@ -30,17 +29,21 @@ export default class Model extends Main {
   };
 
   @BeforeUpdate
-  static prepareUpdate = (model: Model) => {
-
-  };
+  static prepareUpdate = (model: Model) => {};
 
   @AfterUpdate
   static afterModelUpdate = (model: Model) => {
-
-    const before = model.previous()
+    const before = model.previous();
     const obj = Object.keys(before).map((k) => ({ [k]: model.dataValues[k] }));
     const after = Object.assign({}, ...obj);
-    Track.create({ before, after, model: model.constructor.name, ref: model.id })
-    
-  }
+    Track.create({
+      before,
+      after,
+      model: model.constructor.name,
+      ref: model.id,
+    });
+  };
+
+  privateFields: string[] = [];
+  dto = () => _.pick(this, this?.privateFields);
 }

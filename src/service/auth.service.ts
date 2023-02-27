@@ -1,8 +1,6 @@
-
 import { omit } from "lodash";
 import { signJwt } from "../application/jwt";
 import { Session, User } from "../models/index";
-
 
 export async function createSession({ userId }: { userId: string }) {
   return Session.create({ userId });
@@ -31,11 +29,15 @@ export async function signRefreshToken({ userId }: { userId: string }) {
 }
 
 export function signAccessToken(user: User) {
-  const payload = omit(user.toJSON(), User.privateFields);
+  const payload = user.dto();
 
-  const accessToken = signJwt(payload, "accessTokenPublicKey" /* "accessTokenPrivateKey"*/, {
-    expiresIn: "15m",
-  });
+  const accessToken = signJwt(
+    payload,
+    "accessTokenPublicKey" /* "accessTokenPrivateKey"*/,
+    {
+      expiresIn: "15m",
+    }
+  );
 
   return accessToken;
 }
