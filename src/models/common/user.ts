@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import {
   Table,
   AllowNull,
@@ -8,16 +7,14 @@ import {
   Unique,
   BeforeUpdate,
   BeforeSave,
-  BelongsTo,
   ForeignKey,
   HasOne,
 } from "sequelize-typescript";
-import { Contact, Person, Model } from "../";
-//import passwordComplexity from "joi-password-complexity";
+import { Person, Model } from "../";
+
 import bcrypt from "bcrypt";
-import sendEmail from "../../application/mailler";
-// import Notify from "../app/Notify";
-// import authRepo from "../repository/auth.repo";
+import { UserApp } from "../../application/common/user.app";
+
 @Table({
   timestamps: true,
   tableName: "Users",
@@ -92,54 +89,33 @@ export default class User extends Model {
 
     return verified;
   };
-  @BeforeSave
-  @BeforeCreate
-  static initVer = async (user: User) => {
-    user.verificationCode = uuid().substring(5, 12).toUpperCase();
-    user.verified = true;
-  };
 
   @BeforeSave
   @BeforeCreate
-  static validatePassword = async (user: User) => {
-    const complexityOptions = {
-      min: 6,
-      max: 24,
-      lowercase: true,
-      uppercase: true,
-    };
-  };
+  static initVer = UserApp.initVer;
 
   @BeforeCreate
-  static sendMail = async (user: User) =>
-    await sendEmail({
-      to: user.email,
-      from: "test@example.com",
-      subject: "Verify your email",
-      text: `verification code: ${user.verificationCode}. Id: ${user.id}`,
-    });
+  static sendMail = UserApp.sendMail;
 
   @BeforeUpdate
   @BeforeSave
   @BeforeCreate
-  static hashPassword = async (user: User) => {
-    if ((user.changed() || []).filter((x) => x === "password").length === 0)
-      return;
+  static hashPassword = UserApp.hashPassword;
 
+  hashPassword = async (password: string) => {
     const saltRounds = 10;
     try {
       // Generate a salt
-      user.salt = await bcrypt.genSalt(saltRounds);
+      this.salt = await bcrypt.genSalt(saltRounds);
 
       // Hash password
-      user.password = await bcrypt.hash(user.password ?? "", user.salt);
+      this.password = await bcrypt.hash(password, this.salt);
 
-      console.log(user.password);
+      console.log(this.password);
     } catch (error) {
       console.log(error);
     }
   };
-
   privateFields: string[] = [
     "id",
     "username",

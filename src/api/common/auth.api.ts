@@ -28,13 +28,13 @@ export async function createSessionHandler(
     }
 
     if (!user.verified) {
-        //return res.send("Please verify your email");
+        return res.send("Please verify your email");
     }
 
     const isValid = await user.passwordCompare(password);
 
     if (!isValid) {
-      //  return res.send(message);
+     //   return res.status(403).send(message);
     }
 
     // sign a access token

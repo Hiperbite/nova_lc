@@ -33,7 +33,7 @@ export default class Model extends Main {
   static prepareUpdate = (model: Model) => {};
 
   @AfterUpdate
-  @AfterSave
+  //@AfterSave
   static afterModelUpdate = (model: Model) => {
     const before = model.previous();
     const obj = Object.keys(before).map((k) => ({ [k]: model.dataValues[k] }));

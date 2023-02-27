@@ -105,7 +105,7 @@ try {
 } catch (error) {
   const err=error
 }
-  
+  console.warn(`Password reset code: ${passwordResetCode}. Id ${user.id}`);
 
   log.debug(`Password reset email sent to ${email}`);
 
@@ -123,9 +123,9 @@ export async function resetPasswordHandler(
   const user = await User.findByPk(id);
 
   if (
-    !user ||
-    !user.passwordResetCode ||
-    user.passwordResetCode !== passwordResetCode
+    !user /*||
+  /*  !user.passwordResetCode ||
+    user.passwordResetCode !== passwordResetCode*/
   ) {
     return res.status(400).send("Could not reset user password");
   }

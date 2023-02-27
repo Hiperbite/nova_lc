@@ -45,6 +45,7 @@ const {
   accessTokenPublicKey,
   refreshTokenPrivateKey,
   refreshTokenPublicKey,
+  TOKEN_EXPIRE_IN,
 } = process.env;
 const logLevel = "info";
 const config = (app: Application, http: any) => {
@@ -169,6 +170,7 @@ export {
   MAILER_PORT,
   GOOGLE_MAPS_API_KEY,
   NODE_ENV,
+  TOKEN_EXPIRE_IN,
   accessTokenPrivateKey,
   accessTokenPublicKey,
   refreshTokenPrivateKey,
