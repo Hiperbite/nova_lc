@@ -1,6 +1,7 @@
 import { Router } from "express";
 import userRoutes from "./common/user.routes";
 import authRoutes from "./common/auth.routes";
+import trackRoutes from "./common/track.routes";
 import studentRoutes from "./student/student.routes";
 import enrollmentRoutes from "./student/enrollment.routes";
 import enrollmentConfirmationRoutes from "./student/enrollment-confirmations.routes";
@@ -15,6 +16,7 @@ const routes = Router();
 
 routes.use('/users',userRoutes) 
 routes.use('/auth',authRoutes) 
+routes.use('/tracks',trackRoutes) 
 
 routes.use('/students/enrollments',enrollmentRoutes) 
 routes.use('/students/enrollment-confirmations',enrollmentConfirmationRoutes) 

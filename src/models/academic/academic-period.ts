@@ -5,7 +5,8 @@ import {
     DataType,
     BelongsTo,
     ForeignKey,
-    HasMany
+    HasMany,
+    AfterUpdate
   } from "sequelize-typescript";
   import { Classy, Model, Student, User } from "../index";
   
@@ -30,4 +31,14 @@ import {
     @HasMany(()=>Classy)
     classys?: Classy[]
     
+
+    @AfterUpdate
+    static bf=(period:AcademicPeriod)=>{
+      console.log('--------------------')
+      const before=period.previous()
+      const after=Object.keys(before).map((k)=>({[k]:period.dataValues[k]}));
+      console.log('+++++++++++++++++++++')
+      console.log(period)
+      console.log('*************************')
+    }
   }

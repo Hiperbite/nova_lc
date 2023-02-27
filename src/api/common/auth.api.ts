@@ -17,12 +17,14 @@ export async function createSessionHandler(
     res: Response
 ) {
     const message = "Invalid email or password";
+    let status=200;
     const { email, password } = req.body;
 
     const user: User | null|any = await UserM.findOne({ where: { email } });
 
     if (!user) {
-        return res.send(message);
+
+        return res.status(401).send(message);
     }
 
     if (!user.verified) {
@@ -42,7 +44,7 @@ export async function createSessionHandler(
     const refreshToken = await signRefreshToken({ userId: String(user.id) });
 
     // send the tokens
-    return res.send({
+    return res.status(status).send({
         accessToken,
         refreshToken,
     });

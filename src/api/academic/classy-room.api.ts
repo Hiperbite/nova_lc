@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { ClassyRoom, Contact } from "../../models/index";
+import { Classy, ClassyRoom, Contact } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
+import { Paginate } from "../../repository/repository";
 interface IApi {
   create(req: Request, res: Response): Response;
   update(req: Request, res: Response): Response;
@@ -16,13 +17,13 @@ class ClassyRoomApi {
 
     const classRoom: ClassyRoom | void = await this.repo.create(body);
 
-    return res.send(201).json(classRoom);
+    return res.status(201).json(classRoom);
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { body } = req;
 
-    const classRoom = await this.repo.update({ ...body, id }, { returning: true });
+    //const classRoom = await this.repo.update({ ...body, id }, { returning: true });
 
     const updatedClassyRoom = await this.repo.one(id);
 
@@ -41,8 +42,10 @@ class ClassyRoomApi {
     return res.json(classRoom);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const classRooms: Array<ClassyRoom> | undefined =
-      await this.repo.all({});
+
+    const include = [{ model: Classy}]
+    const classRooms: Paginate<ClassyRoom> | undefined =
+      await this.repo.paginated({include,...req.query});
     return res.json(classRooms);
   };
 }

@@ -29,6 +29,7 @@ import ClassyRoom from "./academic/classy-room";
 import Classy from "./academic/classy";
 import EnrollmentConfirmation from "./students/enrollment-confirmation";
 import Enrollment from "./students/enrollment";
+import Track from "./common/track";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -42,7 +43,7 @@ const sequelize = new Sequelize({
   password: DB_PASSWORD,
   database: DB_NAME,
   logging: true,
-  models: [Contact, User, Token, Session, Student,
+  models: [Contact, User, Token, Session, Student, Track,
     Address, Attachment, Role, Category, Department,
     Payroll, Transaction, TransactionType, Paypack, Sequence,Person, Document, 
   AcademicPeriod, AcademicShift, ClassyRoom, Classy, EnrollmentConfirmation, Enrollment
@@ -57,6 +58,7 @@ export default sequelize;
 export {
   sequelize,
   Repo,
+  Track,
   Model,Contact, User, Token, Session, Student,
   Address, Attachment, Role, Category, Department,
   Payroll, Transaction, TransactionType, Paypack, Sequence, Document, Person,

@@ -19,6 +19,12 @@ const router = (app: Application) => {
 */
   routes.get("/healthcheck", (_, res) => res.sendStatus(200));
 
+
+  app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "*");
+    next();
+  });
   // Your function  **must** take 4 parameters for Express to consider it
   // error handling middleware.
   app.use(({ status, err }: any, req: any, res: any, next: any) => {

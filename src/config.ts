@@ -88,6 +88,7 @@ const config = (app: Application, http: any) => {
   ];
 
   const corsOptions = {
+    credentials: true, // This is important.
     origin: (origin: any, callback: any) => {
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
@@ -98,7 +99,7 @@ const config = (app: Application, http: any) => {
     optionsSuccessStatus: 200,
   };
 
-  app.use(cors(corsOptions));
+  //app.use(cors(corsOptions));
 
   const errorLoggerOptions = {
     transports: [new winston.transports.Console()],

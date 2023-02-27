@@ -62,6 +62,13 @@ class StudentApi {
               [Person,
 
               ]
+            ,
+
+            order: [
+              [Person,"firstName", "ASC"]
+            ],
+            offset: 0,
+            limit: 10,
           }
         );
         return res.json(students);

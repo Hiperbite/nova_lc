@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AcademicPeriod } from "../../models/index";
+import { AcademicPeriod, Classy } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 interface IApi {
@@ -22,7 +22,7 @@ class AcademicPeriodApi implements IApi {
     const { id } = req.params;
     const { body } = req;
 
-    const academicPeriod = await this.repo.update({ ...body, id });
+   // const academicPeriod = await this.repo.update({ ...body, id });
 
     const updatedAcademicPeriod = await this.repo.one(id);
 
@@ -36,13 +36,14 @@ class AcademicPeriodApi implements IApi {
 
     const academicPeriod: AcademicPeriod | undefined = await this.repo.one(
       id,
-      query
+      {...query,
+      include: [Classy]}
     );
     return res.json(academicPeriod);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
     const academicPeriods: Array<AcademicPeriod> | undefined =
-      await this.repo.all({});
+      await this.repo.all({include: [Classy]});
     return res.json(academicPeriods);
   };
 }

@@ -43,7 +43,7 @@ class ClassyApi {
     return res.json(classy);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const include = [AcademicShift, ClassyRoom, EnrollmentConfirmation];
+    const include = [AcademicShift,AcademicPeriod, ClassyRoom, EnrollmentConfirmation];
     const classys: Paginate<Classy> | undefined =
       await this.repo.paginated({ ...req.query, include });
     return res.json(classys);
