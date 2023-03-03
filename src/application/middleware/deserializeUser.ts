@@ -14,10 +14,11 @@ const deserializeUser = async (
     return next();
   }
 
-  const decoded = verifyJwt(accessToken, "accessTokenPublicKey");
+  const decoded :any = verifyJwt(accessToken, "accessTokenPublicKey");
 
   if (decoded) {
     res.locals.user = decoded;
+    req.body.updatedById=decoded?.id;
   }
 
   return next();

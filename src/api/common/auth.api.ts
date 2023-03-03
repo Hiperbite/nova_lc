@@ -10,17 +10,17 @@ import {
 } from "../../service/auth.service";
 
 import { verifyJwt } from "../../application/jwt";
-import { User, sequelize } from "../../models/index";
-const UserM = sequelize.models.User;
+import { User, sequelize, Person } from "../../models/index";
+
 export async function createSessionHandler(
     req: Request<{}, {}, CreateSessionInput>,
     res: Response
 ) {
     const message = "Invalid email or password";
-    let status=200;
+    let status = 200;
     const { email, password } = req.body;
 
-    const user: User | null|any = await UserM.findOne({ where: { email } });
+    const user: User | null | any = await User.findOne({ where: { email }, include: [{model:Person}] });
 
     if (!user) {
 
@@ -34,7 +34,7 @@ export async function createSessionHandler(
     const isValid = await user.passwordCompare(password);
 
     if (!isValid) {
-     //   return res.status(403).send(message);
+        return res.status(403).send(message);
     }
 
     // sign a access token
@@ -47,7 +47,7 @@ export async function createSessionHandler(
     return res.status(status).send({
         accessToken,
         refreshToken,
-        user:user.dto(),
+        user: user.dto(),
     });
 }
 

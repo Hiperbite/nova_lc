@@ -6,7 +6,7 @@ import {
   ResetPasswordInput,
   VerifyUserInput,
 } from "../../application/schema";
-import { User } from "../../models/index";
+import { Person, User } from "../../models/index";
 import log from "../../application/logger";
 import sendEmail from "../../application/mailler";
 import { v4 as uuid } from "uuid";
@@ -82,12 +82,12 @@ export async function forgotPasswordHandler(
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    //log.debug(`User with email ${email} does not exists`);
+    log.debug(`User with email ${email} does not exists`);
     return res.send(message);
   }
 
   if (!user.verified) {
-    // return res.send("User is not verified");
+    return res.send("User is not verified");
   }
 
   const passwordResetCode = uuid().substring(0, 8).toUpperCase();
@@ -95,16 +95,16 @@ export async function forgotPasswordHandler(
   user.passwordResetCode = passwordResetCode;
 
   await user.save();
-try {
-  await sendEmail({
-    to: user.email,
-    from: "test@hiperbite.com",
-    subject: "Reset your password",
-    text: `Password reset code: ${passwordResetCode}. Id ${user.id}`,
-  });
-} catch (error) {
-  const err=error
-}
+  try {
+    await sendEmail({
+      to: user.email,
+      from: "test@hiperbite.com",
+      subject: "Reset your password",
+      text: `Password reset code: ${passwordResetCode}. Id ${user.id}`,
+    });
+  } catch (error) {
+    const err = error
+  }
   console.warn(`Password reset code: ${passwordResetCode}. Id ${user.id}`);
 
   log.debug(`Password reset email sent to ${email}`);
@@ -123,9 +123,9 @@ export async function resetPasswordHandler(
   const user = await User.findByPk(id);
 
   if (
-    !user /*||
-  /*  !user.passwordResetCode ||
-    user.passwordResetCode !== passwordResetCode*/
+    !user ||
+    !user.passwordResetCode ||
+    user.passwordResetCode !== passwordResetCode
   ) {
     return res.status(400).send("Could not reset user password");
   }
@@ -143,7 +143,7 @@ export async function getusers(
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
   res: Response
 ) {
-  const users = await User.findAll();
+  const users = await User.findAll({include:{ all: true, nested: true }});
 
   return res.send(users);
 }

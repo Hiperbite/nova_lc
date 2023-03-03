@@ -3,6 +3,7 @@ import express from "express";
 import api from "../../api/academic/classy-room.api";
 
 import validateResource from "../../application/middleware/validateResource";
+import { createSchema, updateSchema } from "../../application/schema/academic/classRoom.schema";
 import {
   createStudentSchema,
   updateStudentSchema,
@@ -11,29 +12,29 @@ import {
 
 const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch(next);
-  // asyncHandler(
+// asyncHandler(
 const router = express.Router()
 
-.post(
-  "/",
-  // validateResource(createStudentSchema),
-  asyncHandler(api.create)
-)
+  .post(
+    "/",
+    validateResource(createSchema),
+    asyncHandler(api.create)
+  )
 
-.put(
-  "/:id",
-  // validateResource(updateStudentSchema),
-  asyncHandler(api.update)
-)
+  .put(
+    "/:id",
+    validateResource(updateSchema),
+    asyncHandler(api.update)
+  )
 
-.get(
-  "/:id",
-  asyncHandler(api.find)
-)
+  .get(
+    "/:id",
+    asyncHandler(api.find)
+  )
 
-.get(
-  "/",
-  asyncHandler(api.findBy)
-);
+  .get(
+    "/",
+    asyncHandler(api.findBy)
+  );
 
 export default router;

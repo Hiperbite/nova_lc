@@ -67,7 +67,7 @@ export default class Repository<T extends M> {
     }
   };
 
-  public updateOne = async (data: any): Promise<T | any> => {
+  public updateOne = async (data: any, options?: any): Promise<T | any> => {
     const { ["id"]: _, ...d } = data;
     const { id } = data;
     const model = await this.repo.update(d, { where: { id }, returning: true });
@@ -98,9 +98,9 @@ export default class Repository<T extends M> {
     const data: T[] = await this.repo.findAll({
       where,
       include,
-      attributes:attributes ? (attributes).split(','):undefined,
-      offset:Number(offset),
-      limit:Number(limit),
+      attributes: attributes ? (attributes).split(',') : undefined,
+      offset: Number(offset),
+      limit: Number(limit),
     });
     return data;
   };
@@ -122,7 +122,7 @@ export default class Repository<T extends M> {
       where,
       attributes,
       include,
-      exclude=[],
+      exclude = [],
       pageSize = 6,
       page = 1,
       order = [["createdAt", "DESC"]],
@@ -152,7 +152,7 @@ export default class Repository<T extends M> {
       }),
       Number(page),
       limit,
-      await this.size(options)
+      await this.size({ include, where })
     );
   };
 
@@ -179,8 +179,8 @@ export default class Repository<T extends M> {
   };
 
   public size = async (options: any): Promise<number> => {
-    const { where } = options;
-    return await this.repo.count({ where });
+    const { where, include } = options;
+    return await this.repo.count({ where, include });
   };
 
   public classOf = (className: string) => eval(className);

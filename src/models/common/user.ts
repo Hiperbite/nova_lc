@@ -9,6 +9,10 @@ import {
   BeforeSave,
   ForeignKey,
   HasOne,
+  Index,
+  AfterCreate,
+  AfterSave,
+  AfterUpdate,
 } from "sequelize-typescript";
 import { Person, Model } from "../";
 
@@ -20,6 +24,7 @@ import { UserApp } from "../../application/common/user.app";
   tableName: "Users",
 })
 export default class User extends Model {
+
   @Unique({ name: "username", msg: "username_should_be_unique" }) // add this line
   @AllowNull(false)
   @Column({
@@ -28,6 +33,8 @@ export default class User extends Model {
   })
   username!: string;
 
+  @Unique({ name: "email", msg: "email_should_be_unique" }) // add this line
+  @AllowNull(false)
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -82,14 +89,6 @@ export default class User extends Model {
   @HasOne(() => Person)
   person?: Person;
 
-  //TODO: fix password compare
-  passwordCompare = async (password: string) => {
-    const myPassword = this.password ?? "";
-    const verified = await bcrypt.compare(password, myPassword);
-
-    return verified;
-  };
-
   @BeforeSave
   @BeforeCreate
   static initVer = UserApp.initVer;
@@ -102,20 +101,26 @@ export default class User extends Model {
   @BeforeCreate
   static hashPassword = UserApp.hashPassword;
 
-  hashPassword = async (password: string) => {
-    const saltRounds = 10;
-    try {
-      // Generate a salt
-      this.salt = await bcrypt.genSalt(saltRounds);
+  //TODO: fix password compare
+  passwordCompare = async (password: string) => {
+    const myPassword = this.password ?? "";
+    const verified = await bcrypt.compare(password, myPassword);
 
-      // Hash password
-      this.password = await bcrypt.hash(password, this.salt);
-
-      console.log(this.password);
-    } catch (error) {
-      console.log(error);
-    }
+    return verified;
   };
+
+  @AfterUpdate
+  @AfterCreate
+  @AfterSave
+  static async refreshPersons(user: User) {
+    const person = await Person.findByPk(user.personId)
+    
+    if (person && person.userId === null) {
+      person.userId = user.id;
+      person?.save();
+    }
+  }
+
   privateFields: string[] = [
     "id",
     "username",

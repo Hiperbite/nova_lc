@@ -10,7 +10,7 @@ interface IApi {
   findBy(req: Request, res: Response): Response;
 }
 class ClassyRoomApi {
-  constructor(private repo: IRepository<ClassyRoom>){};
+  constructor(private repo: IRepository<ClassyRoom>) { };
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
@@ -25,11 +25,13 @@ class ClassyRoomApi {
 
     //const classRoom = await this.repo.update({ ...body, id }, { returning: true });
 
-    const updatedClassyRoom = await this.repo.one(id);
-
-    const success = await updatedClassyRoom?.update(body, { returning: true });
-
-    return res.json(updatedClassyRoom);
+    const classyRoom = await this.repo.one(id);
+    if (classyRoom) {
+      const success = await classyRoom?.update(body, { returning: true });
+      return res.json(classyRoom);
+    }else{
+      return res.status(404).send('response not found');
+    }
   };
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
@@ -43,9 +45,9 @@ class ClassyRoomApi {
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
 
-    const include = [{ model: Classy}]
+    const include = [{ model: Classy }]
     const classRooms: Paginate<ClassyRoom> | undefined =
-      await this.repo.paginated({include,...req.query});
+      await this.repo.paginated({ include, ...req.query });
     return res.json(classRooms);
   };
 }

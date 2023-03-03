@@ -1,3 +1,5 @@
+import { Op } from "sequelize";
+import enrollmentApi from "../../api/student/enrollment.api";
 import sendEmail from "../../application/mailler";
 import sequelize, {
   Address,
@@ -7,6 +9,8 @@ import sequelize, {
   Student,
   User,
   Enrollment,
+  EnrollmentConfirmation,
+  Classy,
 } from "../../models/index";
 import { UserRepository } from "../index";
 import IRepository from "../irepository";
@@ -26,13 +30,14 @@ export default class StudentRepository
   private defaultOptions = async () => ({
     attributes: Object.keys(await Student.describe()),
     include: [
-      Enrollment,
+      { model: Enrollment, include: [{ model: EnrollmentConfirmation, include: Classy }] },
       {
         model: Person,
         include: [
           Contact,
           Document,
-          User,
+
+          { model: User, as: "user" },
           { model: Address, as: "birthPlaceAddres" },
           {
             model: Address,
@@ -49,12 +54,12 @@ export default class StudentRepository
   ): Promise<Student | undefined> => {
     const options = { ...(await this.defaultOptions()), attributes };
     const student: Student | undefined = await this.findOne(id, options);
-    
+
     return student;
   };
   oneBy = async (query: any): Promise<Student | undefined> => {
-   
-    const options = { ...(await this.defaultOptions())};
+
+    const options = { ...(await this.defaultOptions()) };
     const student: Student | undefined = await this.findOneBy(query);
     return student;
   }
@@ -75,7 +80,8 @@ export default class StudentRepository
   };
 
   update = async (data: any): Promise<Student | undefined> => {
-    return await this.updateOne(data);
+    const options = await this.defaultOptions();
+    return await this.updateOne(data, options);
     //  return await this.findOne(id);
   };
 
@@ -109,8 +115,35 @@ export default class StudentRepository
     throw new Error("Method not implemented.");
   };
 
-  paginated = async (options: any): Promise<Paginate<Student> | undefined> =>
-    this.paginate(Student, { ...options, include: [Person] });
+  paginated = async (options: any): Promise<Paginate<Student> | undefined> => {
+
+    let { filter, where } = options
+    if (filter && filter === "withNotEnrollment") {
+      where = {
+        ...where, ... {
+          [Op.and]: [{
+            ['$enrollment.id$']: {
+              [Op.eq]: null
+            }
+          }]
+        }
+      }
+    } else
+      if (filter && filter === "withEnrollment") {
+        where = {
+          ...where, ... {
+            [Op.and]: [{
+              ['$enrollment.id$']: {
+                [Op.ne]: null
+              }
+            }]
+          }
+        }
+      }
+    const students = await this.paginate(Student, { include: [Person, { model: Enrollment }], ...options, ...{ where } });
+   
+    return students
+  }
 }
 
 //export default StudentRepository;

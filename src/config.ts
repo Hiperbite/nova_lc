@@ -57,7 +57,7 @@ const config = (app: Application, http: any) => {
   );
   app.disable("x-powered-by");
   const expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
-  app.set("trust proxy", 1); // trust first proxy
+  //app.set("trust proxy", 1); // trust first proxy
   app.use(
     session({
       secret: "s3Cur3",
@@ -100,7 +100,7 @@ const config = (app: Application, http: any) => {
     optionsSuccessStatus: 200,
   };
 
-  //app.use(cors(corsOptions));
+  app.use(cors(corsOptions));
 
   const errorLoggerOptions = {
     transports: [new winston.transports.Console()],

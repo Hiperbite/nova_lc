@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
-import { Student, Contact, Person } from "../../models/index";
+import { Student, Contact, Person, Enrollment, EnrollmentConfirmation } from "../../models/index";
 import { StudentRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -57,16 +57,8 @@ class StudentApi {
                 { ['$code$']: { [Op.like]: `%${q}%` } }
               ]
             },
-
-            include:
-              [Person,
-
-              ]
-            ,
-
-            order: [
-              [Person,"firstName", "ASC"]
-            ],
+            include: [Person, { model: Enrollment, include: EnrollmentConfirmation }],
+            order: [[Person, "firstName", "ASC"]],
             offset: 0,
             limit: 10,
           }
@@ -80,6 +72,7 @@ class StudentApi {
       const students: Paginate<Student> | undefined = await this.repo.paginated(
         req.query
       );
+
       return res.json(students);
     }
   };

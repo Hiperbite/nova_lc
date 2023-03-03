@@ -15,21 +15,21 @@ class EnrollmentConfirmationApi {
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
     let isEnroll = false;
-    if (body.enrollmentId===undefined) {
-      
-        if (body.studentId) {
-          const student = await Student.findByPk(body.studentId);
-          if (student?.id) {
-            const enroll = await Enrollment.create({
-              studentId:body.studentId, enrollmentConfirmations: [{
-                classyId: body.classId
-              }]
-            }, { include: [EnrollmentConfirmation] });
+    if (body.enrollmentId === undefined) {
 
-            return res.json((enroll?.enrollmentConfirmations ?? [{}])[0]);
-          }
+      if (body.studentId) {
+        const student = await Student.findByPk(body.studentId);
+        if (student?.id) {
+          const enroll = await Enrollment.create({
+            studentId: body.studentId, enrollmentConfirmations: [{
+              classyId: body.classId
+            }]
+          }, { include: [EnrollmentConfirmation] });
+
+          return res.json((enroll?.enrollmentConfirmations ?? [{}])[0]);
         }
-      
+      }
+
 
     }
     const enrollment: EnrollmentConfirmation | void = await this.repo.create(body);
@@ -40,7 +40,7 @@ class EnrollmentConfirmationApi {
     const { id } = req.params;
     const { body } = req;
 
-    const enrollment = await this.repo.update({ ...body, id });
+    // const enrollment = await this.repo.update({ ...body, id });
 
     const updatedEnrollmentConfirmation = await this.repo.one(id);
 
@@ -60,8 +60,9 @@ class EnrollmentConfirmationApi {
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
     const include = [{ model: Enrollment, include: { model: Student, include: Person } }]
-    const { where } = req.query;
-    const enrollments: Paginate<EnrollmentConfirmation> | undefined = await this.repo.paginated({ where, include });
+    const { where, page, pageSize } = req.query;
+    const enrollments: Paginate<EnrollmentConfirmation> | undefined =
+      await this.repo.paginated({ where, page, pageSize, include });
     return res.json(enrollments);
   };
 }

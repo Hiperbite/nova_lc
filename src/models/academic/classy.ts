@@ -23,6 +23,12 @@ export default class Classy extends Model {
     code?: string;
 
     @Column({
+        type: DataType.INTEGER,
+        allowNull: true,
+    })
+    grade?: number;
+
+    @Column({
         type: DataType.STRING,
     })
     descriptions?: string

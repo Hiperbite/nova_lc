@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Track, User } from "../../models/index";
+import { Person, Track, User } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -30,7 +30,7 @@ class TrackApi {
     return res.json(track);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const include = [User];
+    const include = [{model:User,include:Person}];
     const tracks: Paginate<Track> | undefined =
       await this.repo.paginated({ ...req.query, include });
     return res.json(tracks);

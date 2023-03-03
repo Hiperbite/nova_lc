@@ -7,6 +7,7 @@ import {
   ForeignKey,
   BelongsTo,
   HasOne,
+  BeforeCreate,
 } from "sequelize-typescript";
 import { Address, Contact, Document, Model, User } from "../index";
 //import passwordComplexity from "joi-password-complexity";
@@ -116,5 +117,6 @@ export default class Person extends Model {
         
       @HasMany(() => Document)
       documents?: Document[];
+
   };
 

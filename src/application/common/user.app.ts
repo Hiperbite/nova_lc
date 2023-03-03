@@ -4,13 +4,10 @@ import { v4 as uuid } from "uuid";
 import sendEmail from "../../application/mailler";
 
 export class UserApp {
+  
   static hashPassword = async (user: User) => {
-/*
-    return;
-    if (
-      (user.changed() || []).filter((x: string) => x === "password").length ===
-      0
-    )
+
+    if ((user.changed() || []).filter(x => x === 'password').length === 0)
       return;
 
     const saltRounds = 10;
@@ -24,7 +21,7 @@ export class UserApp {
       console.log(user.password);
     } catch (error) {
       console.log(error);
-    }*/
+    }
   };
 
   static sendMail = async (user: User) =>
@@ -39,5 +36,5 @@ export class UserApp {
     user.verificationCode = uuid().substring(5, 12).toUpperCase();
     user.verified = true;
   };
-  
+
 }

@@ -6,11 +6,14 @@ import {
   BeforeUpdate,
   AfterUpdate,
   AfterSave,
+  BelongsToMany,
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
-import { Track } from "./index";
+import { Track, User } from "./index";
 
 export default class Model extends Main {
   @Column({
@@ -24,6 +27,13 @@ export default class Model extends Main {
   })
   isActive!: boolean;
 
+  @BelongsTo(()=>User)
+  updatedBy?: User;
+
+  @ForeignKey(() => User)
+  updatedById?: string;
+
+
   @BeforeCreate
   static prepare = (model: Model) => {
     model.isActive = false;
@@ -33,9 +43,10 @@ export default class Model extends Main {
   static prepareUpdate = (model: Model) => {};
 
   @AfterUpdate
-  //@AfterSave
+  @AfterSave
   static afterModelUpdate = (model: Model) => {
     const before = model.previous();
+
     const obj = Object.keys(before).map((k) => ({ [k]: model.dataValues[k] }));
     const after = Object.assign({}, ...obj);
     Track.create({
@@ -43,6 +54,7 @@ export default class Model extends Main {
       after,
       model: model.constructor.name,
       ref: model.id,
+      userId:model.updatedById
     });
   };
 
