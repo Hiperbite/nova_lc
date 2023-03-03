@@ -15,7 +15,7 @@ class ModelApi<Model> {
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
 
-    const model: Model | void = await this.repo.create(body);
+    const model: Model | void = await this.repo.create(body,{include:{all:true}});
 
     return res.json(model);
   };
@@ -54,13 +54,13 @@ class ModelApi<Model> {
 
     const model: Model | undefined = await this.repo.one(
       id,
-      { ...opts }
+      { ...opts, include:{all:true} }
     );
     return res.json(model);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
     const models: Paginate<Model> | undefined =
-      await this.repo.paginated({ ...req.query });
+      await this.repo.paginated({ ...req.query , include:{all:true}});
     return res.json(models);
   };
 }

@@ -40,33 +40,8 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
   };
 
   public create = async (data: any, options: any = {}): Promise<T | undefined | any> => {
-    try {
+    
       return await this.Model.create(data, options);
-    } catch (err: any) {
-      if (err.errors)
-        throw err.errors.map(
-          ({
-            message,
-            type,
-            path,
-            value,
-            origin,
-            validatorKey,
-            validatorName,
-            validatorArgs,
-          }: any) => ({
-            message,
-            type,
-            path,
-            value,
-            origin,
-            validatorKey,
-            validatorName,
-            validatorArgs,
-          })
-        );
-      else return undefined;
-    }
   };
 
   public update = async (data: any, opts: any = {}): Promise<T | any> => {

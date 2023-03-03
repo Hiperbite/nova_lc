@@ -30,13 +30,18 @@ import Classy from "./academic/classy";
 import EnrollmentConfirmation from "./students/enrollment-confirmation";
 import Enrollment from "./students/enrollment";
 import Track from "./common/track";
+import Course from "./academic/course";
+import CurricularPlan from "./academic/curricular-plan";
+import Discipline from "./academic/discipline";
+import Semester from "./academic/semestre";
+import PlanItem from "./academic/plansItem";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const sequelize = new Sequelize({
-  dialect: "mariadb",
-  //dialect: "sqlite",
+  //dialect: "mariadb",
+  dialect: "sqlite",
   storage: "./database.sqlite",
   host: DB_HOST,
   username: DB_USER,
@@ -68,11 +73,17 @@ const sequelize = new Sequelize({
     Classy,
     EnrollmentConfirmation,
     Enrollment,
+
+    Course,
+    CurricularPlan,
+    Discipline,
+    Semester,
+    PlanItem
   ],
 });
 
 const Repo = sequelize.getRepository;
-//sequelize.sync({ alter: true, force: false })
+sequelize.sync({ alter: true, force: false })
 
 export default sequelize;
 
@@ -104,4 +115,10 @@ export {
   Classy,
   EnrollmentConfirmation,
   Enrollment,
+  
+  Course,
+  CurricularPlan,
+  Discipline,
+  Semester,
+  PlanItem
 };

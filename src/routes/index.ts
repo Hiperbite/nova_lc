@@ -36,8 +36,10 @@ const router = (app: Application) => {
     let errors = []
     if (typeof err.message === 'string') {
       errors = [{ message: err.message }]
-    } else if (Array.isArray(err)) {
+    } else if (Array.isArray(err) && err.length>0) {
       errors = err;
+    } else if (Array.isArray(err)) {
+      errors = [{message:"Some thing wrong is happning"}];
     }
     else {
       errors = [err.data]
