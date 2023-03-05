@@ -35,13 +35,14 @@ import CurricularPlan from "./academic/curricular-plan";
 import Discipline from "./academic/discipline";
 import Semester from "./academic/semestre";
 import PlanItem from "./academic/plansItem";
+import TimeTable from "./academic/time-table";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const sequelize = new Sequelize({
-  //dialect: "mariadb",
-  dialect: "sqlite",
+  dialect: "mariadb",
+//  dialect: "sqlite",
   storage: "./database.sqlite",
   host: DB_HOST,
   username: DB_USER,
@@ -73,7 +74,7 @@ const sequelize = new Sequelize({
     Classy,
     EnrollmentConfirmation,
     Enrollment,
-
+TimeTable,
     Course,
     CurricularPlan,
     Discipline,
@@ -115,7 +116,7 @@ export {
   Classy,
   EnrollmentConfirmation,
   Enrollment,
-  
+  TimeTable,
   Course,
   CurricularPlan,
   Discipline,

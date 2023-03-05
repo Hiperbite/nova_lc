@@ -8,6 +8,7 @@ import {
   BelongsTo,
   HasOne,
   BeforeCreate,
+  AfterFind,
 } from "sequelize-typescript";
 import { Address, Contact, Document, Model, User } from "../index";
 //import passwordComplexity from "joi-password-complexity";
@@ -94,17 +95,17 @@ export default class Person extends Model {
         );
       }
     
-      @ForeignKey(()=>Address)
-      birthPlaceAddresId?: string;
+      @ForeignKey(()=> Address)
+      birthPlaceAddressId?: string;
 
-      @BelongsTo(()=>Address)
-      birthPlaceAddres?: Address
+      @BelongsTo(()=>Address,{foreignKey:'birthPlaceAddressId' })
+      birthPlaceAddress?: Address
 
       @ForeignKey(()=>Address)
-      livingAddresId?: string;
+      livingAddressId?: string;
       
-      @BelongsTo(()=>Address)
-      livingAddres?: Address
+      @BelongsTo(()=>Address, {foreignKey:'livingAddressId' })
+      livingAddress?: Address
 
       @ForeignKey(()=>User)
       userId?: string;
@@ -117,6 +118,12 @@ export default class Person extends Model {
         
       @HasMany(() => Document)
       documents?: Document[];
+
+
+      @AfterFind
+      static afterFindPerson=()=>{
+        
+      }
 
   };
 

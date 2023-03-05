@@ -7,7 +7,7 @@ import {
     ForeignKey,
     HasMany
 } from "sequelize-typescript";
-import { AcademicPeriod, AcademicShift, ClassyRoom, Model, EnrollmentConfirmation, Student, User, Course, Semester } from "../index";
+import { AcademicPeriod, AcademicShift, ClassyRoom, Model, EnrollmentConfirmation, Student, User, Course, Semester, TimeTable } from "../index";
 
 @Table({
     timestamps: true,
@@ -33,21 +33,32 @@ export default class Classy extends Model {
     })
     descriptions?: string
 
+    @Column({
+        type: DataType.VIRTUAL,
+    })
+    get activesEnrollments() {
+        return this.enrollmentConfirmations
+            ?.filter((e: any) => e.current && e.isActive)
+    }
+
     @BelongsTo(() => ClassyRoom)
     classyRoom?: ClassyRoom;
 
     @ForeignKey(() => ClassyRoom)
-    classyRoomId?: string; 
+    classyRoomId?: string;
 
     @HasMany(() => EnrollmentConfirmation)
     enrollmentConfirmations?: EnrollmentConfirmation[]
-    
+
+    @HasMany(() => TimeTable)
+    timeTables?: TimeTable[]
+
     @BelongsTo(() => AcademicPeriod)
     academicPeriod?: AcademicPeriod
 
     @ForeignKey(() => AcademicPeriod)
     academicPeriodId?: AcademicPeriod
-    
+
     @BelongsTo(() => AcademicShift)
     academicShift?: AcademicShift
 
@@ -58,11 +69,11 @@ export default class Classy extends Model {
     course?: Course;
 
     @ForeignKey(() => Course)
-    courseId?: string;   
+    courseId?: string;
 
     @BelongsTo(() => Semester)
     semestre?: Semester;
-  
+
     @ForeignKey(() => Semester)
     semestreId?: string;
 

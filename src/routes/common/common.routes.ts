@@ -52,6 +52,12 @@ models.forEach(({ model, key }: modelsType) => {
       asyncHandler(api.update)
     )
 
+    .delete(
+      `/commons/${key}/:id`,
+      // validateResource(updateStudentSchema),
+      asyncHandler(api.delete)
+    )
+
     .get(`/commons/${key}/:id`, asyncHandler(api.find))
 
     .get(`/commons/${key}/`, asyncHandler(api.findBy));

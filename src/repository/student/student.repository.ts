@@ -38,11 +38,8 @@ export default class StudentRepository
           Document,
 
           { model: User, as: "user" },
-          { model: Address, as: "birthPlaceAddres" },
-          {
-            model: Address,
-            as: "livingAddres",
-          },
+          { model: Address, as: "birthPlaceAddress" },
+          { model: Address, as: "livingAddress"},
         ],
       },
     ],

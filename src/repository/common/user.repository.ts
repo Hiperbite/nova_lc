@@ -31,7 +31,7 @@ class UserRepository extends Repository<User> implements IRepository<User> {
         if (user?.id !== undefined) {
                 await sendEmail({
                     to: user.email,
-                    from: "test@example.com",
+                    from: "test@hiperbite.com",
                     subject: "Verify your email",
                     text: `verification code: ${user.verificationCode}. Id: ${user.id}`,
                 });

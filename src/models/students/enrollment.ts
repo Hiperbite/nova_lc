@@ -15,7 +15,7 @@ import { EnrollmentConfirmation, Model, Student, User } from "../index";
 
 @DefaultScope(() => ({
     //include: [EnrollmentConfirmation]
-  }))
+}))
 @Table({
     timestamps: true,
     tableName: "Registrations",
@@ -38,8 +38,8 @@ export default class Enrollment extends Model {
     })
     get current() {
         if (this.enrollmentConfirmations)
-            return this.enrollmentConfirmations[this.enrollmentConfirmations?.length - 1]
-            
+            return this.enrollmentConfirmations.sort((x: any, y: any) => x.createdAt < y.createdAt ? 1 : -1)[0]
+
         return;
     }
 
@@ -54,8 +54,9 @@ export default class Enrollment extends Model {
 
     @BeforeCreate
     @BeforeSave
-    static initModel = async (student: Student) => {
+    static initModel = async (enrollment: Student) => {
+        enrollment.isActive = true;
         let code = await SequenceApp.count(CODES.ENROLLMENT);
-        student.code = String(code).padStart(6, '0');
+        enrollment.code = String(code).padStart(6, '0');
     };
 }

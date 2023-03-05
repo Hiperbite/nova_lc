@@ -6,9 +6,22 @@ import {
   BelongsTo,
   ForeignKey,
   HasMany,
+  DefaultScope,
+  Scopes,
 } from "sequelize-typescript";
 import { CurricularPlan, Discipline, Model, Semester } from "../index";
 
+@DefaultScope(() => ({
+  include: [Discipline]
+}))
+@Scopes(() => ({
+  full: {
+    include: [Discipline],
+  },
+  yellow: {
+    where: { primaryColor: 'yellow' },
+  },
+}))
 @Table({
   timestamps: true,
   tableName: "PlanItems",
@@ -25,7 +38,7 @@ export default class PlanItem extends Model {
     type: DataType.INTEGER,
     allowNull: true,
   })
-  grade?: number;
+  semester?: number;
 
   @Column({
     type: DataType.TEXT,
@@ -36,7 +49,7 @@ export default class PlanItem extends Model {
   curricularPlan?: CurricularPlan;
 
   @ForeignKey(() => CurricularPlan)
-  curricularPlansId?: string;
+  curricularPlanId?: string;
 
   @BelongsTo(() => Discipline)
   discipline?: Discipline;
@@ -44,9 +57,4 @@ export default class PlanItem extends Model {
   @ForeignKey(() => Discipline)
   disciplineId?: string;
 
-  @BelongsTo(() => Semester)
-  semestre?: Semester;
-
-  @ForeignKey(() => Semester)
-  semestreId?: string;
 }

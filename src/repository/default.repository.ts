@@ -40,27 +40,23 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
   };
 
   public create = async (data: any, options: any = {}): Promise<T | undefined | any> => {
-    
-      return await this.Model.create(data, options);
+
+    return await this.Model.create(data, options);
   };
 
   public update = async (data: any, opts: any = {}): Promise<T | any> => {
     const { ["id"]: _, ...d } = data;
     const { id } = data;
-    try {
-      const model = await this.Model.update(d, { where: { id }, returning: true, ...opts });
-      return model ? 1 : 0;
-    } catch (e: any) {
 
-      return e;
-    }
+    const model = await this.Model.findByPk(id);
+    await model?.update(d, { ...opts });
+    return model;
 
   };
 
   public delete = async (id: any | string): Promise<boolean> => {
     const model = await this.Model.destroy({
-      where: { id },
-      truncate: true,
+      where: { id }
     });
 
     return model == 1;
@@ -117,7 +113,7 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
     const offset =
       Number(page) < 1
         ? 0
-        :  (Number(page) - 1) * limit;
+        : (Number(page) - 1) * limit;
 
     return new Paginate(
       await this.Model.findAll({
