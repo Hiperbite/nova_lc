@@ -12,6 +12,7 @@ import {
   Person,
   PlanItem,
   Semester,
+  TimeTable,
 } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 
@@ -35,6 +36,7 @@ const models: modelsType[] = [
   { key: "disciplines", model: Discipline },
   { key: "semesters", model: Semester },
   { key: "plan-items", model: PlanItem },
+  { key: "time-tables", model: TimeTable },
 ];
 
 models.forEach(({ model, key }: modelsType) => {
@@ -50,6 +52,12 @@ models.forEach(({ model, key }: modelsType) => {
       `/commons/${key}/:id`,
       // validateResource(updateStudentSchema),
       asyncHandler(api.update)
+    )
+
+    .delete(
+      `/commons/${key}/:id`,
+      // validateResource(updateStudentSchema),
+      asyncHandler(api.delete)
     )
 
     .get(`/commons/${key}/:id`, asyncHandler(api.find))

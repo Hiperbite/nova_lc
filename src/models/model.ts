@@ -12,7 +12,7 @@ import {
 } from "sequelize-typescript";
 
 import _ from "lodash";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuids4 } from "uuid";
 import { Track, User } from "./index";
 
 export default class Model extends Main {
@@ -20,14 +20,14 @@ export default class Model extends Main {
     type: DataType.UUID,
     primaryKey: true,
   })
-  id?: string = uuidv4();
+  id?: string
 
   @Column({
     type: DataType.BOOLEAN,
   })
   isActive!: boolean;
 
-  @BelongsTo(()=>User)
+  @BelongsTo(() => User)
   updatedBy?: User;
 
   @ForeignKey(() => User)
@@ -36,11 +36,12 @@ export default class Model extends Main {
 
   @BeforeCreate
   static prepare = (model: Model) => {
-    model.isActive = false;
+    model.isActive = true;
+    model.id = uuids4();
   };
 
   @BeforeUpdate
-  static prepareUpdate = (model: Model) => {};
+  static prepareUpdate = (model: Model) => { };
 
   @AfterUpdate
   @AfterSave
@@ -54,7 +55,7 @@ export default class Model extends Main {
       after,
       model: model.constructor.name,
       ref: model.id,
-      userId:model.updatedById
+      userId: model.updatedById
     });
   };
 

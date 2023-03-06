@@ -36,9 +36,4 @@ export default class Address extends Model {
     })
     province!: string;
 
-    @ForeignKey(() => Person)
-    personId?: string;
-
-    @BelongsTo(() => Person)
-    person?: Person;  
 }

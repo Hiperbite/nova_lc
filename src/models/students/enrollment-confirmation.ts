@@ -1,16 +1,12 @@
 import {
     Table,
-    AllowNull,
     Column,
     DataType,
     BelongsTo,
     ForeignKey,
-    HasMany,
-    BelongsToMany,
     BeforeCreate,
     BeforeSave
 } from "sequelize-typescript";
-import SequenceApp, { CODES } from "../../application/common/sequence.app";
 import { Classy, Model, Enrollment, Student, User } from "../index";
 
 @Table({
@@ -23,6 +19,11 @@ export default class EnrollmentConfirmation extends Model {
         type: DataType.STRING,
     })
     code?: string;
+
+    @Column({
+        type: DataType.BOOLEAN,
+    })
+    current?: boolean;
 
     @Column({
         type: DataType.STRING,
@@ -44,8 +45,26 @@ export default class EnrollmentConfirmation extends Model {
     @BeforeCreate
     @BeforeSave
     static initModel = async (confirmation: EnrollmentConfirmation) => {
-        let code = confirmation.enrollment?.id?.substring(6,12);
-        confirmation.code = String(code).padStart(6, '0');
+        let code =
+            confirmation.enrollment?.id?.substring(6, 12);
+
+        confirmation.code =
+            String(code).padStart(6, '0');
+
+        confirmation.isActive =
+            confirmation.current =
+            true;
+
+        const { enrollmentId } = confirmation;
+        const enrollments =
+            await
+                EnrollmentConfirmation
+                    .findAll({ where: { enrollmentId } })
+
+        for (const enroll of enrollments) {
+            enroll.current = false;
+            enroll.save();
+        }
     };
 
 }

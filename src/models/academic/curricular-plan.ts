@@ -7,7 +7,8 @@ import {
     ForeignKey,
     HasMany,
     BeforeCreate,
-    BeforeSave
+    BeforeSave,
+    HasOne
 } from "sequelize-typescript";
 import SequenceApp from "../../application/common/sequence.app";
 import { Course, Model, PlanItem } from "../index";
@@ -31,7 +32,7 @@ export default class CurricularPlan extends Model {
     })
     descriptions?: string
 
-    @BelongsTo(() => Course)
+    @HasOne(() => Course)
     course?: Course;
 
     @ForeignKey(() => Course)

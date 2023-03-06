@@ -4,10 +4,11 @@ import {
     Column,
     DataType,
     BeforeCreate,
-    BeforeSave
+    BeforeSave,
+    HasMany
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
-import { Model } from "../index";
+import { Course, Model } from "../index";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -33,11 +34,14 @@ export default class Discipline extends Model {
     })
     descriptions?: string
 
-    
+    /*
+    @HasMany(() => Course)
+    courses?: Course[];
+*/
     @BeforeCreate
     @BeforeSave
     static initModel = async (student: Discipline) => {
-      let code = await SequenceApp.count(CODES.DISCIPLINE);
-      student.code = uuidv4().substring(5, 9).toUpperCase()+String(code).padStart(2, '0');
+        let code = await SequenceApp.count(CODES.DISCIPLINE);
+        student.code = uuidv4().substring(5, 9).toUpperCase() + String(code).padStart(2, '0');
     };
 }

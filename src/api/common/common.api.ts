@@ -15,7 +15,7 @@ class ModelApi<Model> {
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
 
-    const model: Model | void = await this.repo.create(body,{include:{all:true}});
+    const model: Model | void = await this.repo.create(body);
 
     return res.json(model);
   };
@@ -39,7 +39,7 @@ class ModelApi<Model> {
       return res.json(finalModel);
 
     } else {
-      const updatedModel = await this.repo.update({ ...models, updatedById }, { where: { id: models.id }, returning: true })
+      const updatedModel = await this.repo.update({ ...models, updatedById })
       
       return res.json(updatedModel);
 
@@ -56,6 +56,13 @@ class ModelApi<Model> {
       id,
       { ...opts, include:{all:true} }
     );
+    return res.json(model);
+  };
+  delete = async (req: Request, res: Response): Promise<Response> => {
+    const { id } = req.params;
+//    const { query: opts } = req;
+
+    const model: Model | undefined = await this.repo.delete(id);
     return res.json(model);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {

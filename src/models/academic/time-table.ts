@@ -1,18 +1,16 @@
 import {
   Table,
-  AllowNull,
   Column,
   DataType,
   BelongsTo,
   ForeignKey,
-  HasMany,
   DefaultScope,
   Scopes,
 } from "sequelize-typescript";
-import { CurricularPlan, Discipline, Model, Semester } from "../index";
+import { Classy, Discipline, Model } from "../index";
 
 @DefaultScope(() => ({
-  include: [Discipline]
+  include: [Discipline, Classy]
 }))
 @Scopes(() => ({
   full: {
@@ -24,9 +22,9 @@ import { CurricularPlan, Discipline, Model, Semester } from "../index";
 }))
 @Table({
   timestamps: true,
-  tableName: "PlanItems",
+  tableName: "TimeTables",
 })
-export default class PlanItem extends Model {
+export default class TimeTable extends Model {
   @Column({
     type: DataType.VIRTUAL,
   })
@@ -38,18 +36,30 @@ export default class PlanItem extends Model {
     type: DataType.INTEGER,
     allowNull: true,
   })
-  semester?: number;
+  weekDay!: number;
+
+  @Column({
+    type: DataType.TIME,
+    allowNull: true,
+  })
+  startTime!: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: true,
+  })
+  duration?: number;
 
   @Column({
     type: DataType.TEXT,
   })
   descriptions?: string;
 
-  @BelongsTo(() => CurricularPlan)
-  curricularPlan?: CurricularPlan;
+  @BelongsTo(() => Classy)
+  classy?: Classy;
 
-  @ForeignKey(() => CurricularPlan)
-  curricularPlanId?: string;
+  @ForeignKey(() => Classy)
+  classyId?: string;
 
   @BelongsTo(() => Discipline)
   discipline?: Discipline;

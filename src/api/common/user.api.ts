@@ -23,7 +23,7 @@ export async function createUserHandler(
     if (user) {
       await sendEmail({
         to: user.email,
-        from: "test@example.com",
+        from: "test@hiperbite.com",
         subject: "Verify your email",
         text: `verification code: ${user.verificationCode}. Id: ${user.id}`,
       });

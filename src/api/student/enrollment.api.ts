@@ -13,21 +13,23 @@ class EnrollmentApi {
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
-    const existAny = await this.repo.oneBy({where:{ studentId: body.studentId }});
-    if (existAny?.id === undefined) {
+    const existAny = await this.repo.oneBy({ where: { studentId: body.studentId } });
+    const st = await Student.findByPk(body.studentId);
+    if (existAny) {
 
+      const enrollment: EnrollmentConfirmation | void =
+        await EnrollmentConfirmation.create(
+          { enrollmentId: existAny.id, classyId: body.enrollmentConfirmations[0].classyId });
+
+      const enroll = await Enrollment.findByPk(enrollment.enrollmentId, { include: [EnrollmentConfirmation] })
+
+      return res.json(enroll);
+
+    } else {
       const enrollment: Enrollment | void = await this.repo.create(body, { include: [EnrollmentConfirmation] });
 
       return res.json(enrollment);
 
-    } else {
-
-      const enrollment: EnrollmentConfirmation | void = await EnrollmentConfirmation.create(
-        { enrollmentId: existAny.id, classyId: body.enrollmentConfirmations[0].classyId });
-
-        const enroll=await Enrollment.findByPk(enrollment.enrollmentId,{ include: [EnrollmentConfirmation] })
-
-      return res.json(enroll);
     }
   };
   update = async (req: Request, res: Response): Promise<Response> => {

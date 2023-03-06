@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AcademicPeriod, AcademicShift, Classy, ClassyRoom, Contact, EnrollmentConfirmation } from "../../models/index";
+import { AcademicPeriod, AcademicShift, Classy, ClassyRoom, Contact, Course, EnrollmentConfirmation, TimeTable } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -34,7 +34,7 @@ class ClassyApi {
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query: opts } = req;
-    const include = [AcademicShift, ClassyRoom, AcademicPeriod,EnrollmentConfirmation];
+    const include = [AcademicShift, ClassyRoom,Course,TimeTable, AcademicPeriod,EnrollmentConfirmation];
 
     const classy: Classy | undefined = await this.repo.one(
       id,
