@@ -36,13 +36,13 @@ export default class TimeTable extends Model {
     type: DataType.INTEGER,
     allowNull: true,
   })
-  weekDay?: number;
+  weekDay!: number;
 
   @Column({
     type: DataType.TIME,
     allowNull: true,
   })
-  start?: string;
+  startTime!: string;
 
   @Column({
     type: DataType.INTEGER,

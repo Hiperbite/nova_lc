@@ -42,7 +42,7 @@ const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const sequelize = new Sequelize({
   dialect: "mariadb",
-//  dialect: "sqlite",
+  //  dialect: "sqlite",
   storage: "./database.sqlite",
   host: DB_HOST,
   username: DB_USER,
@@ -74,7 +74,7 @@ const sequelize = new Sequelize({
     Classy,
     EnrollmentConfirmation,
     Enrollment,
-TimeTable,
+    TimeTable,
     Course,
     CurricularPlan,
     Discipline,
@@ -84,7 +84,7 @@ TimeTable,
 });
 
 const Repo = sequelize.getRepository;
-sequelize.sync({ alter: true, force: false })
+//sequelize.sync({ alter: true, force: false })
 
 export default sequelize;
 

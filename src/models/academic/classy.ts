@@ -26,7 +26,7 @@ export default class Classy extends Model {
         type: DataType.INTEGER,
         allowNull: true,
     })
-    grade?: number;
+    semester?: number;
 
     @Column({
         type: DataType.STRING,
