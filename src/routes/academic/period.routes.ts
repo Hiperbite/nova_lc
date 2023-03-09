@@ -1,39 +1,40 @@
+import { updatePeriodSchema } from './../../application/schema/academic/period.schema';
 import express from "express";
 import api from "../../api/academic/academic-period.api";
 
 import validateResource from "../../application/middleware/validateResource";
 import {
-  createStudentSchema,
+  createPeriodSchema,
   updateStudentSchema,
 } from "../../application/schema/index";
 
 
 const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch(next);
-  // asyncHandler(
+// asyncHandler(
 
 const router = express.Router()
 
-.post(
-  "/",
-  // validateResource(createStudentSchema),
-  asyncHandler(api.create)
-)
+  .post(
+    "/",
+    validateResource(createPeriodSchema),
+    asyncHandler(api.create)
+  )
 
-.put(
-  "/:id",
-  // validateResource(updateStudentSchema),
-  asyncHandler(api.update)
-)
+  .put(
+    "/:id",
+    validateResource(updatePeriodSchema),
+    asyncHandler(api.update)
+  )
 
-.get(
-  "/:id",
-  asyncHandler(api.find)
-)
+  .get(
+    "/:id",
+    asyncHandler(api.find)
+  )
 
-.get(
-  "/",
-  asyncHandler(api.findBy)
-);
+  .get(
+    "/",
+    asyncHandler(api.findBy)
+  );
 
 export default router;

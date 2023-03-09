@@ -34,7 +34,18 @@ const router = (app: Application) => {
   app.use(function (err: any, req: any, res: any, next: any) {
     // All errors from async & non-async route above will be handled here
     let errors = []
-    if (typeof err.message === 'string') {
+
+    /**
+     * 
+     * 
+     * if err.original.code == 'ER_NO_REFERENCED_ROW_2'
+     * err.table
+     * [] err.fields not found
+     * 
+     */
+    if(err?.original?.code === 'ER_NO_REFERENCED_ROW_2'){
+      errors = [{ message: `${err.table} not founds`, fields: err.fields}]
+    } else if (typeof err.message === 'string') {
       errors = [{ message: err.message }]
     } else if (Array.isArray(err) && err.length>0) {
       errors = err;

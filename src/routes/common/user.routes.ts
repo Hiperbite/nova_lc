@@ -2,9 +2,11 @@ import express from "express";
 import {
   createUserHandler,
   forgotPasswordHandler,
+  getCurrent,
   getCurrentUserHandler,
   getusers,
   resetPasswordHandler,
+  updateAvatar,
   verifyUserHandler,
 } from "../../api/common/user.api";
 import requireUser from "../../application/middleware/requireAuthentication";
@@ -49,6 +51,10 @@ router.post(
   resetPasswordHandler
 );
 
-router.get("/me", requireUser, asyncHandler(getCurrentUserHandler));
+router.post(
+  "/upload-avatar",
+  requireUser, asyncHandler(updateAvatar)
+);
+router.get("/me", requireUser, asyncHandler(getCurrent));
 
 export default router;

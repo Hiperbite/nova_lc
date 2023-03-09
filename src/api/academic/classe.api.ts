@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AcademicPeriod, AcademicShift, Classy, ClassyRoom, Contact, Course, EnrollmentConfirmation, TimeTable } from "../../models/index";
+import { Period, Classe, ClasseRoom, Course, TimeTable, Enrollment } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -9,46 +9,46 @@ interface IApi {
   find(req: Request, res: Response): Response;
   findBy(req: Request, res: Response): Response;
 }
-class ClassyApi {
-  constructor(private repo: IRepository<Classy>) { };
+class ClasseApi {
+  constructor(private repo: IRepository<Classe>) { };
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
 
-    const classy: Classy | void = await this.repo.create(body);
+    const classe: Classe | void = await this.repo.create(body);
 
-    return res.json(classy);
+    return res.json(classe);
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { body } = req;
 
-    // const classy = await this.repo.update({ ...body, id });
+    // const classe = await this.repo.update({ ...body, id });
 
-    const updatedClassy = await this.repo.one(id);
+    const updatedClasse = await this.repo.one(id);
 
-    await updatedClassy?.update(body, { returning: true });
+    await updatedClasse?.update(body, { returning: true });
 
-    return res.json(updatedClassy);
+    return res.json(updatedClasse);
   };
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query: opts } = req;
-    const include = [AcademicShift, ClassyRoom,Course,TimeTable, AcademicPeriod,EnrollmentConfirmation];
+    const include = [ClasseRoom, Course, TimeTable, Period, Enrollment];
 
-    const classy: Classy | undefined = await this.repo.one(
+    const classe: Classe | undefined = await this.repo.one(
       id,
       { ...opts, include }
     );
-    return res.json(classy);
+    return res.json(classe);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const include = [AcademicShift,AcademicPeriod, ClassyRoom, EnrollmentConfirmation];
-    const classys: Paginate<Classy> | undefined =
+    const include = [Period, ClasseRoom, Course, Enrollment];
+    const classes: Paginate<Classe> | undefined =
       await this.repo.paginated({ ...req.query, include });
-    return res.json(classys);
+    return res.json(classes);
   };
 }
 
-export default new ClassyApi(new Repository(Classy));
-export { ClassyApi };
+export default new ClasseApi(new Repository(Classe));
+export { ClasseApi };

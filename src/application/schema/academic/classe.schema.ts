@@ -1,4 +1,4 @@
-import { any, object,z, string, TypeOf, boolean, preprocess, number} from "zod";
+import { any, object, z, string, TypeOf, boolean, preprocess, number } from "zod";
 import { createPersonSchema } from '../common/person.schema';
 const numericString = (schema: z.ZodTypeAny) =>
   z.preprocess((a) => {
@@ -11,26 +11,32 @@ const numericString = (schema: z.ZodTypeAny) =>
     }
   }, schema) //as z.ZodEffects<z.ZodTypeAny, number, number>;
 
-export  const createSchema = object({
+export const createClassSchema = object({
   body: object({
     isActive: boolean().optional(),
     code: string().min(3).max(20),
     descriptions: string().optional().nullable().optional(),
-    size: numericString(z.number().positive().max(1000))
+    classeRoomId: z.string().uuid(),
+    semester: numericString(z.number().positive().max(14)),
+    periodId: z.string().uuid(),
+    courseId: z.string().uuid()
   })
 });
 
-export const updateSchema = object({
+export const updateClassSchema = object({
   body: object({
     isActive: boolean().optional(),
     code: string().min(3).max(20).optional(),
     descriptions: string().optional().nullable().optional(),
-    size: numericString(z.number().positive().max(1000)).optional()
+    classeRoomId: z.string().uuid().optional(),
+    semester: numericString(z.number().positive().max(14)).optional(),
+    periodId: z.string().uuid().optional(),
+    courseId: z.string().uuid().optional()
   })
 })
 
 
-export type CreateClassRoomInput = TypeOf<typeof createSchema>["body"];
+export type CreateClassInput = TypeOf<typeof createClassSchema>["body"];
 
-export type UpdateClassRoomInput = TypeOf<typeof updateSchema>["body"];
+export type UpdateClassRoomInput = TypeOf<typeof updateClassSchema>["body"];
 

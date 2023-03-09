@@ -23,11 +23,10 @@ import Paypack from "./payroll/paypack";
 import Sequence from "./common/sequence";
 import Document from "./document/document";
 import Person from "./common/person";
-import AcademicPeriod from "./academic/academic-period";
-import AcademicShift from "./academic/academic-shift";
-import ClassyRoom from "./academic/classy-room";
-import Classy from "./academic/classy";
-import EnrollmentConfirmation from "./students/enrollment-confirmation";
+import Period from "./academic/academic-period";
+import ClasseRoom from "./academic/classe-room";
+import Classe from "./academic/classe";
+
 import Enrollment from "./students/enrollment";
 import Track from "./common/track";
 import Course from "./academic/course";
@@ -36,6 +35,9 @@ import Discipline from "./academic/discipline";
 import Semester from "./academic/semestre";
 import PlanItem from "./academic/plansItem";
 import TimeTable from "./academic/time-table";
+import Staff from "./staff/staff";
+import StaffClasse from "./staff/staffClass";
+import StaffDiscipline from "./staff/staff-discipline";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -68,18 +70,21 @@ const sequelize = new Sequelize({
     Sequence,
     Person,
     Document,
-    AcademicPeriod,
-    AcademicShift,
-    ClassyRoom,
-    Classy,
-    EnrollmentConfirmation,
+    Period,
+    ClasseRoom,
+    Classe,
     Enrollment,
     TimeTable,
     Course,
     CurricularPlan,
     Discipline,
     Semester,
-    PlanItem
+    PlanItem,
+
+    Staff,
+    StaffClasse,
+
+    StaffDiscipline,
   ],
 });
 
@@ -110,16 +115,19 @@ export {
   Sequence,
   Document,
   Person,
-  AcademicPeriod,
-  AcademicShift,
-  ClassyRoom,
-  Classy,
-  EnrollmentConfirmation,
+  Period,
+  ClasseRoom,
+  Classe,
   Enrollment,
   TimeTable,
   Course,
   CurricularPlan,
   Discipline,
   Semester,
-  PlanItem
+  PlanItem,
+
+  Staff,
+  StaffClasse,
+
+  StaffDiscipline,
 };

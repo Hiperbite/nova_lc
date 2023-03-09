@@ -9,10 +9,10 @@ import {
   DefaultScope,
   Scopes,
 } from "sequelize-typescript";
-import { CurricularPlan, Discipline, Model, Semester } from "../index";
+import { CurricularPlan, Discipline, Model, Semester, Staff } from "../index";
 
 @DefaultScope(() => ({
-  include: [Discipline]
+  include: [Discipline, Staff]
 }))
 @Scopes(() => ({
   full: {
@@ -56,5 +56,11 @@ export default class PlanItem extends Model {
 
   @ForeignKey(() => Discipline)
   disciplineId?: string;
+
+  @BelongsTo(() => Staff)
+  professor?: Staff;
+
+  @ForeignKey(() => Staff)
+  professorId?: string;
 
 }

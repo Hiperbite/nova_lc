@@ -5,10 +5,11 @@ import {
     DataType,
     BeforeCreate,
     BeforeSave,
-    HasMany
+    HasMany,
+    BelongsToMany
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
-import { Course, Model } from "../index";
+import { Course, Model, PlanItem, Staff, StaffDiscipline } from "../index";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,10 +35,12 @@ export default class Discipline extends Model {
     })
     descriptions?: string
 
-    /*
-    @HasMany(() => Course)
-    courses?: Course[];
-*/
+    @BelongsToMany(() => Staff, () => StaffDiscipline)
+    staffs?: Staff[];
+
+    @HasMany(() => PlanItem)
+    items?: PlanItem[]
+    
     @BeforeCreate
     @BeforeSave
     static initModel = async (student: Discipline) => {

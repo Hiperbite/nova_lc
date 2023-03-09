@@ -7,10 +7,10 @@ import {
   DefaultScope,
   Scopes,
 } from "sequelize-typescript";
-import { Classy, Discipline, Model } from "../index";
+import { Classe, Discipline, Model } from "../index";
 
 @DefaultScope(() => ({
-  include: [Discipline, Classy]
+  include: [Discipline, Classe]
 }))
 @Scopes(() => ({
   full: {
@@ -55,11 +55,11 @@ export default class TimeTable extends Model {
   })
   descriptions?: string;
 
-  @BelongsTo(() => Classy)
-  classy?: Classy;
+  @BelongsTo(() => Classe)
+  classe?: Classe;
 
-  @ForeignKey(() => Classy)
-  classyId?: string;
+  @ForeignKey(() => Classe)
+  classeId?: string;
 
   @BelongsTo(() => Discipline)
   discipline?: Discipline;

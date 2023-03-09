@@ -78,6 +78,12 @@ export default class User extends Model {
   verificationCode?: string | null;
 
   @Column({
+    type: DataType.TEXT,
+    allowNull: true,
+  })
+  avatar?: string | null;
+
+  @Column({
     type: DataType.BOOLEAN,
     allowNull: true,
   })

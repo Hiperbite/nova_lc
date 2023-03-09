@@ -8,13 +8,17 @@ import {
     BeforeUpdate,
     HasOne,
     ForeignKey,
-    HasMany
+    HasMany,
+    DefaultScope
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
-import { Classy, CurricularPlan, Model } from "../index";
+import { Classe, CurricularPlan, Model, Student } from "../index";
 
 import { v4 as uuidv4 } from "uuid";
 
+@DefaultScope(() => ({
+    include: [Classe, CurricularPlan]
+}))
 
 @Table({
     timestamps: true,
@@ -37,8 +41,8 @@ export default class Course extends Model {
     })
     descriptions?: string
 
-    @HasMany(() => Classy)
-    classys?: Classy[]
+    @HasMany(() => Classe)
+    classes?: Classe[]
 
     @HasOne(() => CurricularPlan)
     curricularPlan?: CurricularPlan;
