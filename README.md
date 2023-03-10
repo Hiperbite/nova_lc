@@ -1,7 +1,7 @@
 # nova_rh_srv
 # nova_lc
 
-# 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
+# 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
 
 
 
@@ -12,3 +12,4 @@ We use essential cookies to make our site work. With your consent, we may also u
 
 ## The best recruiting email templates for all scenarios
 https://resources.workable.com/tutorial/recruiting-email-templates
+https://www.indeed.com/hire/c/info/rejection-letter-samples
