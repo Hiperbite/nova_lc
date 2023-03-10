@@ -2,16 +2,53 @@ import { Application, Response, Router } from "express";
 import deserializeUser from "../application/middleware/deserializeUser";
 import requireAuthentication from "../application/middleware/requireAuthentication";
 import validateRequest from "../application/middleware/validateRequest";
-
+import ejs from "ejs";
 import { StudentRepository } from "../repository";
 import routes from "./routes";
+import path, { dirname } from "path";
 export const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch((err: any) => {
     next(err);
   });
 
 const router = (app: Application) => {
-  routes.get("/healthcheck", (_, res) => res.status(200).send("I am alive"));
+  routes.get("/healthcheck", (_, res) => {
+    const html = ejs.render('<%= people.join(", "); %>', {
+      people: [1, 2, 3, 4, 5],
+    });
+    res.status(200).send(html);
+  });
+  app.get(
+    "/ss",
+    asyncHandler(async (req: any, res: any) => {
+      //throw new Error("Something went wrong!");
+     /* const html = ejs.render('<%= people.join(", "); %>', {
+        people: [1, 2, 3, 4, 5],
+      });
+      res.status(200).send(html);
+*/
+      ejs.renderFile(
+        path.resolve(__dirname+'/../set.html.ejs'),
+        //"./../set.html.ejs",
+        { people: [1, 2, 3, 4, 5] },
+        {},
+        function (err:any, str:any) {
+          console.warn('----------------------------------')
+          console.warn(path.resolve(__dirname+'/../'))
+          console.warn('----------------------------------')
+          console.warn(err)
+          console.warn('----------------------------------')
+          res.status(200).send(str);
+        }
+      );
+    })
+  );
+  app.get(
+    "/",
+    asyncHandler(async (req: any, res: any) => {
+      throw new Error("Something went wrong!");
+    })
+  );
   /*
     app.use(function (req, res, next) {
       res.header("Access-Control-Allow-Origin", "*");
@@ -33,16 +70,15 @@ const router = (app: Application) => {
   // Error handler
   app.use(function (err: any, req: any, res: any, next: any) {
     // All errors from async & non-async route above will be handled here
-    let errors = []
-    if (typeof err.message === 'string') {
-      errors = [{ message: err.message }]
-    } else if (Array.isArray(err) && err.length>0) {
+    let errors = [];
+    if (typeof err.message === "string") {
+      errors = [{ message: err.message }];
+    } else if (Array.isArray(err) && err.length > 0) {
       errors = err;
     } else if (Array.isArray(err)) {
-      errors = [{message:"Some thing wrong is happning"}];
-    }
-    else {
-      errors = [err.data]
+      errors = [{ message: "Some thing wrong is happning" }];
+    } else {
+      errors = [err.data];
     }
 
     res.status(err.code ?? 500).send(errors);
@@ -50,20 +86,12 @@ const router = (app: Application) => {
   // Error handler
   app.use((req: any, res: any, next: any) => {
     // All errors from async & non-async route above will be handled here
-    res.status(404).json([{ message: 'resource not found' }]);
+    res.status(404).json([{ message: "resource not found" }]);
   });
 
   app.use((err: any, req: any, res: any, next: any) => {
-    const { status, error } = err
+    const { status, error } = err;
     res.status(status).json(err);
   });
-
-  app.get(
-    "/",
-    asyncHandler(async (req: any, res: any) => {
-      throw new Error("Something went wrong!");
-    })
-  );
-  
 };
 export default router;
