@@ -1,6 +1,5 @@
 import { Op } from "sequelize";
 
-import sendEmail from "../../application/mailler";
 import sequelize, {
   Address,
   Document,

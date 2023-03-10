@@ -1,0 +1,23 @@
+<div class="v-font-size"
+    style="line-height: 140%; text-align: left; word-wrap: break-word;font-family:'Open Sans',sans-serif;">
+    <br /><br /><br />
+    <p>
+        Olá <%= data.person.fullName%>!
+    </p>
+    <p>
+        Obrigado pelo tempo que você investiu o processo da sua candidatura.
+    </p>
+    <p>
+        Reservamos apenas {x} vagas para o cursop que se inscreveu no entanto recebemos um grande volume de inscrições.
+        Após um rigoroso e cauteloso processo de seleção, estamos escrevendo para informar que sua inscrição para para a
+        nossa instituição não foi bem-sucedida.
+    </p>
+    <p>
+        Nós o revisamos cuidadosamente, mas lamentamos em não poder proceguir
+    </p>
+    <p>
+        Obrigado pelo tempo que investiu no processo da sua candidatura.
+        Agradecemos seu interesse em nossa instituição e desejamos boa sorte em seus próximos passos.
+    </p>
+
+</div>

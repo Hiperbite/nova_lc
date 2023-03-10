@@ -24,6 +24,7 @@ import sequelize from "./models";
 
 import winston from "winston";
 import expressWinston from "express-winston";
+import path from "path";
 
 dotenv.config({ path: __dirname + "/../.env" });
 
@@ -71,6 +72,7 @@ const config = (app: Application, http: any) => {
       }
     })
   );
+  app.set('views', path.resolve(__dirname+'/../helpers/mailer/templates/'))
   //  app.use(helmet());
 
   /*
@@ -153,7 +155,7 @@ const smtp = {
   user: MAILER_USER || "",
   pass: MAILER_PASSWORD || "",
   host: MAILER_HOST || "",
-  port: MAILER_PORT || "",
+  port: Number(MAILER_PORT || ""),
   secure: Number(MAILER_PORT || "") == 465,
 };
 export {

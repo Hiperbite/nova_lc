@@ -28,9 +28,9 @@ const router = (app: Application) => {
       res.status(200).send(html);
 */
       ejs.renderFile(
-        path.resolve(__dirname+'/../set.html.ejs'),
+        path.resolve(__dirname+'/../helpers/mailer/templates/layout.html.ejs'),
         //"./../set.html.ejs",
-        { people: [1, 2, 3, 4, 5] },
+        { people: [1, 2, 3, 4, 5] , template:'set'},
         {},
         function (err:any, str:any) {
           console.warn('----------------------------------')

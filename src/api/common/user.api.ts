@@ -8,7 +8,7 @@ import {
 } from "../../application/schema";
 import { Person, User } from "../../models/index";
 import log from "../../application/logger";
-import sendEmail from "../../application/mailler";
+import sendEmail,{mailServices} from "../../application/mailler/index";
 import { v4 as uuid } from "uuid";
 import { UserRepository } from "../../repository/index";
 
@@ -18,25 +18,11 @@ export async function createUserHandler(
 ) {
   const body = req.body;
 
-  try {
     const user = await UserRepository.create(body);
-    if (user) {
-      await sendEmail({
-        to: user.email,
-        from: "test@hiperbite.com",
-        subject: "Verify your email",
-        text: `verification code: ${user.verificationCode}. Id: ${user.id}`,
-      });
-    }
+
 
     return res.send({ user });
-  } catch (e: any) {
-    if (e.code === 11000) {
-      return res.status(409).send("Account already exists");
-    }
 
-    return res.status(500).send(e);
-  }
 }
 
 export async function verifyUserHandler(
@@ -79,7 +65,7 @@ export async function forgotPasswordHandler(
 
   const { email } = req.body;
 
-  const user = await User.findOne({ where: { email } });
+  const user = await User.findOne({ where: { email } , include:[Person]});
 
   if (!user) {
     log.debug(`User with email ${email} does not exists`);
@@ -95,16 +81,12 @@ export async function forgotPasswordHandler(
   user.passwordResetCode = passwordResetCode;
 
   await user.save();
-  try {
-    await sendEmail({
-      to: user.email,
-      from: "test@hiperbite.com",
-      subject: "Reset your password",
-      text: `Password reset code: ${passwordResetCode}. Id ${user.id}`,
-    });
-  } catch (error) {
-    const err = error
-  }
+  
+  await sendEmail({
+    service: mailServices['forgotPassword'],
+    data: user,      
+  });
+  
   console.warn(`Password reset code: ${passwordResetCode}. Id ${user.id}`);
 
   log.debug(`Password reset email sent to ${email}`);

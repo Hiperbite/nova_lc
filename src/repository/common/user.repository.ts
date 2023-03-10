@@ -1,5 +1,5 @@
 
-import sendEmail from "../../application/mailler";
+import sendEmail from "../../application/mailler/mailler";
 import { Contact, User } from "../../models/index";
 import IRepository from "../irepository";
 import Repository, { Paginate } from "../repository";

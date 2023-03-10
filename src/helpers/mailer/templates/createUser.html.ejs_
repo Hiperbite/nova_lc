@@ -1,0 +1,39 @@
+<div class="v-font-size"
+    style="line-height: 140%; text-align: left; word-wrap: break-word;font-family:'Open Sans',sans-serif;">
+    
+    <br /><br />
+    <p>
+        Prezado <%= data.person.fullName%>,
+        </p>
+         
+        <p>
+        Muito obrigado por se juntar a {club name} como um dos nossos membros mais novos. É um prazer receber você em nosso grupo!
+        </p>
+         
+        <p>
+        Você encontrará nossa área de membros em {link}, onde será solicitado a criar uma conta usando este endereço de e-mail: {o endereço de e-mail do novo membro}. Depois de se inscrever, você poderá atualizar seu perfil e adicionar seus dados ao nosso diretório de membros.
+        </p>
+         
+        <p>
+        Como um novo membro, você desbloqueou vários benefícios de associação, incluindo:
+        </p>
+        <p>
+        {lista de benefícios de associação}
+        Para acessar e usar seus benefícios, acesse {membership area link}.
+        </p>
+         
+        <p>No {nome do clube}, nosso lema é {lema ou declaração de missão}. Para ajudá-lo a começar sua jornada, você encontrará nossa página de novos membros {aqui}.</p>
+        
+         
+        <p>Em breve, enviarei um e-mail convidando você para nosso próximo evento em {data do evento}. Esperamos que você se junte a nós lá. Até lá, se você tiver alguma dúvida, ligue para mim no número {phone number}.</p>
+        
+         
+        <p>É muito bom ter você conosco.</p>
+         
+        <p>Muitas felicidades,</p>
+        
+        <p>{Nome do presidente do clube ou administrador do grupo}</p>
+        
+        <p>{Título}</p>
+        <p>{Endereço de email}</p>
+</div>

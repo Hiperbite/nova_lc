@@ -1,4 +1,4 @@
-import sendEmail from "../../application/mailler";
+import sendEmail from "../../application/mailler/mailler";
 import { Contact, TransactionType, User } from "../../models/index";
 import { UserRepository } from "../index";
 import IRepository from "../irepository";

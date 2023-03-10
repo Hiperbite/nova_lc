@@ -18,13 +18,13 @@ import { Person, Model } from "../";
 
 import bcrypt from "bcrypt";
 import { UserApp } from "../../application/common/user.app";
+import sendEmail, { mailServices } from "../../application/mailler/index";
 
 @Table({
   timestamps: true,
   tableName: "Users",
 })
 export default class User extends Model {
-
   @Unique({ name: "username", msg: "username_should_be_unique" }) // add this line
   @AllowNull(false)
   @Column({
@@ -119,14 +119,21 @@ export default class User extends Model {
   @AfterCreate
   @AfterSave
   static async refreshPersons(user: User) {
-    const person = await Person.findByPk(user.personId)
-    
+    const person = await Person.findByPk(user.personId);
+
     if (person && person.userId === null) {
       person.userId = user.id;
       person?.save();
+    } else {
+      if (person) user.person = person;
     }
+ 
+    await sendEmail({
+      service: mailServices["createUser"],
+      data: user,
+    });
   }
-
+  
   privateFields: string[] = [
     "id",
     "username",

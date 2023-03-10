@@ -1,7 +1,7 @@
 import { User } from "../../models/index";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import sendEmail from "../../application/mailler";
+import sendEmail from "../mailler/mailler";
 
 export class UserApp {
   
