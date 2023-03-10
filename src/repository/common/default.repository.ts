@@ -3,8 +3,8 @@ import {
   ModelCtor,
   Repository as Repo,
 } from "sequelize-typescript";
-import sequelize from "../models/index";
-import IRepository from "./irepository";
+import sequelize from "../../models/index";
+import IRepository from "../irepository";
 
 export default class DefaultRepository<T extends M> implements IRepository<T> {
   repo: Repo<T>;
@@ -35,7 +35,9 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
   public one = async (id: string, opts: any = {}): Promise<T | undefined> => {
     const options = await this.refactorOptions(opts);
     const data = await this.Model.findByPk(id, options);
-
+    if (data === null) {
+      throw { code: 404, message: "Record not found" }
+    }
     return data ?? undefined;
   };
 
@@ -49,6 +51,9 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
     const { id } = data;
 
     const model = await this.Model.findByPk(id);
+    if (model === null) {
+      throw { code: 400, message: 'Resource not found to update' }
+    }
     await model?.update(d, { ...opts });
     return model;
 

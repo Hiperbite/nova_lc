@@ -1,4 +1,4 @@
-import { Paginate } from './../repository';
+import { Paginate } from '../repository';
 
 import { Contact } from "../../models/index";
 import IRepository from "../irepository";

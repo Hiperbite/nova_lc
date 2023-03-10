@@ -1,11 +1,10 @@
-
 import express from "express";
 import api from "../../api/student/enrollment.api";
 
 import validateResource from "../../application/middleware/validateResource";
 import {
-  createStudentSchema,
-  updateStudentSchema,
+  updateEnrollmentClassSchema,
+  createEnrollmentClassSchema
 } from "../../application/schema/index";
 
 const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
@@ -14,14 +13,14 @@ const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
 const router = express.Router()
 
 .post(
-  "/",
-  // validateResource(createStudentSchema),
+  "/", 
+  validateResource(createEnrollmentClassSchema),
   asyncHandler(api.create)
 )
 
 .put(
   "/:id",
-  // validateResource(updateStudentSchema),
+  validateResource(updateEnrollmentClassSchema),
   asyncHandler(api.update)
 )
 

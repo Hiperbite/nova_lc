@@ -1,12 +1,11 @@
 
 import express from "express";
-import api from "../../api/academic/classy-room.api";
+import api from "../../api/academic/classe.api";
 
 import validateResource from "../../application/middleware/validateResource";
-import { createSchema, updateSchema } from "../../application/schema/academic/classRoom.schema";
 import {
-  createStudentSchema,
-  updateStudentSchema,
+  createClassSchema,
+  updateClassSchema
 } from "../../application/schema/index";
 
 
@@ -17,13 +16,13 @@ const router = express.Router()
 
   .post(
     "/",
-    validateResource(createSchema),
+    validateResource(createClassSchema),
     asyncHandler(api.create)
   )
 
   .put(
     "/:id",
-    validateResource(updateSchema),
+    validateResource(updateClassSchema),
     asyncHandler(api.update)
   )
 

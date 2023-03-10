@@ -143,9 +143,28 @@ export async function getusers(
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
   res: Response
 ) {
-  const users = await User.findAll({include:{ all: true, nested: true }});
+  const users = await User.findAll({ include: { all: true, nested: true } });
 
   return res.send(users);
+}
+export async function getCurrent(
+  req: Request,
+  res: Response
+) {
+  const users = await User.findByPk(res?.locals?.user?.id, { include: { all: true, nested: true } });
+
+  return res.send(users);
+}
+export async function updateAvatar(
+  req: Request,
+  res: Response
+) {
+  const user = await User.findByPk(res?.locals?.user?.id, { include: { all: true, nested: true } });
+  if (user) {
+    user.avatar = req.body.avatar
+    user.save()
+  }
+  return res.send(user);
 }
 
 export async function getCurrentUserHandler(req: Request, res: Response) {

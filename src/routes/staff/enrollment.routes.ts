@@ -1,13 +1,12 @@
 
 import express from "express";
-import api from "../../api/academic/classy.api";
+import api from "../../api/student/enrollment.api";
 
 import validateResource from "../../application/middleware/validateResource";
 import {
   createStudentSchema,
   updateStudentSchema,
 } from "../../application/schema/index";
-
 
 const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch(next);

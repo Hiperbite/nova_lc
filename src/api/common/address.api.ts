@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AcademicPeriod, AcademicShift, Address, Contact, EnrollmentConfirmation, Person } from "../../models/index";
+import { Address, Person } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";

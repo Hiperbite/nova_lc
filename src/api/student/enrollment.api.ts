@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { Enrollment, Contact, EnrollmentConfirmation, Student, Person } from "../../models/index";
+import { Enrollment, Student, Person } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
+import { Paginate } from "../../repository/repository";
 interface IApi {
   create(req: Request, res: Response): Response;
   update(req: Request, res: Response): Response;
@@ -13,24 +14,15 @@ class EnrollmentApi {
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
-    const existAny = await this.repo.oneBy({ where: { studentId: body.studentId } });
+
     const st = await Student.findByPk(body.studentId);
-    if (existAny) {
 
-      const enrollment: EnrollmentConfirmation | void =
-        await EnrollmentConfirmation.create(
-          { enrollmentId: existAny.id, classyId: body.enrollmentConfirmations[0].classyId });
+    const enrollment: Enrollment | void =
+      await Enrollment.create(body);
 
-      const enroll = await Enrollment.findByPk(enrollment.enrollmentId, { include: [EnrollmentConfirmation] })
+    return res.json(enrollment);
 
-      return res.json(enroll);
 
-    } else {
-      const enrollment: Enrollment | void = await this.repo.create(body, { include: [EnrollmentConfirmation] });
-
-      return res.json(enrollment);
-
-    }
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
@@ -47,7 +39,7 @@ class EnrollmentApi {
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query }: any = req;
-    const opts: any = { ...query, ...{ include: [EnrollmentConfirmation] } }
+    const opts: any = { ...query }
     const enrollment: Enrollment | undefined = await this.repo.one(
       id,
       opts
@@ -55,9 +47,10 @@ class EnrollmentApi {
     return res.json(enrollment);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-
     const include = [{ model: Student, include: Person }]
-    const enrollments: Enrollment[] | undefined = await this.repo.all({ include });
+    const options = {...req.query, include}
+    
+    const enrollments: Paginate<Enrollment>| undefined = await this.repo.paginated( options);
     return res.json(enrollments);
   };
 }

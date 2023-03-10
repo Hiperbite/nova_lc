@@ -7,21 +7,13 @@ import {
   HasMany,
   BeforeCreate,
   BeforeSave,
-  HasOne,
-  AfterCreate,
-  AfterSave,
+  DefaultScope,
 } from "sequelize-typescript";
 import {
-  Contact,
   Model,
-  Address,
   Role,
   Category,
   Department,
-  Attachment,
-  Payroll,
-  Paypack,
-  User,
   Person,
   Enrollment,
 } from "../index";
@@ -29,17 +21,9 @@ import {
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 
 import { v4 as uuidv4 } from "uuid";
-
-export type MaritalstatusType =
-  | "SINGLE"
-  | "MARRIED"
-  | "DIVORCED"
-  | "WIDOWED"
-  | "OTHER";
-export type GenderType =
-  | "M"
-  | "F";
-
+@DefaultScope(() => ({
+ // include: [Person, Enrollment]
+}))
 @Table({
   timestamps: true,
   tableName: "Students",
@@ -47,9 +31,13 @@ export type GenderType =
 export default class Student extends Model {
   @Column({
     type: DataType.STRING,
-    //     allowNull: false,
   })
-  code!: string;
+  code?: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  entryCode!: string;
 
   @ForeignKey(() => Person)
   personId?: string;
@@ -74,14 +62,40 @@ export default class Student extends Model {
 
   @BelongsTo(() => Department)
   department?: Department;
-    
-  @HasOne(()=>Enrollment)
-  enrollment?:Enrollment;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  descriptions?: string
+
+  @Column({
+    type: DataType.VIRTUAL,
+  })
+  get current() {
+    if (this.enrollments)
+      return this.enrollments.sort((x: any, y: any) => x.createdAt < y.createdAt ? 1 : -1)[0]
+
+    return;
+  }
+
+  @BelongsTo(() => Student)
+  student!: Student;
+
+  @ForeignKey(() => Student)
+  studentId!: string;
+
+  @HasMany(() => Enrollment)
+  enrollments?: Enrollment[]
 
   @BeforeCreate
   @BeforeSave
   static initModel = async (student: Student) => {
+
+    let xcode = await SequenceApp.count(CODES.ENROLLMENT);
+    student.code = String(xcode).padStart(6, '0');
+
     let code = await SequenceApp.count(CODES.STUDENT);
-    student.code = uuidv4().substring(5, 9).toUpperCase()+String(code).padStart(8, '0');
+    student.entryCode = uuidv4().substring(5, 9).toUpperCase() + String(code).padStart(8, '0');
+
   };
 }

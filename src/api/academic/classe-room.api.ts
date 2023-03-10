@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Classy, ClassyRoom, Contact } from "../../models/index";
+import { Classe, ClasseRoom, Contact } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -9,13 +9,13 @@ interface IApi {
   find(req: Request, res: Response): Response;
   findBy(req: Request, res: Response): Response;
 }
-class ClassyRoomApi {
-  constructor(private repo: IRepository<ClassyRoom>) { };
+class ClasseRoomApi {
+  constructor(private repo: IRepository<ClasseRoom>) { };
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
 
-    const classRoom: ClassyRoom | void = await this.repo.create(body);
+    const classRoom: ClasseRoom | void = await this.repo.create(body);
 
     return res.status(201).json(classRoom);
   };
@@ -23,21 +23,16 @@ class ClassyRoomApi {
     const { id } = req.params;
     const { body } = req;
 
-    //const classRoom = await this.repo.update({ ...body, id }, { returning: true });
+    const classeRoom = await this.repo.update({ ...body, id }, { returning: true });
 
-    const classyRoom = await this.repo.one(id);
-    if (classyRoom) {
-      const success = await classyRoom?.update(body, { returning: true });
-      return res.json(classyRoom);
-    }else{
-      return res.status(404).send('response not found');
-    }
+    return res.json(classeRoom);
+
   };
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query } = req;
 
-    const classRoom: ClassyRoom | undefined = await this.repo.one(
+    const classRoom: ClasseRoom | undefined = await this.repo.one(
       id,
       query
     );
@@ -45,12 +40,12 @@ class ClassyRoomApi {
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
 
-    const include = [{ model: Classy }]
-    const classRooms: Paginate<ClassyRoom> | undefined =
+    const include = [{ model: Classe }]
+    const classRooms: Paginate<ClasseRoom> | undefined =
       await this.repo.paginated({ include, ...req.query });
     return res.json(classRooms);
   };
 }
 
-export default new ClassyRoomApi(new Repository(ClassyRoom));
-export { ClassyRoomApi };
+export default new ClasseRoomApi(new Repository(ClasseRoom));
+export { ClasseRoomApi };

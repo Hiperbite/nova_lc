@@ -32,21 +32,22 @@ class TrackApi {
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
     const include = [{ model: User, include: Person }];
-    let oldWhere: any = req?.query?.where;
     let where: any = req?.query?.where;
 
-    const arrOfModels = where?.model.split(',')
-    const arrOfrefs = where?.ref.split(',')
-    where = {
-      model: {
-        [Op.in]: arrOfModels
-      },
-      ref: {
-        [Op.in]: arrOfrefs
+    if (where?.model)
+      where.
+        model = {
+        [Op.in]: where?.model.split(',')
       }
-    }
+
+    if (where?.ref)
+      where.
+        ref = {
+        [Op.in]: where?.ref?.split(',')
+      }
+
     const tracks: Paginate<Track> | undefined =
-      await this.repo.paginated({ ...req.query, where: { ...oldWhere, ...where }, include });
+      await this.repo.paginated({ ...req.query, where: { ...where }, include });
     return res.json(tracks);
   };
 }

@@ -7,13 +7,13 @@ import {
     ForeignKey,
     HasMany
   } from "sequelize-typescript";
-  import { Classy, Model, Student, User } from "../index";
+  import { Classe, Model, Student, User } from "../index";
   
   @Table({
     timestamps: true,
-    tableName: "ClassyRooms",
+    tableName: "ClasseRooms",
   })
-  export default class ClassyRoom extends Model {
+  export default class ClasseRoom extends Model {
   
     @AllowNull(false)
     @Column({
@@ -32,7 +32,7 @@ import {
     })
     size?:number
 
-    @HasMany(()=>Classy)
-    classys?: Classy[]
+    @HasMany(()=>Classe)
+    classes?: Classe[]
     
   }

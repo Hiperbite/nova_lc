@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AcademicPeriod, Classy } from "../../models/index";
+import { Period, Classe } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 interface IApi {
@@ -8,46 +8,42 @@ interface IApi {
   find(req: Request, res: Response): Promise<Response>;
   findBy(req: Request, res: Response): Promise<Response>;
 }
-class AcademicPeriodApi implements IApi {
-  constructor(private repo: IRepository<AcademicPeriod>) { };
+class PeriodApi implements IApi {
+  constructor(private repo: IRepository<Period>) { };
 
   create = async (req: Request, res: Response): Promise<Response> => {
     const { body } = req;
 
-    const academicPeriod: AcademicPeriod | void = await this.repo.create(body);
+    const period: Period | void = await this.repo.create(body);
 
-    return res.json(academicPeriod);
+    return res.json(period);
   };
   update = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { body } = req;
 
-   // const academicPeriod = await this.repo.update({ ...body, id });
+   const updatedPeriod = await this.repo.update({ ...body, id });
 
-    const updatedAcademicPeriod = await this.repo.one(id);
-
-    await updatedAcademicPeriod?.update(body, { returning: true });
-
-    return res.json(updatedAcademicPeriod);
+    return res.json(updatedPeriod);
   };
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query } = req;
 
-    const academicPeriod: AcademicPeriod | undefined = await this.repo.one(
+    const period: Period | undefined = await this.repo.one(
       id,
       {...query,
-      include: [Classy]}
+      include: [Classe]}
     );
-    return res.json(academicPeriod);
+    return res.json(period);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const academicPeriods: Array<AcademicPeriod> | undefined =
-      await this.repo.all({include: [Classy]});
-    return res.json(academicPeriods);
+    const periods: Array<Period> | undefined =
+      await this.repo.all({include: [Classe]});
+    return res.json(periods);
   };
 }
 
-export default new AcademicPeriodApi(new Repository(AcademicPeriod));
+export default new PeriodApi(new Repository(Period));
 
-export { AcademicPeriodApi };
+export { PeriodApi };

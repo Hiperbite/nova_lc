@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { Op } from "sequelize";
-import { Student, Contact, Person, Enrollment, EnrollmentConfirmation } from "../../models/index";
+import { Student, Person, Enrollment } from "../../models/index";
 import { StudentRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -44,30 +44,25 @@ class StudentApi {
   findBy = async (req: Request, res: Response): Promise<Response | void> => {
     const { q } = req.query
     if (q) {
-      try {
 
-        const students: any | Paginate<Student> | undefined = await this.repo.all(
-          {
-            subQuery: false,
-            where: {
-              [Op.or]: [
-                { ['$person.lastName$']: { [Op.like]: `%${q}%` } },
+      const students: any | Paginate<Student> | undefined = await this.repo.all(
+        {
+          subQuery: false,
+          where: {
+            [Op.or]: [
+              { ['$person.lastName$']: { [Op.like]: `%${q}%` } },
+              { ['$person.firstName$']: { [Op.like]: `%${q}%` } },
+              { code: q }
+            ]
+          },
+          //include: [Enrollment],
+          order: [[Person, "firstName", "ASC"]],
+          offset: 0,
+          limit: 10,
+        }
+      );
+      return res.json(students);
 
-                { ['$person.firstName$']: { [Op.like]: `%${q}%` } },
-                { ['$code$']: { [Op.like]: `%${q}%` } }
-              ]
-            },
-            include: [Person, { model: Enrollment, include: EnrollmentConfirmation }],
-            order: [[Person, "firstName", "ASC"]],
-            offset: 0,
-            limit: 10,
-          }
-        );
-        return res.json(students);
-
-      } catch (error) {
-        const xxx = error
-      }
     } else {
       const students: Paginate<Student> | undefined = await this.repo.paginated(
         req.query
