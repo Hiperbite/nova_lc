@@ -3,64 +3,26 @@ import deserializeUser from "../application/middleware/deserializeUser";
 import requireAuthentication from "../application/middleware/requireAuthentication";
 import validateRequest from "../application/middleware/validateRequest";
 import ejs from "ejs";
-import { StudentRepository } from "../repository";
 import routes from "./routes";
-import path, { dirname } from "path";
+import { logger } from "../config";
+
 export const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch((err: any) => {
     next(err);
   });
 
 const router = (app: Application) => {
-  routes.get("/healthcheck", (_, res) => {
-    const html = ejs.render('<%= people.join(", "); %>', {
-      people: [1, 2, 3, 4, 5],
-    });
-    res.status(200).send(html);
-  });
-  app.get(
-    "/ss",
-    asyncHandler(async (req: any, res: any) => {
-      //throw new Error("Something went wrong!");
-     /* const html = ejs.render('<%= people.join(", "); %>', {
-        people: [1, 2, 3, 4, 5],
-      });
-      res.status(200).send(html);
-*/
-      ejs.renderFile(
-        path.resolve(__dirname+'/../helpers/mailer/templates/layout.html.ejs'),
-        //"./../set.html.ejs",
-        { people: [1, 2, 3, 4, 5] , template:'set'},
-        {},
-        function (err:any, str:any) {
-          console.warn('----------------------------------')
-          console.warn(path.resolve(__dirname+'/../'))
-          console.warn('----------------------------------')
-          console.warn(err)
-          console.warn('----------------------------------')
-          res.status(200).send(str);
-        }
-      );
-    })
-  );
+    
+  app.get("/ip", (req: any, res: any) => res.send(req.ip));
   app.get(
     "/",
     asyncHandler(async (req: any, res: any) => {
-      throw new Error("Something went wrong!");
+      res.status(200).send("I'm alive")
     })
   );
-  /*
-    app.use(function (req, res, next) {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "*");
-      next();
-    });*/
-  // Your function  **must** take 4 parameters for Express to consider it
-  // error handling middleware.
-
+  
   app.use(
     "/api/v1/",
-
     [deserializeUser, requireAuthentication, validateRequest],
     routes
   );
@@ -70,21 +32,21 @@ const router = (app: Application) => {
   // Error handler
   app.use(function (err: any, req: any, res: any, next: any) {
     // All errors from async & non-async route above will be handled here
-    let errors = []
+    let errors = [];
 
     /**
-     * 
-     * 
+     *
+     *
      * if err.original.code == 'ER_NO_REFERENCED_ROW_2'
      * err.table
      * [] err.fields not found
-     * 
+     *
      */
-    if(err?.original?.code === 'ER_NO_REFERENCED_ROW_2'){
-      errors = [{ message: `${err.table} not founds`, fields: err.fields}]
-    } else if (typeof err.message === 'string') {
-      errors = [{ message: err.message }]
-    } else if (Array.isArray(err) && err.length>0) {
+    if (err?.original?.code === "ER_NO_REFERENCED_ROW_2") {
+      errors = [{ message: `${err.table} not founds`, fields: err.fields }];
+    } else if (typeof err.message === "string") {
+      errors = [{ message: err.message }];
+    } else if (Array.isArray(err) && err.length > 0) {
       errors = err;
     } else if (Array.isArray(err)) {
       errors = [{ message: "Some thing wrong is happning" }];
@@ -93,16 +55,20 @@ const router = (app: Application) => {
     }
 
     res.status(err.code ?? 500).send(errors);
+    logger.error({message:errors, meta:{req,res}})
   });
+
   // Error handler
+  // All errors from async & non-async route above will be handled here
   app.use((req: any, res: any, next: any) => {
-    // All errors from async & non-async route above will be handled here
     res.status(404).json([{ message: "resource not found" }]);
+    logger.warn({ message: "resource not found" ,meta:{req,res}})
   });
 
   app.use((err: any, req: any, res: any, next: any) => {
-    const { status, error } = err;
+    const { status } = err;
     res.status(status).json(err);
+    logger.info({ message: err ,meta:{req,res}})
   });
 };
 export default router;
