@@ -1,27 +1,19 @@
 import dotenv from "dotenv";
-
 import errorHandler from "./routes/hendlers";
+import { log, logger, loggerOptions, errorLoggerOptions } from "./application/logger";
+
 import { createServer } from "http";
-import express, {
-  Application,
-  Express,
-  NextFunction,
-  Request,
-  Response,
-} from "express";
-import session from "express-session"
+import express, { Application } from "express";
+import session, { MemoryStore } from "express-session";
 import bodyParser from "body-parser";
 import "reflect-metadata";
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 // TODO:***
 //https://www.npmjs.com/package/express-rate-limit?activeTab=readme
-//import rateLimit from "express-rate-limit";
+
 import cors from "cors";
-//import helmet from "helmet";
-
-// import router from "./routes";
-import sequelize from "./models";
-
 import winston from "winston";
 import expressWinston from "express-winston";
 import path from "path";
@@ -48,8 +40,13 @@ const {
   refreshTokenPublicKey,
   TOKEN_EXPIRE_IN,
 } = process.env;
+
 const logLevel = "info";
 const config = (app: Application, http: any) => {
+  
+  app.use(expressWinston.logger(loggerOptions));
+  app.use(expressWinston.errorLogger(errorLoggerOptions));
+  
   app.use(errorHandler);
   app.use(
     bodyParser.urlencoded({
@@ -57,7 +54,7 @@ const config = (app: Application, http: any) => {
     })
   );
   app.disable("x-powered-by");
-  const expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+  const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
   //app.set("trust proxy", 1); // trust first proxy
   app.use(
     session({
@@ -66,21 +63,28 @@ const config = (app: Application, http: any) => {
       cookie: {
         secure: true,
         httpOnly: true,
-        domain: 'example.com',
-        path: 'foo/bar',
-        expires: expiryDate
-      }
+        //  domain: 'example.com',
+        // path: 'foo/bar',
+        expires: expiryDate,
+      },
     })
   );
-  app.set('views', path.resolve(__dirname+'/../helpers/mailer/templates/'))
-  //  app.use(helmet());
+  app.set("views", path.resolve(__dirname + "/../helpers/mailer/templates/"));
 
-  /*
-      const limiter = rateLimit({
-        windowMs: 15 * 60 * 1000, // 15 minutes
-        max: 1000, // 1000 requests
-      });
-      app.use(limiter);*/
+  app.use(helmet());
+
+  const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 15 minutes
+    max: 100, // 1000 requests
+    standardHeaders: true,
+    message: "You can only make 100 requests every minutes.",
+    keyGenerator: (req: any, res: any) => req.ip,
+    //store: new MemoryStore(),
+    handler: (req: any, res: any, next: any, opt: any) =>
+      res.status(opt.statusCode).send(opt.message),
+  });
+
+  app.use(limiter);
 
   const allowedOrigins: string[] = [
     "https://www.yoursite.com",
@@ -104,27 +108,6 @@ const config = (app: Application, http: any) => {
 
   app.use(cors(corsOptions));
 
-  const errorLoggerOptions = {
-    transports: [new winston.transports.Console()],
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.json()
-    ),
-  };
-  const loggerOptions = {
-    transports: [new winston.transports.Console()],
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.json()
-    ),
-    meta: true, // optional: control whether you want to log the meta data about the request (default to true)
-    msg: "HTTP {{req.method}} {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"
-    expressFormat: true, // Use the default Express/morgan request formatting. Enabling this will override any msg if true. Will only output colors with colorize set to true
-    colorize: false, // Color the text and status code, using the Express/morgan color palette (text: gray, status: default green, 3XX cyan, 4XX yellow, 5XX red).
-    // ignoreRoute: function (req, res) { return false; } // optional: allows to skip some log messages based on request and/or response
-  };
-  app.use(expressWinston.logger(loggerOptions));
-  app.use(expressWinston.errorLogger(errorLoggerOptions));
   // parse requests of content-type - application/json
   app.use(express.json());
   // parse requests of content-type - application/x-www-form-urlencoded
@@ -179,4 +162,5 @@ export {
   refreshTokenPublicKey,
   smtp,
   logLevel,
+  logger
 };
