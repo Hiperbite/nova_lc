@@ -26,21 +26,21 @@ class ModelApi<Model> {
 
     if (Array.isArray(models)) {
 
-      for (let model of models)
-
+      for (let model of models) {
         if (model.id) {
           finalModel.push(await this.repo.update({ ...model, updatedById }, { where: { id: model.id }, returning: true }));
         } else {
+          model.personId = id
           finalModel.push(await this.repo.create({ ...model, updatedById }));
         }
+      }
 
       return res.json(finalModel);
 
     } else {
-      const updatedModel = await this.repo.update({ ...models, updatedById })
-      
-      return res.json(updatedModel);
+      const updatedModel = await this.repo.update({ ...models, id, updatedById })
 
+      return res.json(updatedModel);
     }
 
 
@@ -52,20 +52,20 @@ class ModelApi<Model> {
 
     const model: Model | undefined = await this.repo.one(
       id,
-      { ...opts, include:{all:true} }
+      { ...opts, include: { all: true } }
     );
     return res.json(model);
   };
   delete = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
-//    const { query: opts } = req;
+    //    const { query: opts } = req;
 
     const model: Model | undefined = await this.repo.delete(id);
     return res.json(model);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
     const models: Paginate<Model> | undefined =
-      await this.repo.paginated({ ...req.query , include:{all:true}});
+    await this.repo.paginated({ ...req.query, include: { all: true } });
     return res.json(models);
   };
 }

@@ -4,12 +4,18 @@ import {
   DataType,
   BelongsTo,
   ForeignKey,
+  Scopes,
 } from "sequelize-typescript";
 
 import { Attachment, Model, Person } from "../index";
 
 type DocumenttypeType = "PASSPORT" | "IDCARD" | "OTHER";
 
+@Scopes(() => ({
+  default: {
+      include: []
+  }
+}))
 @Table({
   timestamps: true,
   tableName: "Documents",

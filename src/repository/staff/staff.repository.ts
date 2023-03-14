@@ -35,7 +35,7 @@ export default class StaffRepository
 
           { model: User, as: "user" },
           { model: Address, as: "birthPlaceAddress" },
-          { model: Address, as: "livingAddress"},
+          { model: Address, as: "livingAddress" },
         ],
       },
     ],
@@ -110,23 +110,25 @@ export default class StaffRepository
 
   paginated = async (options: any): Promise<Paginate<Staff> | undefined> => {
 
-    let {  where } = options
+    let { where } = options
 
     if (where?.roles) {
-      const roles =where?.roles
+      const roles = where?.roles?.split(',')?.map((role: string) => ({
+        roles: { [Op.like]: `%${role}%` }
+      }))
+
       delete where?.roles
       where = {
         ...where, ... {
           [Op.and]: [{
-            roles: {
-              [Op.like]: `%${roles}%`
-            }
+            [Op.or]:
+              roles
           }]
         }
       }
-    } 
-    const staffs = await this.paginate(Staff, {  ...options, ...{ where } });
-   
+    }
+    const staffs = await this.paginate(Staff, { ...options, ...{ where } });
+
     return staffs
   }
 }

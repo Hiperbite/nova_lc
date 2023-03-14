@@ -109,7 +109,7 @@ export default class StudentRepository
   paginated = async (options: any): Promise<Paginate<Student> | undefined> => {
 
     let { filter, where } = options
-    if (filter && filter === "withNotEnrollment") {
+    if (filter && filter === "withEnrollment") {
       where = {
         ...where, ... {
           [Op.and]: [{
@@ -120,7 +120,7 @@ export default class StudentRepository
         }
       }
     } else
-      if (filter && filter === "withEnrollment") {
+      if (filter && filter === "withNotEnrollment") {
         where = {
           ...where, ... {
             [Op.and]: [{
@@ -129,7 +129,7 @@ export default class StudentRepository
           }
         }
       }
-    const students = await this.paginate(Student, { include: [Person, { model: Enrollment }], ...options, ...{ where } });
+    const students = await this.paginate(Student, { include: [Person, { model: Enrollment, include: [Classe] }], ...options, ...{ where } });
 
     return students
   }

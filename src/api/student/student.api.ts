@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Op } from "sequelize";
+import sendEmail, { mailServices } from "../../application/mailler/index";
 import { Student, Person, Enrollment } from "../../models/index";
 import { StudentRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
@@ -39,13 +40,14 @@ class StudentApi {
     if (!student) {
       throw { message: "User not found", code: 404 };
     }
+
     return res.json(student);
   };
   findBy = async (req: Request, res: Response): Promise<Response | void> => {
     const { q } = req.query
     if (q) {
 
-      const students: any | Paginate<Student> | undefined = await this.repo.all(
+      const students: Student[] | any = await this.repo.all(
         {
           subQuery: false,
           where: {
@@ -55,7 +57,7 @@ class StudentApi {
               { code: q }
             ]
           },
-          //include: [Enrollment],
+          include: [Person.scope('empty')],
           order: [[Person, "firstName", "ASC"]],
           offset: 0,
           limit: 10,

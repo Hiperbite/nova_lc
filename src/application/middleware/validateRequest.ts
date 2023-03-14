@@ -6,6 +6,14 @@ const validateRequest = (
   next: NextFunction
 ) => {
 
+  const { where }:any = req.query
+  if (where) {
+    Object.keys(where).forEach((key: string) => {
+      if (where[key] === 'true' || where[key] === 'false')
+        where[key] = where[key] === 'true' ? true : false;
+    })
+    req.query.where = where
+  }
   if (req.params.id && !uuidPattern.test(req.params.id)) {
     throw { code: 400, message: `required a valid uuid param, ${req.params.id} given` }
   }

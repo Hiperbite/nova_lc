@@ -2,24 +2,16 @@
     style="line-height: 140%; text-align: left; word-wrap: break-word;font-family:'Open Sans',sans-serif;">
     <br /><br /><br />
     <p>
-        Olá <%= data.person.fullName%>! Recebemos a sua candidatura e esta a merecer a nossa devida atenção pois
-            o seu perfil parece ser adequado para a nossa instituição. Agradecemos seu interesse em nossa instituição e
-            esperamos que cheguemos ate ao passo final desse processo.
+        Olá <%= data.person.fullName%>!
     </p>
     <p>
-        Para registo, a sua candidatura foi registada sob o número
-
-        <a href="https://www.unlayer.com?code<%=data.passwordResetCode%>&id<%=data.id%>" target="_blank"
-            class="v-button v-size-width v-font-size"
-            style="box-sizing: border-box;display: inline-block;font-family:'Open Sans',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;color: #FFFFFF; background-color: #0a77ff; border-radius: 20px;-webkit-border-radius: 20px; -moz-border-radius: 20px; width:45%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
-            <span style="display:block;padding:10px 20px;line-height:120%;"><strong><span style="line-height: 16.8px;">
-                        <h3>{00-00000000}</h3>
-                    </span></strong></span>
-        </a>
+        Parabéns, você passou no processo de selecao e foste apurado para nossa instituicao sob o numero de matricula:
     </p>
-
+        <p>
+           <h2> <%=data.student.code%></h2>
+        </p>
     <p>
-        Se não solicitaste a redefinição da palavrapassw, podes seguramente ignorar este E-mail
-        <br /><br /><br />
+        Estamos entusiasmados por você se juntar a nós em nossa missão de garantir que as oportunidades sejam distribuídas uniformemente e queremos dar as boas-vindas oficialmente a você na nossa instituicao.
     </p>
+    <br /><br />
 </div>

@@ -4,10 +4,17 @@ import {
     DataType,
     BelongsTo,
     ForeignKey,
+    Scopes,
   } from "sequelize-typescript";
   
   import {  Model, Person } from "../index";
   
+
+@Scopes(() => ({
+  default: {
+      include: []
+  }
+}))
   @Table({
     timestamps: true,
     tableName: "Contacts",

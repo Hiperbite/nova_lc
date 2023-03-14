@@ -37,7 +37,7 @@ export default class Model extends Main {
   @BeforeCreate
   static prepare = (model: Model) => {
     model.isActive = true;
-    model.id = uuids4();
+    model.id = model.id ?? uuids4();
   };
 
   @BeforeUpdate

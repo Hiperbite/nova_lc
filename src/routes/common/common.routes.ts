@@ -4,6 +4,8 @@ import { ModelApi } from "../../api/common/common.api";
 
 import {
   Address,
+  Assessment,
+  AssessmentType,
   Contact,
   Course,
   CurricularPlan,
@@ -37,10 +39,13 @@ const models: modelsType[] = [
   { key: "semesters", model: Semester },
   { key: "plan-items", model: PlanItem },
   { key: "time-tables", model: TimeTable },
+
+  { key: "assessments", model: Assessment },
+  { key: "assessment-types", model: AssessmentType },
 ];
 
 models.forEach(({ model, key }: modelsType) => {
-  let api = new ModelApi<typeof model>(new Repository(model));
+  let api = new ModelApi<typeof model>(new Repository(model.scope('default')));
   router
     .post(
       `/commons/${key}/`,

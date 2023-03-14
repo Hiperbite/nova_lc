@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Op } from "sequelize";
-import { Staff, Person, } from "../../models/index";
+import { Staff, Person, Discipline, StaffDiscipline, } from "../../models/index";
 import { StaffRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -12,7 +12,7 @@ interface IApi {
 }
 class StaffApi {
   constructor(private repo: IRepository<Staff>) { }
-
+  updateModel = (model: any) => this.repo
   create = async (req: Request, res: Response): Promise<Response | any> => {
     const { body } = req;
 
@@ -23,13 +23,26 @@ class StaffApi {
     const { id } = req.params;
     const { body } = req;
 
-    const staff = await this.repo.update({ ...body, id });
+    const staff = await this.repo.one(id);
 
-    const updatedStaff = await this.repo.one(id);
+    const staffId = staff?.id;
 
-    await updatedStaff?.update(body, { returning: true });
+    await staff?.update(body, { returning: true });
 
-    return res.json(updatedStaff);
+    if (body?.disciplines && staff) {
+      const disciplines: Discipline[] = await Discipline.findAll({ where: { id: body?.disciplines?.add } })
+      disciplines.forEach(async (discipline: Discipline) => {
+        try {
+
+          const d = await StaffDiscipline.create({ staffId, disciplineId: discipline?.id })
+          let y = 0;
+
+        } catch (error: any) {
+          let u = error
+        }
+      })
+    }
+    return res.json(staff);
   };
   find = async (req: Request, res: Response): Promise<Response | void> => {
     const { id } = req.params;
@@ -42,7 +55,7 @@ class StaffApi {
     return res.json(staff);
   };
   findBy = async (req: Request, res: Response): Promise<Response | void> => {
-    const { q } = req.query
+    const { q, scope } = req.query
     if (q) {
       try {
 
@@ -68,6 +81,15 @@ class StaffApi {
       } catch (error) {
         const xxx = error
       }
+    } else if (scope) {
+      const { where }: any = req.query;
+
+
+      const staffs: Paginate<Staff> | undefined = await this.repo.paginated(
+        { ...req.query, where }
+      );
+
+      return res.json(staffs);
     } else {
       const staffs: Paginate<Staff> | undefined = await this.repo.paginated(
         req.query

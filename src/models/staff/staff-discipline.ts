@@ -8,5 +8,5 @@ export default class StaffDiscipline extends Model {
   staffId?: string;
 
   @ForeignKey(() => Discipline)
-  diciplineId?: string;
+  disciplineId?: string;
 }

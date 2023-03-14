@@ -8,6 +8,7 @@ import {
   BeforeCreate,
   BeforeSave,
   DefaultScope,
+  AfterCreate,
 } from "sequelize-typescript";
 import {
   Model,
@@ -21,9 +22,11 @@ import {
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 
 import { v4 as uuidv4 } from "uuid";
-@DefaultScope(() => ({
- // include: [Person, Enrollment]
-}))
+
+import sendEmail, { mailServices } from "../../application/mailler/index";
+/*{@DefaultScope(() => ({
+  // include: [Person, Enrollment]
+}))*/
 @Table({
   timestamps: true,
   tableName: "Students",
@@ -71,7 +74,7 @@ export default class Student extends Model {
   @Column({
     type: DataType.VIRTUAL,
   })
-  get current() {
+  get enrollment() {
     if (this.enrollments)
       return this.enrollments.sort((x: any, y: any) => x.createdAt < y.createdAt ? 1 : -1)[0]
 
@@ -91,11 +94,20 @@ export default class Student extends Model {
   @BeforeSave
   static initModel = async (student: Student) => {
 
-    let xcode = await SequenceApp.count(CODES.ENROLLMENT);
-    student.code = String(xcode).padStart(6, '0');
-
     let code = await SequenceApp.count(CODES.STUDENT);
     student.entryCode = uuidv4().substring(5, 9).toUpperCase() + String(code).padStart(8, '0');
 
   };
+
+  @AfterCreate
+  static doAfterCreateStudent = async (student: Student): Promise<void> => {
+  
+    sendEmail(
+      {
+        service: mailServices.createStudent,
+        data: {person:student?.person,student, to:student?.person?.user?.email}
+      }
+    )
+
+  }
 }

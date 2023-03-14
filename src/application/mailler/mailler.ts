@@ -1,8 +1,8 @@
 import nodemailer, { SendMailOptions } from "nodemailer";
 import log from "../logger";
-import { smtp, NODE_ENV, MAILER_USER as a } from "../../config";
-const MAILER_USER='mailtrap@hiperbite.ao'
-/*const transporter = nodemailer.createTransport({
+import { smtp, NODE_ENV, MAILER_USER } from "../../config";
+//const MAILER_USER='mailtrap@hiperbite.ao'
+const transporter = nodemailer.createTransport({
   host: smtp.host,
   port: smtp.port,
   secure: smtp.secure,
@@ -11,7 +11,7 @@ const MAILER_USER='mailtrap@hiperbite.ao'
     pass: smtp.pass,
   },
 });
-*/
+/*
 const transporter = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
   port: 2525,
@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
     user: "eadde1c5fd97b5",
     pass: "e97254b970141d"
   }
-});
+});*/
 transporter.verify(function(error:any, success:any) {
   if (error) {
         console.log(error);

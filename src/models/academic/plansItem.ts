@@ -9,14 +9,17 @@ import {
   DefaultScope,
   Scopes,
 } from "sequelize-typescript";
-import { CurricularPlan, Discipline, Model, Semester, Staff } from "../index";
+import { Course, CurricularPlan, Discipline, Model, Semester, Staff } from "../index";
 
 @DefaultScope(() => ({
-  include: [Discipline, Staff]
+  //include: [Discipline, Staff]
 }))
 @Scopes(() => ({
   full: {
     include: [Discipline],
+  },
+  default: {
+    include: [Discipline, Staff, { model: CurricularPlan, include: [Course] }]
   },
   yellow: {
     where: { primaryColor: 'yellow' },
@@ -38,24 +41,31 @@ export default class PlanItem extends Model {
     type: DataType.INTEGER,
     allowNull: true,
   })
-  semester?: number;
+  semester!: number;
 
+  @Column({
+    type: DataType.VIRTUAL,
+  })
+  get grade() {
+    return Number(String(((this.semester ?? 1) / 2) + 0.5).split('.')[0])
+  }
+  
   @Column({
     type: DataType.TEXT,
   })
   descriptions?: string;
 
   @BelongsTo(() => CurricularPlan)
-  curricularPlan?: CurricularPlan;
+  curricularPlan!: CurricularPlan;
 
   @ForeignKey(() => CurricularPlan)
-  curricularPlanId?: string;
+  curricularPlanId!: string;
 
   @BelongsTo(() => Discipline)
-  discipline?: Discipline;
+  discipline!: Discipline;
 
   @ForeignKey(() => Discipline)
-  disciplineId?: string;
+  disciplineId!: string;
 
   @BelongsTo(() => Staff)
   professor?: Staff;

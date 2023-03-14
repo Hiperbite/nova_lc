@@ -9,6 +9,7 @@ import {
   HasOne,
   AfterFind,
   DefaultScope,
+  Scopes,
 } from "sequelize-typescript";
 import { Address, Contact, Document, Model, User } from "../index";
 
@@ -29,10 +30,30 @@ export type GenderType =
 @DefaultScope(() => ({
   include: [
     //{ model: Address, as: 'birthPlaceAddress' },
-  //  { model: Address, as: 'livingAddress' },
+    //  { model: Address, as: 'livingAddress' },
+
+
     { model: User, as: 'user' },
-    
+    { model: Contact },
   ]
+}))
+@Scopes(() => ({
+  full: {
+    include: [
+      Contact,
+      { model: User, as: 'user' },
+      { model: Address, as: 'birthPlaceAddress' },
+      { model: Address, as: 'livingAddress' }],
+  },
+  default: {
+    include: [
+      { model: User, as: 'user' },
+      { model: Contact },
+    ],
+  },
+  empty: {
+    include: [{ model: User, as: 'user' }],
+  },
 }))
 @Table({
   timestamps: true,

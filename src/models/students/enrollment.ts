@@ -6,10 +6,12 @@ import {
     ForeignKey,
     BeforeCreate,
     BeforeSave,
-    DefaultScope
+    DefaultScope,
+    HasMany
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
-import { Classe, Model, Student } from "../index";
+import sendEmail, { mailServices } from "../../application/mailler/index";
+import { Assessment, Classe, Model, Person, Student } from "../index";
 
 @DefaultScope(() => ({
     // include: [Student, Classe]
@@ -49,18 +51,45 @@ export default class Enrollment extends Model {
     @ForeignKey(() => Classe)
     classeId!: string;
 
+    @HasMany(() => Assessment)
+    assessments?: Assessment[]
+
+    @Column({
+        type:DataType.VIRTUAL
+    })
+    get assessmentAverage(){
+        
+        for(let ass in this.assessments){
+
+        }
+        const average=this.assessments?.reduce(function (o, a:Assessment) {
+            o[a?.disciplineId] = o[a.disciplineId] || [];
+            o[a.disciplineId].push(a);
+            return o;
+        }, Object.create(null));
+        
+        return average;
+    }
+
+
     @BeforeCreate
     @BeforeSave
     static initModel = async (enrollment: Enrollment) => {
         await Enrollment.update({ current: false }, { where: { studentId: enrollment.studentId } })
         enrollment.current = true;
 
-        const student = await Student.findByPk(enrollment.studentId);
+        const student = await Student.findByPk(enrollment.studentId, { include: [Person] });
         if (student?.code === null) {
 
             let code = await SequenceApp.count(CODES.ENROLLMENT);
             student.code = String(code).padStart(6, '0');
             student.save();
+
+            sendEmail(
+                {
+                    service: mailServices.createEnrollment,
+                    data: { person: student?.person, student: student, to: student?.person?.user?.email }
+                })
         }
     };
 }

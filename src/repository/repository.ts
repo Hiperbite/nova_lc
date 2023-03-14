@@ -180,7 +180,7 @@ export default class Repository<T extends M> {
 
   public size = async (options: any): Promise<number> => {
     const { where, include } = options;
-    return await this.repo.count({ where, include });
+    return await this.repo.count({ where, });
   };
 
   public classOf = (className: string) => eval(className);

@@ -7,6 +7,14 @@ const mailServices = {
     template: "createUser",
     subject: "Be welcome",
   },
+  createStudent: {
+    template: "student/createStudent",
+    subject: "Seja bem vindo ao Nova academico",
+  },
+  createEnrollment: {
+    template: "student/createEnrollment",
+    subject: "Matricula feita com sucesso",
+  },
   forgotPassword: {
     template: "forgotPassword",
     subject: "Reset your password",
@@ -29,7 +37,7 @@ const sendEmail = async ({ service, data }: { service: any; data: any }) => {
   });
 };
 const layout = path.resolve(
-  __dirname + "/../../helpers/mailer/templates/layout.html.ejs"
+  __dirname + "/../../helpers/mailer/templates/layout.html.ejs_"
 );
 const render = () => {};
 export { mailServices };

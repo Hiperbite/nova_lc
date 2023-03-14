@@ -8,12 +8,20 @@ import {
     HasMany,
     BeforeCreate,
     BeforeSave,
-    HasOne
+    HasOne,
+    DefaultScope,
+    Scopes,
+    Unique
 } from "sequelize-typescript";
 import SequenceApp from "../../application/common/sequence.app";
-import { Course, Model, PlanItem } from "../index";
+import { Course, Discipline, Model, PlanItem, Staff } from "../index";
 
 
+@Scopes(() => ({
+    default: {
+        include: [Course, { model: PlanItem, include: [Discipline, Staff] }]
+    }
+}))
 @Table({
     timestamps: true,
     tableName: "CurricularPlans",
@@ -23,7 +31,7 @@ export default class CurricularPlan extends Model {
     @Column({
         type: DataType.VIRTUAL,
     })
-    get code(){
+    get code() {
         return this.getDataValue('id').substring(4, 10).toUpperCase()
     }
 
@@ -32,12 +40,12 @@ export default class CurricularPlan extends Model {
     })
     descriptions?: string
 
-    @HasOne(() => Course)
+    @BelongsTo(() => Course)
     course?: Course;
 
     @ForeignKey(() => Course)
-    courseId?: string;     
-    
+    id?: string;
+
     @HasMany(() => PlanItem)
     items?: PlanItem[]
 }

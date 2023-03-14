@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Period, Classe, ClasseRoom, Course, TimeTable, Enrollment } from "../../models/index";
+import { Period, Classe, ClasseRoom, Course, TimeTable, Enrollment, CurricularPlan } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -43,7 +43,7 @@ class ClasseApi {
     return res.json(classe);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const include = [Period, ClasseRoom, Course, Enrollment];
+    const include = [Period, ClasseRoom, {model:Course,include:[CurricularPlan]}, Enrollment];
     const classes: Paginate<Classe> | undefined =
       await this.repo.paginated({ ...req.query, include });
     return res.json(classes);

@@ -16,6 +16,7 @@ import { Classe, Discipline, Model } from "../index";
   full: {
     include: [Discipline],
   },
+  default: { include: [Discipline, Classe] },
   yellow: {
     where: { primaryColor: 'yellow' },
   },

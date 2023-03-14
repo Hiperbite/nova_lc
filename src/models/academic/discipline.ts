@@ -6,13 +6,19 @@ import {
     BeforeCreate,
     BeforeSave,
     HasMany,
-    BelongsToMany
+    BelongsToMany,
+    Scopes
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
-import { Course, Model, PlanItem, Staff, StaffDiscipline } from "../index";
+import { Course, Model, PlanItem, Staff, StaffDiscipline, TimeTable } from "../index";
 
 import { v4 as uuidv4 } from "uuid";
 
+@Scopes(() => ({
+    default: {
+        include: [Staff, PlanItem]
+    }
+}))
 @Table({
     timestamps: true,
     tableName: "Disciplines",
@@ -40,7 +46,7 @@ export default class Discipline extends Model {
 
     @HasMany(() => PlanItem)
     items?: PlanItem[]
-    
+
     @BeforeCreate
     @BeforeSave
     static initModel = async (student: Discipline) => {

@@ -218,7 +218,7 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <%- include(template+'.html.ejs',{data}) %>
+                                            <%- include(template+'.html.ejs_',{data}) %>
                                             
                                         </div>
                                     </div>

@@ -25,15 +25,28 @@ import {
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 
 import { v4 as uuidv4 } from "uuid";
+import { Op } from "sequelize";
 
 @DefaultScope(() => ({
-  include: [Person]
+  include: [Person, Discipline]
 }))
+@Scopes(() => ({
+  professor: {
+    where: {
+
+      [Op.and]: [
+        { roles: { [Op.like]: `%PROFFESSOR%` } },
+      ]
+    }
+  }
+}))
+
 @Table({
   timestamps: true,
   tableName: "Staffs",
 })
 export default class Staff extends Model {
+  [x: string]: any;
   @Column({
     type: DataType.STRING,
     //     allowNull: false,
@@ -44,12 +57,12 @@ export default class Staff extends Model {
     type: DataType.STRING,
     //     allowNull: false,
   })
-  get roles(){
-    return (this.getDataValue('roles')??'').split(',')
-  } 
-  set roles(roles:string[]){
-    this.setDataValue('roles',roles.join(','))
-  } 
+  get roles() {
+    return (this.getDataValue('roles') ?? '').split(',')
+  }
+  set roles(roles: string[]) {
+    this.setDataValue('roles', roles.join(','))
+  }
 
   @ForeignKey(() => Person)
   personId?: string;
@@ -72,7 +85,7 @@ export default class Staff extends Model {
   @HasMany(() => StaffClasse)
   classes?: StaffClasse[];
 
-  @BelongsToMany(() => Discipline,()=>StaffDiscipline)
+  @BelongsToMany(() => Discipline, () => StaffDiscipline)
   disciplines?: Discipline[];
 
   @BeforeCreate

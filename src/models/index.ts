@@ -38,19 +38,21 @@ import TimeTable from "./academic/time-table";
 import Staff from "./staff/staff";
 import StaffClasse from "./staff/staffClass";
 import StaffDiscipline from "./staff/staff-discipline";
+import AssessmentType from "./progress/assessment-type";
+import Assessment from "./progress/assessment";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const sequelize = new Sequelize({
-  //dialect: "mariadb",
-  dialect: "sqlite",
+  dialect: "mariadb",
+  //dialect: "sqlite",
   storage: "./database.sqlite",
   host: DB_HOST,
   username: DB_USER,
   password: DB_PASSWORD,
   database: DB_NAME,
-  logging: true,
+  logging: (msg:any)=>logger.info(msg),
   models: [
     Contact,
     User,
@@ -85,11 +87,14 @@ const sequelize = new Sequelize({
     StaffClasse,
 
     StaffDiscipline,
+
+    AssessmentType,
+    Assessment
   ],
 });
 
 const Repo = sequelize.getRepository;
-sequelize.sync({ alter: true, force: true })
+//sequelize.sync({ alter: true, force: false })
 
 export default sequelize;
 
@@ -130,4 +135,7 @@ export {
   StaffClasse,
 
   StaffDiscipline,
+
+  AssessmentType,
+  Assessment
 };

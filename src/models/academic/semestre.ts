@@ -2,9 +2,16 @@ import {
     Table,
     Column,
     DataType,
+    Scopes,
 } from "sequelize-typescript";
 import { Model } from "../index";
 
+
+@Scopes(() => ({
+    default: {
+        include: []
+    }
+  }))
 @Table({
     timestamps: true,
     tableName: "Semesters",
