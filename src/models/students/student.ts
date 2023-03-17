@@ -14,9 +14,9 @@ import {
   Model,
   Role,
   Category,
-  Department,
   Person,
   Enrollment,
+  Course,
 } from "../index";
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
@@ -54,18 +54,6 @@ export default class Student extends Model {
   @BelongsTo(() => Role)
   role?: Role;
 
-  @ForeignKey(() => Category)
-  categoryId?: string;
-
-  @BelongsTo(() => Category)
-  category?: Category;
-
-  @ForeignKey(() => Department)
-  departmentId?: string;
-
-  @BelongsTo(() => Department)
-  department?: Department;
-
   @Column({
     type: DataType.STRING,
   })
@@ -87,6 +75,12 @@ export default class Student extends Model {
   @ForeignKey(() => Student)
   studentId!: string;
 
+  @BelongsTo(() => Course)
+  desiredCourse!: Course;
+
+  @ForeignKey(() => Course)
+  desiredCourseId!: string;
+
   @HasMany(() => Enrollment)
   enrollments?: Enrollment[]
 
@@ -101,11 +95,11 @@ export default class Student extends Model {
 
   @AfterCreate
   static doAfterCreateStudent = async (student: Student): Promise<void> => {
-  
+
     sendEmail(
       {
         service: mailServices.createStudent,
-        data: {person:student?.person,student, to:student?.person?.user?.email}
+        data: { person: student?.person, student, to: student?.person?.user?.email }
       }
     )
 

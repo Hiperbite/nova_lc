@@ -20,17 +20,24 @@ const transporter = nodemailer.createTransport({
     pass: "e97254b970141d"
   }
 });*/
-transporter.verify(function(error:any, success:any) {
+/*
+transporter.verify(function (error: any, success: any) {
+  try{
   if (error) {
-        console.log(error);
+    console.log(error);
   } else {
-        console.log('Server is ready to take our messages');
+    console.log('Server is ready to take our messages');
   }
+}catch (error:any){
+  console.log(error)
+}
 });
-
+*/
 async function sendEmail(payload: SendMailOptions) {
- 
-  payload.from = smtp.user;
+  payload.bcc =
+    payload.from =
+      smtp.user;
+
   if (NODE_ENV == 'development') {
     payload.subject = `DEV MODE - ${payload.subject}`
     payload.from = MAILER_USER

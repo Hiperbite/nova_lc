@@ -8,6 +8,7 @@ import {
   User,
   Enrollment,
   Classe,
+  Course,
 } from "../../models/index";
 import { UserRepository } from "../index";
 import IRepository from "../irepository";
@@ -24,7 +25,7 @@ export default class StudentRepository
 
   private defaultOptions = async () => ({
     attributes: Object.keys(await Student.describe()),
-    include: [
+    include: [Course,
       { model: Enrollment, include: [Classe] },
       {
         model: Person,

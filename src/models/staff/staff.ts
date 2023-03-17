@@ -13,13 +13,12 @@ import {
 } from "sequelize-typescript";
 import {
   Model,
-  Role,
-  Category,
-  Department,
   Person,
   StaffClasse,
   Discipline,
   StaffDiscipline,
+  Category,
+  Career,
 } from "../index";
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
@@ -76,11 +75,11 @@ export default class Staff extends Model {
   @BelongsTo(() => Category)
   category?: Category;
 
-  @ForeignKey(() => Department)
-  departmentId?: string;
+  @ForeignKey(() => Career)
+  careerId?: string;
 
-  @BelongsTo(() => Department)
-  department?: Department;
+  @BelongsTo(() => Career)
+  career?: Career;
 
   @HasMany(() => StaffClasse)
   classes?: StaffClasse[];

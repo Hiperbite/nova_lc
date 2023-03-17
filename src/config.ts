@@ -10,11 +10,7 @@ import "reflect-metadata";
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
-// TODO:***
-//https://www.npmjs.com/package/express-rate-limit?activeTab=readme
-
 import cors from "cors";
-import winston from "winston";
 import expressWinston from "express-winston";
 import path from "path";
 
@@ -43,10 +39,10 @@ const {
 
 const logLevel = "info";
 const config = (app: Application, http: any) => {
-  
+
   app.use(expressWinston.logger(loggerOptions));
   app.use(expressWinston.errorLogger(errorLoggerOptions));
-  
+
   app.use(errorHandler);
   app.use(
     bodyParser.urlencoded({
@@ -54,15 +50,15 @@ const config = (app: Application, http: any) => {
     })
   );
   app.disable("x-powered-by");
-  const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  const expiryDate = new Date(Date.now() + 60 * 60 * 1000*24*366); // 1 year
   //app.set("trust proxy", 1); // trust first proxy
   app.use(
     session({
-      secret: "s3Cur3",
+      secret: "s3Cur3x",
       name: "sessionId",
       cookie: {
         secure: true,
-        httpOnly: true,
+     //   httpOnly: true,
         //  domain: 'example.com',
         // path: 'foo/bar',
         expires: expiryDate,
@@ -70,6 +66,12 @@ const config = (app: Application, http: any) => {
     })
   );
   app.set("views", path.resolve(__dirname + "/../helpers/mailer/templates/"));
+
+
+  app.use((req: any, res: any, next: any) => {
+
+    return;
+  });
 
   app.use(helmet());
 
@@ -141,6 +143,8 @@ const smtp = {
   port: Number(MAILER_PORT || ""),
   secure: Number(MAILER_PORT || "") == 465,
 };
+
+const WEB_CLIENT_URL = 0
 export {
   DB_HOST,
   DB_USER,
@@ -155,6 +159,7 @@ export {
   MAILER_PORT,
   GOOGLE_MAPS_API_KEY,
   NODE_ENV,
+  WEB_CLIENT_URL,
   TOKEN_EXPIRE_IN,
   accessTokenPrivateKey,
   accessTokenPublicKey,

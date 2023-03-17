@@ -1,8 +1,13 @@
 import send from "./mailler";
 import ejs from "ejs";
 import path from "path";
+import { WEB_CLIENT_URL } from "../../config";
 
 const mailServices = {
+  beWelcome: {
+    template: "beWelcome",
+    subject: "Be welcome",
+  },
   createUser: {
     template: "createUser",
     subject: "Be welcome",
@@ -28,6 +33,7 @@ const sendEmail = async ({ service, data }: { service: any; data: any }) => {
       ...data,
       html,
       ...service,
+      app:{WEB_CLIENT_URL}
     };
     if (html) {
       send(payload);

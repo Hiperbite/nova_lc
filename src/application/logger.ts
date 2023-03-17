@@ -1,5 +1,38 @@
 import winston from "winston";
 const { NODE_ENV } = process.env;
+
+
+const printLog = (info: any) => {
+  try {
+    const {
+      ip,
+      method,
+      url,
+      query,
+      params,
+      body,
+      headers,
+    }: any = info?.meta?.req ?? {};
+
+    const log = `<> ${[info?.timestamp]}: ${info?.level}: ${info.meta?.res?.statusCode
+      }: ${info?.message}: ${info?.meta?.responseTime} >>stack: ${JSON.stringify({
+        ip,
+        method,
+        url,
+        query: JSON.stringify(query),
+        params: JSON.stringify(params),
+        body: JSON.stringify(body),
+      })}`;
+console.log(info)
+    return log;
+  } catch (error) {
+    console.error(error);
+  }
+
+  return "error writing logs";
+}
+
+
 export const errorLoggerOptions = {
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
@@ -27,42 +60,7 @@ export const loggerOptions = {
     }),
     winston.format.align(),
 
-    winston.format.printf((info: any) => {
-      try {
-        const {
-          ip,
-          method,
-          url,
-          query,
-          params,
-          body,
-          headers: {
-            "sec-ch-ua-platform": so,
-            "sec-ch-ua": browser,
-            "sec-ch-ua-mobile": modile,
-          },
-        } = info?.meta?.req??{};
-        const log = `<> ${[info?.timestamp]}: ${info?.level}: ${
-          info.meta?.res?.statusCode
-        }: ${info?.message}: ${info?.meta?.responseTime} >>stak: ${JSON.stringify({
-          ip,
-          method,
-          url,
-          query,
-          params,
-          body,
-          so,
-          modile,
-          browser,
-        })}`;
-
-        return log;
-      } catch (error) {
-        console.error(error);
-      }
-
-      return "error writing logs";
-    })
+    winston.format.printf(printLog)
   ),
   meta: true, // optional: control whether you want to log the meta data about the request (default to true)
   msg: "HTTP > code: {{res.statusCode}}, METHOD: {{req.method}}, RESPONSE_TIME: {{res.responseTime}}ms, URL: {{req.url}}", // optional: customize the default logging message. E.g. "{{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}"

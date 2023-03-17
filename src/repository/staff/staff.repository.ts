@@ -8,6 +8,8 @@ import sequelize, {
   Staff,
   User,
   Classe,
+  Category,
+  Career,
 } from "../../models/index";
 
 import IRepository from "../irepository";
@@ -26,7 +28,7 @@ export default class StaffRepository
 
   private defaultOptions = async () => ({
     attributes: Object.keys(await Staff.describe()),
-    include: [
+    include: [Category, Career,
       {
         model: Person,
         include: [

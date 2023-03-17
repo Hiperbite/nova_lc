@@ -11,7 +11,7 @@ const roles = [
 export const createStaffSchema = object({
   body: object({
     isActive: boolean().optional(),
-    roles: array(z.enum(roles)),
+    roles: array(z.enum(roles)).optional(),
     person: createPersonSchema
   })
 });

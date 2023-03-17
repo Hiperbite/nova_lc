@@ -47,6 +47,9 @@ export default class Discipline extends Model {
     @HasMany(() => PlanItem)
     items?: PlanItem[]
 
+    @HasMany(() => TimeTable)
+    timeTables?: TimeTable[]
+
     @BeforeCreate
     @BeforeSave
     static initModel = async (student: Discipline) => {

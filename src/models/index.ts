@@ -12,8 +12,6 @@ import Attachment from "./common/attachment";
 
 import dotenv from "dotenv";
 import Role from "./students/role";
-import Category from "./students/category";
-import Department from "./students/department";
 
 import Payroll from "./payroll/payroll";
 import Transaction from "./payroll/transaction";
@@ -40,6 +38,9 @@ import StaffClasse from "./staff/staffClass";
 import StaffDiscipline from "./staff/staff-discipline";
 import AssessmentType from "./progress/assessment-type";
 import Assessment from "./progress/assessment";
+import { logger } from "../config";
+import Category from "./staff/category";
+import Career from "./staff/career";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -63,8 +64,7 @@ const sequelize = new Sequelize({
     Address,
     Attachment,
     Role,
-    Category,
-    Department,
+    
     Payroll,
     Transaction,
     TransactionType,
@@ -85,7 +85,8 @@ const sequelize = new Sequelize({
 
     Staff,
     StaffClasse,
-
+    Category,
+    Career,
     StaffDiscipline,
 
     AssessmentType,
@@ -111,8 +112,6 @@ export {
   Address,
   Attachment,
   Role,
-  Category,
-  Department,
   Payroll,
   Transaction,
   TransactionType,
@@ -133,7 +132,8 @@ export {
 
   Staff,
   StaffClasse,
-
+  Category,
+  Career,
   StaffDiscipline,
 
   AssessmentType,

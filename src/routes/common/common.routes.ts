@@ -6,6 +6,8 @@ import {
   Address,
   Assessment,
   AssessmentType,
+  Career,
+  Category,
   Contact,
   Course,
   CurricularPlan,
@@ -31,6 +33,10 @@ interface modelsType {
 const models: modelsType[] = [
   { key: "contacts", model: Contact },
   { key: "address", model: Address },
+
+  { key: "categories", model: Category },
+  { key: "careers", model: Career },
+  
   { key: "persons", model: Person },
   { key: "documents", model: Document },
   { key: "courses", model: Course },

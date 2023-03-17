@@ -9,12 +9,18 @@ import {
   BelongsToMany,
   ForeignKey,
   BelongsTo,
+  Scopes,
 } from "sequelize-typescript";
 
 import _ from "lodash";
 import { v4 as uuids4 } from "uuid";
 import { Track, User } from "./index";
 
+@Scopes(() => ({
+  default: {
+      include: []
+  }
+}))
 export default class Model extends Main {
   @Column({
     type: DataType.UUID,
