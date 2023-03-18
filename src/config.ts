@@ -30,6 +30,7 @@ const {
   MAILER_PORT,
   GOOGLE_MAPS_API_KEY,
   NODE_ENV,
+  MY_NODE_ENV,
   accessTokenPrivateKey,
   accessTokenPublicKey,
   refreshTokenPrivateKey,
@@ -151,7 +152,7 @@ const WEB_CLIENT_URL = {
   quality: "https://academic.app.hiperbite.com",
   production: "http://localhost:3000",
 
-}[NODE_ENV ?? 'development']
+}[MY_NODE_ENV ?? 'development']
 export {
   DB_HOST,
   DB_USER,
@@ -166,6 +167,7 @@ export {
   MAILER_PORT,
   GOOGLE_MAPS_API_KEY,
   NODE_ENV,
+  MY_NODE_ENV,
   WEB_CLIENT_URL,
   TOKEN_EXPIRE_IN,
   accessTokenPrivateKey,
