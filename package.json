@@ -1,6 +1,7 @@
 {
     "name": "nova_rh",
     "version": "1.0.0",
+    "homepage": "academic.nova.app.hiperbite.com",
     "description": "Nova HR",
     "main": "index.js",
     "scripts": {

@@ -1,9 +1,8 @@
 import { createClassSchema, updateClassSchema } from './academic/classe.schema';
 
-import { createPaypackSchema, updatePaypackSchema } from './payroll/paypack.schema';
 import { CreateStudentInput, createStudentSchema, UpdateStudentInput, updateStudentSchema } from './student/student.schema';
 import { CreateStaffInput, createStaffSchema, UpdateStaffInput, updateStaffSchema } from './staff/staff.schema';
-import { createTransactionTypeSchema, updateTransactionTypeSchema } from './payroll/transaction-type.schema';
+
 import { CreateSessionInput, createSessionSchema } from "./common/auth.schema";
 import {
     CreateUserInput,
