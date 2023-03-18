@@ -13,11 +13,6 @@ import Attachment from "./common/attachment";
 import dotenv from "dotenv";
 import Role from "./students/role";
 
-import Payroll from "./payroll/payroll";
-import Transaction from "./payroll/transaction";
-import TransactionType from "./payroll/transactionType";
-
-import Paypack from "./payroll/paypack";
 import Sequence from "./common/sequence";
 import Document from "./document/document";
 import Person from "./common/person";
@@ -65,10 +60,6 @@ const sequelize = new Sequelize({
     Attachment,
     Role,
     
-    Payroll,
-    Transaction,
-    TransactionType,
-    Paypack,
     Sequence,
     Person,
     Document,
@@ -112,10 +103,6 @@ export {
   Address,
   Attachment,
   Role,
-  Payroll,
-  Transaction,
-  TransactionType,
-  Paypack,
   Sequence,
   Document,
   Person,
