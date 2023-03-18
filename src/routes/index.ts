@@ -4,7 +4,7 @@ import requireAuthentication from "../application/middleware/requireAuthenticati
 import validateRequest from "../application/middleware/validateRequest";
 import ejs from "ejs";
 import routes from "./routes";
-import { logger } from "../config";
+import { logger, NODE_ENV } from "../config";
 import sendEmail, { mailServices } from "../application/mailler/index";
 import { Person, User } from "../models/index";
 
@@ -20,7 +20,7 @@ const router = (app: Application) => {
     "/",
     asyncHandler(async (req: any, res: any) => {
 
-      res.status(200).send("I'm alive")
+      res.status(200).send(`I'm alive on ${NODE_ENV}`)
     })
   );
   

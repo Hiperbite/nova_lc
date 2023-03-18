@@ -93,6 +93,7 @@ const config = (app: Application, http: any) => {
     "http://127.0.0.1:5500",
     "http://localhost:3500",
     "http://localhost:3000",
+    "https://academic.app.hiperbite.com",
     "*",
   ];
 
@@ -147,7 +148,7 @@ const smtp = {
 const WEB_CLIENT_URL = {
   development: "http://localhost:3000",
   test: "http://localhost:3000",
-  quality: "http://localhost:3000",
+  quality: "https://academic.app.hiperbite.com",
   production: "http://localhost:3000",
 
 }[NODE_ENV ?? 'development']
