@@ -50,7 +50,7 @@ const config = (app: Application, http: any) => {
     })
   );
   app.disable("x-powered-by");
-  const expiryDate = new Date(Date.now() + 60 * 60 * 1000*24*366); // 1 year
+  const expiryDate = new Date(Date.now() + 60 * 60 * 1000 * 24 * 366); // 1 year
   //app.set("trust proxy", 1); // trust first proxy
   app.use(
     session({
@@ -58,7 +58,7 @@ const config = (app: Application, http: any) => {
       name: "sessionId",
       cookie: {
         secure: true,
-     //   httpOnly: true,
+        //   httpOnly: true,
         //  domain: 'example.com',
         // path: 'foo/bar',
         expires: expiryDate,
@@ -70,7 +70,7 @@ const config = (app: Application, http: any) => {
 
   app.use((req: any, res: any, next: any) => {
 
-    return;
+    next();
   });
 
   app.use(helmet());
@@ -144,7 +144,13 @@ const smtp = {
   secure: Number(MAILER_PORT || "") == 465,
 };
 
-const WEB_CLIENT_URL = 0
+const WEB_CLIENT_URL = {
+  development: "http://localhost:3000",
+  test: "http://localhost:3000",
+  quality: "http://localhost:3000",
+  production: "http://localhost:3000",
+
+}[NODE_ENV ?? 'development']
 export {
   DB_HOST,
   DB_USER,

@@ -4,12 +4,16 @@ import path from "path";
 import { WEB_CLIENT_URL } from "../../config";
 
 const mailServices = {
-  beWelcome: {
-    template: "beWelcome",
+  createUser: {
+    template: "user/createUser",
     subject: "Be welcome",
   },
-  createUser: {
-    template: "createUser",
+  forgotPassword: {
+    template: "user/forgotPassword",
+    subject: "Redefinir palavra-passe",
+  },
+  beWelcome: {
+    template: "student/beWelcome",
     subject: "Be welcome",
   },
   createStudent: {
@@ -20,20 +24,15 @@ const mailServices = {
     template: "student/createEnrollment",
     subject: "Matricula feita com sucesso",
   },
-  forgotPassword: {
-    template: "forgotPassword",
-    subject: "Reset your password",
-  },
 };
 
 const sendEmail = async ({ service, data }: { service: any; data: any }) => {
-  ejs.renderFile(layout, { data, ...service }, (err: any, html: any) => {
+  
+  ejs.renderFile(layout, {data, app : { WEB_CLIENT_URL }, ...service }, (err: any, html: any) => {
     const payload = {
       to: data.email,
-      ...data,
-      html,
       ...service,
-      app:{WEB_CLIENT_URL}
+      html,
     };
     if (html) {
       send(payload);
@@ -45,6 +44,6 @@ const sendEmail = async ({ service, data }: { service: any; data: any }) => {
 const layout = path.resolve(
   __dirname + "/../../helpers/mailer/templates/layout.html.ejs_"
 );
-const render = () => {};
+const render = () => { };
 export { mailServices };
 export default sendEmail;

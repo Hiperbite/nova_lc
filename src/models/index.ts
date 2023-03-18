@@ -95,7 +95,7 @@ const sequelize = new Sequelize({
 });
 
 const Repo = sequelize.getRepository;
-//sequelize.sync({ alter: true, force: false })
+sequelize.sync({ alter: true, force: false })
 
 export default sequelize;
 

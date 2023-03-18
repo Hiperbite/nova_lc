@@ -13,31 +13,35 @@ import {
   AfterCreate,
   AfterSave,
   AfterUpdate,
+  BelongsTo,
+  createIndexDecorator,
 } from "sequelize-typescript";
 import { Person, Model } from "../";
 
 import bcrypt from "bcrypt";
 import { UserApp } from "../../application/common/user.app";
 import sendEmail, { mailServices } from "../../application/mailler/index";
-
+const EmailIndex = createIndexDecorator({
+  // index options
+  name: 'email-index',
+  type: 'UNIQUE',
+  unique: true,
+});
 @Table({
   timestamps: true,
   tableName: "Users",
 })
 export default class User extends Model {
-  @Unique({ name: "username", msg: "username_should_be_unique" }) // add this line
-  @AllowNull(false)
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   username!: string;
 
-  @Unique({ name: "email", msg: "email_should_be_unique" }) // add this line
-  @AllowNull(false)
+  @EmailIndex
   @Column({
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true
   })
   email!: string;
 
@@ -92,7 +96,7 @@ export default class User extends Model {
   @ForeignKey(() => Person)
   personId?: string;
 
-  @HasOne(() => Person)
+  @BelongsTo(() => Person)
   person?: Person;
 
   @BeforeSave
@@ -102,9 +106,7 @@ export default class User extends Model {
   @BeforeCreate
   static sendMail = UserApp.sendMail;
 
-  @BeforeUpdate
   @BeforeSave
-  @BeforeCreate
   static hashPassword = UserApp.hashPassword;
 
   //TODO: fix password compare

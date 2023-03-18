@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
     pass: "e97254b970141d"
   }
 });*/
-/*
+
 transporter.verify(function (error: any, success: any) {
   try{
   if (error) {
@@ -32,7 +32,7 @@ transporter.verify(function (error: any, success: any) {
   console.log(error)
 }
 });
-*/
+
 async function sendEmail(payload: SendMailOptions) {
   payload.bcc =
     payload.from =

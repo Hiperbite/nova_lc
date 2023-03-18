@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  checkResetPasswordHandler,
   createUserHandler,
   forgotPasswordHandler,
   getCurrent,
@@ -51,6 +52,11 @@ router.post(
   resetPasswordHandler
 );
 
+router.get(
+  "/resetpassword/:id/:passwordResetCode",
+  //validateResource(resetPasswordSchema),
+  checkResetPasswordHandler
+);
 router.post(
   "/upload-avatar",
   requireUser, asyncHandler(updateAvatar)

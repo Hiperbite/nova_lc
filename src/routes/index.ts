@@ -5,6 +5,8 @@ import validateRequest from "../application/middleware/validateRequest";
 import ejs from "ejs";
 import routes from "./routes";
 import { logger } from "../config";
+import sendEmail, { mailServices } from "../application/mailler/index";
+import { Person, User } from "../models/index";
 
 export const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch((err: any) => {
@@ -17,6 +19,7 @@ const router = (app: Application) => {
   app.get(
     "/",
     asyncHandler(async (req: any, res: any) => {
+
       res.status(200).send("I'm alive")
     })
   );

@@ -8,7 +8,7 @@ import {
 } from "../../application/schema";
 import { Person, User } from "../../models/index";
 import log from "../../application/logger";
-import sendEmail,{mailServices} from "../../application/mailler/index";
+import sendEmail, { mailServices } from "../../application/mailler/index";
 import { v4 as uuid } from "uuid";
 import { UserRepository } from "../../repository/index";
 
@@ -18,10 +18,10 @@ export async function createUserHandler(
 ) {
   const body = req.body;
 
-    const user = await UserRepository.create(body);
+  const user = await UserRepository.create(body);
 
 
-    return res.send({ user });
+  return res.send({ user });
 
 }
 
@@ -65,7 +65,7 @@ export async function forgotPasswordHandler(
 
   const { email } = req.body;
 
-  const user = await User.findOne({ where: { email } , include:[Person]});
+  const user = await User.findOne({ where: { email }, include: [Person] });
 
   if (!user) {
     log.debug(`User with email ${email} does not exists`);
@@ -81,12 +81,12 @@ export async function forgotPasswordHandler(
   user.passwordResetCode = passwordResetCode;
 
   await user.save();
-  
+
   await sendEmail({
-    service: mailServices['forgotPassword'],
-    data: user,      
+    service: mailServices.forgotPassword,
+    data: user,
   });
-  
+
   console.warn(`Password reset code: ${passwordResetCode}. Id ${user.id}`);
 
   log.debug(`Password reset email sent to ${email}`);
@@ -119,6 +119,20 @@ export async function resetPasswordHandler(
   await user.save();
 
   return res.send("Successfully updated password");
+}
+
+export async function checkResetPasswordHandler(
+  req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
+  res: Response
+) {
+  const { id, passwordResetCode } = req.params;
+
+  const user = await User.findOne({ where: { id, passwordResetCode } });
+
+  if (user) {
+    return res.send(user);
+  }
+  return res.status(404).send("invalid credentials");
 }
 
 export async function getusers(

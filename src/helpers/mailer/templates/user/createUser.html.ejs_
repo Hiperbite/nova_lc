@@ -2,16 +2,19 @@
     style="line-height: 140%; text-align: left; word-wrap: break-word;font-family:'Open Sans',sans-serif;">
     
     <br /><br />
-        <p>Prezado <%= data.person.fullName%>,</p>
+        <p>Prezado <%=data.person.fullName%> ,</p>
          
         <p>Bem-vindo ao hiperbite.com!</p>
         
-        <p>O nome de usuário da sua nova conta é ${user.email}.</p>
-        <p>Para teres acesso a sua conta, precisas definir a palavra-passe desta conta no seguinte URL: 
-            https://hiperbite.com:2083/invitation?user=comercial@luba.ao</p>
-        code=${user.verificationCode}&kid=${user.id}
-        <p>{Título}</p>
+        <p>O nome de usuário da sua nova conta é <%=data.email%>.</p>
+        <p>Para teres acesso a sua conta, precisas definir a palavra-passe clicando no link abaixo: 
+            <a href="<%=app.WEB_CLIENT_URL%>/auth/password-reset/?code=<%=data.verificationCode%>&kid=<%=data.id%>">
+                Definir palavra-passe
+            </a>
+        </p>
+        
+        <p>Melhores comprimentos</p>
 
-        <p>{Endereço de email}</p>
+        <p>A secretaria da Escola</p>
 
 </div>

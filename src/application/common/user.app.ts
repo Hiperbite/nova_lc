@@ -1,10 +1,10 @@
-import { User } from "../../models/index";
+import { Person, User } from "../../models/index";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import sendEmail from "../mailler/mailler";
+import sendEmail, { mailServices } from "../mailler/index";
 
 export class UserApp {
-  
+
   static hashPassword = async (user: User) => {
 
     if ((user.changed() || []).filter(x => x === 'password').length === 0)
@@ -25,12 +25,13 @@ export class UserApp {
   };
 
   static sendMail = async (user: User) =>
-    await sendEmail({
-      to: user.email,
-      from: "test@hiperbite.com",
-      subject: "Verify your email",
-      text: `verification code: ${user.verificationCode}. Id: ${user.id}`,
-    });
+    null;
+  static createUser = async (user: User) =>
+    sendEmail(
+      {
+        service: mailServices.createUser,
+        data: user
+      })
 
   static initVer = async (user: User) => {
     user.verificationCode = uuid().substring(5, 12).toUpperCase();
