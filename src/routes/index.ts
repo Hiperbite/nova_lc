@@ -5,6 +5,8 @@ import validateRequest from "../application/middleware/validateRequest";
 import ejs from "ejs";
 import routes from "./routes";
 import { logger, MY_NODE_ENV } from "../config";
+import sendEmail, { mailServices } from "../application/mailler/index";
+import { User } from "../models/index";
 
 export const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch((err: any) => {
@@ -12,7 +14,7 @@ export const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   });
 
 const router = (app: Application) => {
-    
+
   app.get("/ip", (req: any, res: any) => res.send(req.ip));
   app.get(
     "/",
@@ -21,7 +23,19 @@ const router = (app: Application) => {
       res.status(200).send(`I'm alive on ${MY_NODE_ENV}`)
     })
   );
-  
+  app.get(
+    "/testmail",
+    asyncHandler(async (req: any, res: any) => {
+
+      const user = await User.findOne({ where: { email: 'lutonda@gmail.com' } })
+      await sendEmail({
+        service: mailServices.forgotPassword,
+        data: user,
+      });
+      res.status(200).send(`I'm alive on ${MY_NODE_ENV}`)
+    })
+  );
+
   app.use(
     "/api/v1/",
     [deserializeUser, requireAuthentication, validateRequest],
@@ -56,20 +70,20 @@ const router = (app: Application) => {
     }
 
     res.status(err.code ?? 500).send(errors);
-    logger.error({message:errors, meta:{req,res}})
+    logger.error({ message: errors, meta: { req, res } })
   });
 
   // Error handler
   // All errors from async & non-async route above will be handled here
   app.use((req: any, res: any, next: any) => {
     res.status(404).json([{ message: "resource not found" }]);
-    logger.warn({ message: "resource not found" ,meta:{req,res}})
+    logger.warn({ message: "resource not found", meta: { req, res } })
   });
 
   app.use((err: any, req: any, res: any, next: any) => {
     const { status } = err;
     res.status(status).json(err);
-    logger.info({ message: err ,meta:{req,res}})
+    logger.info({ message: err, meta: { req, res } })
   });
 };
 export default router;
