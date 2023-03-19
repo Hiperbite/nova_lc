@@ -11,6 +11,10 @@ const transporter = nodemailer.createTransport({
     user: smtp.user,
     pass: smtp.pass,
   },
+
+  tls: {
+    rejectUnauthorized: false
+}
 });
 /*
 const transporter = nodemailer.createTransport({
@@ -26,7 +30,7 @@ transporter.verify(function (err: any, success: any) {
   try {
     if (err) {
       console.log(err);
-      logger.error(err)
+      logger.info(err)
     } else {
       logger.info('Server is ready to take our messages');
     }
