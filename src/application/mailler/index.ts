@@ -1,3 +1,4 @@
+import { logger } from './../logger';
 import send from "./mailler";
 import ejs from "ejs";
 import path from "path";
@@ -38,8 +39,14 @@ const sendEmail = async ({ service, data }: { service: any; data: any }) => {
       send(payload);
     } else {
       let u = html;
+      logger.info(err)
     }
-  });
+
+    logger.error(err)
+
+    logger.info(payload)
+    logger.info(html)
+    });
 };
 const layout = path.resolve(
   __dirname + "/../../helpers/mailer/templates/layout.html.ejs_"
