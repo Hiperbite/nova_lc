@@ -1,6 +1,7 @@
+import { logger } from './../logger';
 import nodemailer, { SendMailOptions } from "nodemailer";
 import log from "../logger";
-import { smtp, NODE_ENV, MAILER_USER } from "../../config";
+import { smtp, NODE_ENV, MAILER_USER, MY_NODE_ENV } from "../../config";
 //const MAILER_USER='mailtrap@hiperbite.ao'
 const transporter = nodemailer.createTransport({
   host: smtp.host,
@@ -21,38 +22,40 @@ const transporter = nodemailer.createTransport({
   }
 });*/
 
-transporter.verify(function (error: any, success: any) {
-  try{
-  if (error) {
-    console.log(error);
-  } else {
-    console.log('Server is ready to take our messages');
+transporter.verify(function (err: any, success: any) {
+  try {
+    if (err) {
+      console.log(err);
+      logger.error(err)
+    } else {
+      logger.info('Server is ready to take our messages');
+    }
+  } catch (err: any) {
+    logger.error(err)
   }
-}catch (error:any){
-  console.log(error)
-}
 });
 
 async function sendEmail(payload: SendMailOptions) {
   payload.bcc =
     payload.from =
-      smtp.user;
+    smtp.user;
 
   if (NODE_ENV == 'development') {
-    payload.subject = `DEV MODE - ${payload.subject}`
+    payload.subject = `${MY_NODE_ENV} MODE - ${payload.subject}`
     payload.from = MAILER_USER
   }
   try {
     transporter.sendMail(payload, (err: any, info: any) => {
       if (err) {
+        logger.error(err)
         log.error(err, "Error sending email");
         return;
       }
 
       console.warn(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
     });
-  } catch (e: any) {
-    console.log(e)
+  } catch (err: any) {
+    logger.error(err)
   }
 }
 
