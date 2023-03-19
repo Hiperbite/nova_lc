@@ -6,7 +6,7 @@ import ejs from "ejs";
 import routes from "./routes";
 import { logger, MY_NODE_ENV } from "../config";
 import sendEmail, { mailServices } from "../application/mailler/index";
-import { User } from "../models/index";
+import { Person, User } from "../models/index";
 
 export const asyncHandler = (fn: any) => (req: any, res: any, next: any) =>
   Promise.resolve(fn(req, res, next)).catch((err: any) => {
@@ -27,8 +27,8 @@ const router = (app: Application) => {
     "/testmail",
     asyncHandler(async (req: any, res: any) => {
 
-      const user = await User.findOne({ where: { email: 'lutonda@gmail.com' } })
-      await sendEmail({
+      const user = await User.findOne({ where: { email: 'lutonda@gmail.com' }, include: [Person] })
+      sendEmail({
         service: mailServices.forgotPassword,
         data: user,
       });
