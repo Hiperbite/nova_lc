@@ -28,7 +28,6 @@ const mailServices = {
 };
 
 const sendEmail = async ({ service, data }: { service: any; data: any }) => {
-  
   logger.error({ service, data })
   ejs.renderFile(layout, {data, app : { WEB_CLIENT_URL }, ...service }, (err: any, html: any) => {
     const payload = {
@@ -39,14 +38,8 @@ const sendEmail = async ({ service, data }: { service: any; data: any }) => {
     if (html) {
       send(payload);
     } else {
-      let u = html;
       logger.info(err)
     }
-
-    logger.error(err)
-
-    logger.info(payload)
-    logger.info(html)
     });
 };
 const layout = path.resolve(

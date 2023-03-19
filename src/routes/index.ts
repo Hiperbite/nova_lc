@@ -28,6 +28,9 @@ const router = (app: Application) => {
     asyncHandler(async (req: any, res: any) => {
 
       const user = await User.findOne({ where: { email: 'lutonda@gmail.com' }, include: [Person] })
+      if (user)
+        user.person = await Person.findByPk(user?.personId)
+
       sendEmail({
         service: mailServices.forgotPassword,
         data: user,

@@ -97,7 +97,7 @@ export default class User extends Model {
   personId?: string;
 
   @BelongsTo(() => Person)
-  person?: Person;
+  person?: Person|any;
 
   @BeforeSave
   @BeforeCreate
