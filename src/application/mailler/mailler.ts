@@ -44,7 +44,7 @@ async function sendEmail(payload: SendMailOptions) {
     payload.from =
     smtp.user;
 
-  if (NODE_ENV == 'development') {
+  if (NODE_ENV !== 'production') {
     payload.subject = `${MY_NODE_ENV} MODE - ${payload.subject}`
     payload.from = MAILER_USER
   }
