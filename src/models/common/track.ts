@@ -6,7 +6,7 @@ import { User } from "../index";
     timestamps: true,
     tableName: "Tracks",
 })
-export default class Track extends Model {
+export default class  Track extends Model {
 
     @Column({
         type: DataType.TEXT,

@@ -6,8 +6,8 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc",
-        "start": "node dist/app.js",
-        "dev": "nodemon  --inspect src/app.ts",
+        "start": "node --stack-size=65500 dist/app.js",
+        "dev": "nodemon  --inspect --stack-size=65500 src/app.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Sebastião Lutonda",

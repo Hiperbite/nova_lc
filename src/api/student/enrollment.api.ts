@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { EnrollmentApp } from "../../application/student/enrollment.app";
 import { Enrollment, Student, Person, Classe, Assessment } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
@@ -39,7 +40,7 @@ class EnrollmentApi {
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query }: any = req;
-    const opts: any = { ...query, incluede:[ Assessment] }
+    const opts: any = { ...query, incluede: [Assessment] }
     const enrollment: Enrollment | undefined = await this.repo.one(
       id,
       opts
@@ -47,10 +48,34 @@ class EnrollmentApi {
     return res.json(enrollment);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const include = [{ model: Student, include: [Person]}, Classe, ]
-    const options = {...req.query, include}
-    
-    const enrollments: Paginate<Enrollment>| undefined = await this.repo.paginated( options);
+    const { query, queryClass, queryStudent, queryStudentPerson } = EnrollmentApp.filters.basicQuery(req.query?.where??{})
+    const {
+      page,
+      pageSize,
+      scope } = req.query;
+    const include = [
+      {
+        model: Student,
+        where: queryStudent,
+        include: [{
+          model: Person,
+          where: queryStudentPerson
+        }]
+      }, {
+        model: Classe,
+        where: queryClass
+      }]
+    const options: any = {
+      where: query,
+
+      include,
+      page,
+      pageSize,
+    }
+
+
+
+    const enrollments: Paginate<Enrollment> | undefined = await this.repo.paginated(options);
     return res.json(enrollments);
   };
 }

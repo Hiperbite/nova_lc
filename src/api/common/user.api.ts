@@ -11,6 +11,7 @@ import log from "../../application/logger";
 import sendEmail, { mailServices } from "../../application/mailler/index";
 import { v4 as uuid } from "uuid";
 import { UserRepository } from "../../repository/index";
+import { UserApp } from "../../application/common/user.app";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -139,10 +140,14 @@ export async function getusers(
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
   res: Response
 ) {
-  const users = await User.findAll({ include: { all: true, nested: true } });
+  const users = await User.findAll();
 
   return res.send(users);
 }
+export const getUser = async (
+  req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
+  res: Response
+) => res.send(await User.scope('main').findByPk(req.params.id));
 export async function getCurrent(
   req: Request,
   res: Response
@@ -161,6 +166,42 @@ export async function updateAvatar(
     user.save()
   }
   return res.send(user);
+}
+export async function updateUser(
+  req: Request,
+  res: Response
+) {
+
+  const { id } = req.params
+  const { permissions } = req.body
+  const user = await User.findByPk(id);
+  if (user) {
+    user.update(req.body)
+    user.save()
+    return res.send(user);
+  }
+  else {
+    throw { code: 404 }
+  }
+
+}
+
+export async function userHistory(
+  req: Request,
+  res: Response
+) {
+
+  const { id } = req.params
+
+  const user = await User.findByPk(id);
+  if (user) {
+    const histories = await UserApp.history(user)
+
+    return res.send(histories);
+  } else
+    res.status(404).send(null)
+
+
 }
 
 export async function getCurrentUserHandler(req: Request, res: Response) {

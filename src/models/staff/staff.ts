@@ -19,20 +19,26 @@ import {
   StaffDiscipline,
   Category,
   Career,
+  AcademicDegree,
 } from "../index";
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 
 import { v4 as uuidv4 } from "uuid";
 import { Op } from "sequelize";
+import { type } from "os";
 
+export type StaffType =
+  | 'ROLES_PROFESSOR'
+  | 'ROLES_TECHNICAL'
+  | 'ROLES_MANAGER'
+  | 'ROLES_OFFICE_CHEF'
 @DefaultScope(() => ({
   include: [Person, Discipline]
 }))
 @Scopes(() => ({
   professor: {
     where: {
-
       [Op.and]: [
         { roles: { [Op.like]: `%PROFFESSOR%` } },
       ]
@@ -51,6 +57,11 @@ export default class Staff extends Model {
     //     allowNull: false,
   })
   code!: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  type!: StaffType;
 
   @Column({
     type: DataType.STRING,
@@ -74,6 +85,12 @@ export default class Staff extends Model {
 
   @BelongsTo(() => Category)
   category?: Category;
+
+  @ForeignKey(() => AcademicDegree)
+  academicDegreeId?: string;
+
+  @BelongsTo(() => AcademicDegree)
+  academicDegree?: AcademicDegree;
 
   @ForeignKey(() => Career)
   careerId?: string;

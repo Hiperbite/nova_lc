@@ -60,12 +60,6 @@ export default class StudentRepository
     await this.startTransaction();
     const options = await this.defaultOptions();
 
-    data.person.user = {
-      password: null,
-      username: `${data.person.firstName.toLowerCase()}.${data.person.lastName.toLowerCase()}`,
-      email: data.person?.contacts[0].descriptions,
-      role: "ROLE_USER",
-    };
     const student = await this.createOne(data, options);
 
     return student;
@@ -125,7 +119,9 @@ export default class StudentRepository
         where = {
           ...where, ... {
             [Op.and]: [{
-              code: null
+              code:  {
+                [Op.eq]: null
+              }
             }]
           }
         }

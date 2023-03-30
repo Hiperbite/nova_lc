@@ -5,10 +5,15 @@ import {
     ForeignKey,
     BelongsTo,
     Scopes,
+    DefaultScope,
 } from "sequelize-typescript";
 
 import { Classe, Discipline, Model, AssessmentType, Enrollment, Staff } from "../index";
 
+@DefaultScope(() => ({
+        include: [AssessmentType, Discipline, AssessmentType]
+    
+}))
 @Scopes(() => ({
     default: {
         include: []

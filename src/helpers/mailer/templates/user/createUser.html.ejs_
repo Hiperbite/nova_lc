@@ -11,7 +11,7 @@
             <a href="<%=app.WEB_CLIENT_URL%>/auth/password-reset/?code=<%=data.verificationCode%>&kid=<%=data.id%>">
                 Definir palavra-passe
             </a>
-        </p>
+        </p
         
         <p>Melhores comprimentos</p>
 

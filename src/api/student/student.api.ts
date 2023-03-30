@@ -1,7 +1,8 @@
+import { StudentApp } from './../../application/student/student.app';
 import { Request, Response } from "express";
 import { Op } from "sequelize";
 import sendEmail, { mailServices } from "../../application/mailler/index";
-import { Student, Person, Enrollment } from "../../models/index";
+import { Student, Person, Enrollment, Course } from "../../models/index";
 import { StudentRepository } from "../../repository/index";
 import IRepository from "../../repository/irepository";
 import { Paginate } from "../../repository/repository";
@@ -44,6 +45,27 @@ class StudentApi {
     return res.json(student);
   };
   findBy = async (req: Request, res: Response): Promise<Response | void> => {
+    const { query, queryPerson } = StudentApp.filters.basicQuery(req.query?.where)
+    const {
+      page,
+      pageSize,
+      scope } = req.query;
+    const include = [
+      {
+        model: Person,
+        where: queryPerson,
+      }, {
+        model: Course
+      }]
+    const options: any = {
+      where: query,
+
+      include,
+      page,
+      pageSize,
+    }
+
+
     const { q } = req.query
     if (q) {
 
@@ -67,7 +89,7 @@ class StudentApi {
 
     } else {
       const students: Paginate<Student> | undefined = await this.repo.paginated(
-        req.query
+        options
       );
 
       return res.json(students);

@@ -13,3 +13,69 @@ We use essential cookies to make our site work. With your consent, we may also u
 ## The best recruiting email templates for all scenarios
 https://resources.workable.com/tutorial/recruiting-email-templates
 https://www.indeed.com/hire/c/info/rejection-letter-samples
+
+
+
+Proximos passos
+-
+filtros,
+controlo de acesso,
+formulario publico de candidatura
+validacao de candidaturas
+
+
+
+
+definicao de acessos
+
+
+
+TO ADD
+- Adicionar coluna de media das provas 1,2,...)
+- aredondaras notas das medias 
+- calssificacao so quando tem todas as notas preenchidas
+
+Resultado : -, Aprovado, Reprovado e Recurso
+
+
+para pr1 e pr2
+se a media for  < 7 -> reporvado
+se a mdeia for de 7 a 14 -> exame
+se a media for >= 14 e cadeira for despensavel -> aprovado
+
+para exames
+se a nota for < 10 -> recurso 
+se a nota for >= 10 -> aprovado
+
+para recurso
+se a nota for < 10 -> reprovado 
+se a nota for >= 10 -> aprovado
+
+para Exames Melhora, estraordinario e Especial
+concorem ao resultado final
+
+
+Biometria e controlo de ponto
+
+nacionalidades
+-de todos os paises
+
+documentos
+-
+
+grau academic
+
+Lic, MsC, Dr
+
+ACL
+-
+Professores
+lancar notas,
+imprimir as pautas,
+
+Estudantes
+Tecnicos
+Gestor
+Chefe de departamento
+
+email instituicional para todos

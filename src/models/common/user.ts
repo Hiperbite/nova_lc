@@ -15,18 +15,68 @@ import {
   AfterUpdate,
   BelongsTo,
   createIndexDecorator,
+  AfterFind,
+  Scopes,
 } from "sequelize-typescript";
-import { Person, Model } from "../";
+import { Person, Model, Student, Staff } from "../";
 
 import bcrypt from "bcrypt";
 import { UserApp } from "../../application/common/user.app";
 import sendEmail, { mailServices } from "../../application/mailler/index";
+
+export type ROLES =
+  | 'ROLES_STUDENT'
+  | 'ROLES_PROFESSOR'
+  | 'ROLES_TECHNICAL'
+  | 'ROLES_MANAGER'
+  | 'ROLES_OFFICE_CHEF'
+
+export type PermissionsType =
+  | "STUDENTS_1"
+  | "STUDENTS_2"
+  | "STUDENTS_3"
+  | "STUDENTS_4"
+  | "CANDIDATES_1"
+  | "CANDIDATES_2"
+  | "CANDIDATES_3"
+  | "CANDIDATES_4"
+  | "CLASS_1"
+  | "CLASS_2"
+  | "CLASS_3"
+  | "CLASS_4"
+  | "CLASSIFICATION_1"
+  | "CLASSIFICATION_2"
+  | "CLASSIFICATION_3"
+  | "CLASSIFICATION_4"
+  | "STAFF_1"
+  | "STAFF_2"
+  | "STAFF_3"
+  | "STAFF_4"
+  | "TABLES_1"
+  | "TABLES_2"
+  | "TABLES_3"
+  | "TABLES_4"
+  | "ADMIN_1"
+  | "ADMIN_2"
+  | "ADMIN_3"
+  | "ADMIN_4"
+
+
+
 const EmailIndex = createIndexDecorator({
-  // index options
   name: 'email-index',
   type: 'UNIQUE',
   unique: true,
 });
+
+@Scopes(() => ({
+  main: {
+    include: [{
+      model: Person,
+      include: [Student, Staff]
+    }]
+  }
+}))
 @Table({
   timestamps: true,
   tableName: "Users",
@@ -49,13 +99,25 @@ export default class User extends Model {
     type: DataType.STRING,
     allowNull: true,
   })
+
+  get permissions() {
+    return (this.getDataValue('permissions') ?? '').split(',').map((p: string) => p.split('_')) ?? []
+  }
+  set permissions(roles: string[]) {
+    this.setDataValue('permissions', roles.map((p: any) => p.join('_')).join(','))
+  }
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
   password?: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  role!: string;
+  role!: ROLES;
 
   @Column({
     type: DataType.TEXT,
@@ -97,7 +159,7 @@ export default class User extends Model {
   personId?: string;
 
   @BelongsTo(() => Person)
-  person?: Person|any;
+  person?: Person | any;
 
   @BeforeSave
   @BeforeCreate
@@ -117,6 +179,14 @@ export default class User extends Model {
     return verified;
   };
 
+
+  @AfterCreate
+  static notifyUser = async (user: User) =>
+    sendEmail({
+      service: mailServices["createUser"],
+      data: user,
+    });
+
   @AfterUpdate
   @AfterCreate
   @AfterSave
@@ -129,13 +199,29 @@ export default class User extends Model {
     } else {
       if (person) user.person = person;
     }
- 
-    await sendEmail({
-      service: mailServices["createUser"],
-      data: user,
-    });
   }
-  
+
+
+
+  @AfterFind
+  static updateRoles = async (user: User) => {
+    if (!user) return;
+    const { personId } = user
+    const student = await Student.findOne({ where: { personId } })
+    if (student)
+      user.role = 'ROLES_STUDENT'
+    else {
+      const staff = await Staff.findOne({ where: { personId } })
+      if (staff) {
+        user.role ??= staff.type;
+      }
+    }
+
+
+    user.save()
+
+
+  }
   privateFields: string[] = [
     "id",
     "username",
@@ -144,5 +230,6 @@ export default class User extends Model {
     "verified",
     "personId",
     "person",
+    "permissions",
   ];
 }

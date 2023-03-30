@@ -10,8 +10,9 @@ import {
   AfterFind,
   DefaultScope,
   Scopes,
+  AfterCreate,
 } from "sequelize-typescript";
-import { Address, Contact, Document, Model, User } from "../index";
+import { Address, Contact, Document, Model, Staff, Student, User } from "../index";
 
 
 export type MaritalstatusType =
@@ -175,6 +176,33 @@ export default class Person extends Model {
   @HasMany(() => Document)
   documents?: Document[];
 
+  @HasMany(() => Student)
+  students?: Student[];
+  @Column({
+    type: DataType.VIRTUAL
+  })
+  get student(): Student | null {
+    return this.students ? this.students[0] : null
+  }
+
+  @HasMany(() => Staff)
+  staffs?: Staff[];
+  @Column({
+    type: DataType.VIRTUAL
+  })
+  get staff(): Staff | null {
+    return this.staffs ? this.staffs[0] : null
+  }
+
+  @AfterCreate
+  static createUser = (person: Person) => {
+    const user = {
+      password: null,
+      username: `${person.firstName.toLowerCase()}.${person.lastName.toLowerCase()}`,
+      email: person?.contacts[0].descriptions,
+      role: "ROLE_USER",
+    };
+  }
 
   @AfterFind
   static afterFindPerson = () => {

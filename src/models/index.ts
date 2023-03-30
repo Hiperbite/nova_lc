@@ -36,6 +36,7 @@ import Assessment from "./progress/assessment";
 import { logger } from "../config";
 import Category from "./staff/category";
 import Career from "./staff/career";
+import AcademicDegree from "./staff/academic-degree";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -48,7 +49,7 @@ const sequelize = new Sequelize({
   username: DB_USER,
   password: DB_PASSWORD,
   database: DB_NAME,
-  logging: (msg:any)=>logger.info(msg),
+  logging: (msg: any) => logger.info(msg),
   models: [
     Contact,
     User,
@@ -59,7 +60,7 @@ const sequelize = new Sequelize({
     Address,
     Attachment,
     Role,
-    
+
     Sequence,
     Person,
     Document,
@@ -79,6 +80,7 @@ const sequelize = new Sequelize({
     Category,
     Career,
     StaffDiscipline,
+    AcademicDegree,
 
     AssessmentType,
     Assessment
@@ -86,7 +88,7 @@ const sequelize = new Sequelize({
 });
 
 const Repo = sequelize.getRepository;
-sequelize.sync({ alter: true, force: false })
+//sequelize.sync({ alter: true, force: false })
 
 export default sequelize;
 
@@ -122,6 +124,8 @@ export {
   Category,
   Career,
   StaffDiscipline,
+  AcademicDegree,
+
 
   AssessmentType,
   Assessment

@@ -7,7 +7,8 @@ import {
     BeforeCreate,
     BeforeSave,
     DefaultScope,
-    HasMany
+    HasMany,
+    Scopes
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 import sendEmail, { mailServices } from "../../application/mailler/index";
@@ -15,6 +16,11 @@ import { Assessment, Classe, Model, Person, Student } from "../index";
 
 @DefaultScope(() => ({
     // include: [Student, Classe]
+}))
+@Scopes(() => ({
+    withClassAndAssessment: {
+        include: [Assessment, Classe]
+    }
 }))
 @Table({
     timestamps: true,
@@ -55,19 +61,19 @@ export default class Enrollment extends Model {
     assessments?: Assessment[]
 
     @Column({
-        type:DataType.VIRTUAL
+        type: DataType.VIRTUAL
     })
-    get assessmentAverage(){
-        
-        for(let ass in this.assessments){
+    get assessmentAverage() {
+
+        for (let ass in this.assessments) {
 
         }
-        const average=this.assessments?.reduce(function (o, a:Assessment) {
+        const average = this.assessments?.reduce(function (o, a: Assessment) {
             o[a?.disciplineId] = o[a.disciplineId] || [];
             o[a.disciplineId].push(a);
             return o;
         }, Object.create(null));
-        
+
         return average;
     }
 
