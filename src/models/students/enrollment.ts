@@ -12,7 +12,7 @@ import {
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 import sendEmail, { mailServices } from "../../application/mailler/index";
-import { Assessment, Classe, Model, Person, Student } from "../index";
+import { Assessment, Classe, ClasseRoom, Course, Model, Period, Person, Student, User } from "../index";
 
 @DefaultScope(() => ({
     // include: [Student, Classe]
@@ -20,6 +20,15 @@ import { Assessment, Classe, Model, Person, Student } from "../index";
 @Scopes(() => ({
     withClassAndAssessment: {
         include: [Assessment, Classe]
+    },
+    full: {
+        include: [
+
+            Assessment, { model: Classe, include: [Course, Period, ClasseRoom] }]
+    },
+    students: {
+        include: [
+             { model: Student, include: [{ model: Person, }] }]
     }
 }))
 @Table({

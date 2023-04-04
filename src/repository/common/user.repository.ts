@@ -1,7 +1,7 @@
 
 import sendEmail from "../../application/mailler/mailler";
 import { Contact, User } from "../../models/index";
-import IRepository from "../irepository";
+import IRepository from "../iRepository";
 import Repository, { Paginate } from "../repository";
 
 

@@ -18,7 +18,7 @@ import {
   AfterFind,
   Scopes,
 } from "sequelize-typescript";
-import { Person, Model, Student, Staff } from "../";
+import { Person, Model, Student, Staff, Address, Contact } from "../";
 
 import bcrypt from "bcrypt";
 import { UserApp } from "../../application/common/user.app";
@@ -75,6 +75,15 @@ const EmailIndex = createIndexDecorator({
       model: Person,
       include: [Student, Staff]
     }]
+  },
+  full: {
+    include: [{
+      model: Person,
+      include: [Contact,
+        { model: Address, as: 'livingAddress' },
+        { model: Address, as: 'birthPlaceAddress' },
+        Student, Staff]
+    }]
   }
 }))
 @Table({
@@ -101,10 +110,16 @@ export default class User extends Model {
   })
 
   get permissions() {
-    return (this.getDataValue('permissions') ?? '').split(',').map((p: string) => p.split('_')) ?? []
+    return (this.getDataValue('permissions') ?? '')
+      .split(',')
+      .map((p: string) => p.split('_'))
+      .map((p: string[]) => [p[0], Number(p[1])])
+      .map(([l, v]: any) => ({ [l]: v }))
+      .reduce((x: any, y: any) => ({ ...x, ...y }))
+      ?? []
   }
   set permissions(roles: string[]) {
-    this.setDataValue('permissions', roles.map((p: any) => p.join('_')).join(','))
+    this.setDataValue('permissions', Object.entries(roles).map((p: any) => p.join('_')).join(','))
   }
 
   @Column({
@@ -206,7 +221,11 @@ export default class User extends Model {
   @AfterFind
   static updateRoles = async (user: User) => {
     if (!user) return;
+
     const { personId } = user
+
+    if (!personId) return;
+
     const student = await Student.findOne({ where: { personId } })
     if (student)
       user.role = 'ROLES_STUDENT'

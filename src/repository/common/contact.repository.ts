@@ -1,7 +1,7 @@
 import { Paginate } from '../repository';
 
 import { Contact } from "../../models/index";
-import IRepository from "../irepository";
+import IRepository from "../iRepository";
 import Repository from "../repository";
 
 class ContactRepository extends Repository<Contact> implements IRepository<Contact> {

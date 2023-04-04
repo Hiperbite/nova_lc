@@ -4,7 +4,7 @@ import {
   Repository as Repo,
 } from "sequelize-typescript";
 import sequelize from "../../models/index";
-import IRepository from "../irepository";
+import IRepository from "../iRepository";
 
 export default class DefaultRepository<T extends M> implements IRepository<T> {
   repo: Repo<T>;
@@ -107,6 +107,7 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
       where,
       attributes,
       include,
+      scope,
       exclude,
       pageSize = 6,
       page = 1,
@@ -119,9 +120,9 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
       Number(page) < 1
         ? 0
         : (Number(page) - 1) * limit;
-
+    
     return new Paginate(
-      await this.Model.findAll({
+      await this.Model.scope(scope).findAll({
         where,
         attributes: attributes
           ? attributes

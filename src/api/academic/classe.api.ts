@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Period, Classe, ClasseRoom, Course, TimeTable, Enrollment, CurricularPlan } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
-import IRepository from "../../repository/irepository";
+import IRepository from "../../repository/iRepository";
 import { Paginate } from "../../repository/repository";
 interface IApi {
   create(req: Request, res: Response): Response;

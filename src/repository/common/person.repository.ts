@@ -1,6 +1,6 @@
 
 import { Person } from "../../models/index";
-import IRepository from "../irepository";
+import IRepository from "../iRepository";
 import Repository, { Paginate } from "../repository";
 
 class PersonRepository extends Repository<Person> implements IRepository<Person> {

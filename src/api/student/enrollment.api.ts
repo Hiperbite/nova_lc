@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { EnrollmentApp } from "../../application/student/enrollment.app";
 import { Enrollment, Student, Person, Classe, Assessment } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
-import IRepository from "../../repository/irepository";
+import IRepository from "../../repository/iRepository";
 import { Paginate } from "../../repository/repository";
 interface IApi {
   create(req: Request, res: Response): Response;
@@ -40,7 +40,7 @@ class EnrollmentApi {
   find = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const { query }: any = req;
-    const opts: any = { ...query, incluede: [Assessment] }
+    const opts: any = { ...query, include: [Assessment] }
     const enrollment: Enrollment | undefined = await this.repo.one(
       id,
       opts
@@ -48,11 +48,11 @@ class EnrollmentApi {
     return res.json(enrollment);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const { query, queryClass, queryStudent, queryStudentPerson } = EnrollmentApp.filters.basicQuery(req.query?.where??{})
+    const { query, queryClass, queryStudent, queryStudentPerson } = EnrollmentApp.filters.basicQuery(req.query?.where ?? {})
     const {
       page,
       pageSize,
-      scope } = req.query;
+      scope = 'full' } = req.query;
     const include = [
       {
         model: Student,
@@ -67,13 +67,11 @@ class EnrollmentApi {
       }]
     const options: any = {
       where: query,
-
-      include,
+      scope,
+      //   include,
       page,
       pageSize,
     }
-
-
 
     const enrollments: Paginate<Enrollment> | undefined = await this.repo.paginated(options);
     return res.json(enrollments);

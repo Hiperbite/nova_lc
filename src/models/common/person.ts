@@ -34,8 +34,8 @@ export type GenderType =
     //  { model: Address, as: 'livingAddress' },
 
 
-    { model: User, as: 'user' },
-    { model: Contact },
+ //   { model: User, as: 'user' },
+   // { model: Contact },
   ]
 }))
 @Scopes(() => ({

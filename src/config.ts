@@ -77,14 +77,14 @@ const config = (app: Application, http: any) => {
   app.use(helmet());
 
   const limiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 15 minutes
-    max: 100, // 1000 requests
+    windowMs: 10 * 1000, // 15 minutes
+    max: 10, // 1000 requests
     standardHeaders: true,
-    message: "You can only make 100 requests every minutes.",
+    message: "You can only make {0} requests every minutes.",
     keyGenerator: (req: any, res: any) => req.ip,
     //store: new MemoryStore(),
     handler: (req: any, res: any, next: any, opt: any) =>
-      res.status(opt.statusCode).send(opt.message),
+      res.status(opt.statusCode).send(`You can only make ${opt.max} requests every minutes.`),
   });
 
   app.use(limiter);

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import IRepository from "../../repository/irepository";
+import IRepository from "../../repository/iRepository";
 import { Paginate } from "../../repository/repository";
 interface IApi {
   create(req: Request, res: Response): Response;

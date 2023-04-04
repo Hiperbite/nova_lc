@@ -1,7 +1,7 @@
 
 import { Request, Response } from "express";
 import { Contact, Person } from "../../models/index";
-import IRepository from "../../repository/irepository";
+import IRepository from "../../repository/iRepository";
 import { Paginate } from "../../repository/repository";
 import { DefaultRepository as Repository } from "../../repository/index";
 interface IApi {

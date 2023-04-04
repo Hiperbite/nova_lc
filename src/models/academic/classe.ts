@@ -6,12 +6,18 @@ import {
     BelongsTo,
     ForeignKey,
     HasMany,
-    DefaultScope
+    DefaultScope,
+    Scopes
 } from "sequelize-typescript";
 import { Period, ClasseRoom, Model, Course, TimeTable, Enrollment } from "../index";
 
-@DefaultScope(()=>({
+@DefaultScope(() => ({
     //include: [Enrollment]
+}))
+@Scopes(() => ({
+    full: {
+        include: [Course, Period, ClasseRoom]
+    }
 }))
 @Table({
     timestamps: true,
@@ -44,7 +50,7 @@ export default class Classe extends Model {
         type: DataType.VIRTUAL,
     })
     get activeEnrollments() {
-        return this.enrollments?.filter((x:any)=>x.current)
+        return this.enrollments?.filter((x: any) => x.current)
     }
     @Column({
         type: DataType.STRING,

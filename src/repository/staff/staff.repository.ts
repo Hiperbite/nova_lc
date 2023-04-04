@@ -12,7 +12,7 @@ import sequelize, {
   Career,
 } from "../../models/index";
 
-import IRepository from "../irepository";
+import IRepository from "../iRepository";
 import Repository, { Paginate } from "../repository";
 
 

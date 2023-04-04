@@ -12,6 +12,8 @@ import sendEmail, { mailServices } from "../../application/mailler/index";
 import { v4 as uuid } from "uuid";
 import { UserRepository } from "../../repository/index";
 import { UserApp } from "../../application/common/user.app";
+import Repository, { Paginate } from "../../repository/repository";
+import userRepository from "../../repository/common/user.repository";
 
 export async function createUserHandler(
   req: Request<{}, {}, CreateUserInput>,
@@ -140,21 +142,37 @@ export async function getusers(
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
   res: Response
 ) {
-  const users = await User.findAll();
+  const {
+    where,
+    scope,
+    page,
+    pageSize,
+  } = req.query
+  const options: any = {
+    where,
+    scope,
+    page,
+    pageSize,
+  }
+
+  const repo = userRepository;
+
+  const users: Paginate<User> | undefined = await repo.paginated(options);
 
   return res.send(users);
 }
+
 export const getUser = async (
   req: Request<ResetPasswordInput["params"], {}, ResetPasswordInput["body"]>,
   res: Response
-) => res.send(await User.scope('main').findByPk(req.params.id));
+) => res.send(await User.scope('full').findByPk(req.params.id));
 export async function getCurrent(
   req: Request,
   res: Response
 ) {
-  const users = await User.findByPk(res?.locals?.user?.id, { include: { all: true, nested: true } });
+  const user = await User.scope('full').findByPk(res?.locals?.user?.id, { include: { all: true, nested: true } });
 
-  return res.send(users);
+  return res.send(user);
 }
 export async function updateAvatar(
   req: Request,

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Period, Classe } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
-import IRepository from "../../repository/irepository";
+import IRepository from "../../repository/iRepository";
 interface IApi {
   create(req: Request, res: Response): Promise<Response>;
   update(req: Request, res: Response): Promise<Response>;

@@ -122,6 +122,7 @@ export default class Repository<T extends M> {
       where,
       attributes,
       include,
+      scope,
       exclude = [],
       pageSize = 6,
       page = 1,
@@ -137,6 +138,8 @@ export default class Repository<T extends M> {
           ? limit
           : (Number(page) - 1) * limit;
 
+    if (scope)
+      this.repo.scope(scope);
     return new Paginate(
       await this.repo.findAll({
         where,

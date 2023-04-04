@@ -11,7 +11,7 @@ import {
 import { Classe, Discipline, Model, AssessmentType, Enrollment, Staff } from "../index";
 
 @DefaultScope(() => ({
-        include: [AssessmentType, Discipline, AssessmentType]
+        include: [AssessmentType, Discipline]
     
 }))
 @Scopes(() => ({

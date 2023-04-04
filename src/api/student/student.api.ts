@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import sendEmail, { mailServices } from "../../application/mailler/index";
 import { Student, Person, Enrollment, Course } from "../../models/index";
 import { StudentRepository } from "../../repository/index";
-import IRepository from "../../repository/irepository";
+import IRepository from "../../repository/iRepository";
 import { Paginate } from "../../repository/repository";
 interface IApi {
   create(req: Request, res: Response): Response;

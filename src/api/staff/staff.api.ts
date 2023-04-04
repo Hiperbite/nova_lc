@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Op } from "sequelize";
 import { Staff, Person, Discipline, StaffDiscipline, } from "../../models/index";
 import { StaffRepository } from "../../repository/index";
-import IRepository from "../../repository/irepository";
+import IRepository from "../../repository/iRepository";
 import { Paginate } from "../../repository/repository";
 interface IApi {
   create(req: Request, res: Response): Response;
