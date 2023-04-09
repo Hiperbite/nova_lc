@@ -11,7 +11,8 @@ import {
     HasOne,
     DefaultScope,
     Scopes,
-    Unique
+    Unique,
+    AfterFind
 } from "sequelize-typescript";
 import SequenceApp from "../../application/common/sequence.app";
 import { Course, Discipline, Model, PlanItem, Staff } from "../index";
@@ -40,7 +41,7 @@ export default class CurricularPlan extends Model {
     })
     descriptions?: string
 
-    @BelongsTo(() => Course)
+    @HasOne(() => Course)
     course?: Course;
 
     @ForeignKey(() => Course)
@@ -48,4 +49,5 @@ export default class CurricularPlan extends Model {
 
     @HasMany(() => PlanItem)
     items?: PlanItem[]
+
 }

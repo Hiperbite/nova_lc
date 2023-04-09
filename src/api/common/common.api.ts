@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AssessmentApp } from "../../application/student/assessment.app";
 import IRepository from "../../repository/iRepository";
 import { Paginate } from "../../repository/repository";
 interface IApi {
@@ -66,7 +67,13 @@ class ModelApi<Model> {
   findBy = async (req: Request, res: Response): Promise<Response> => {
     const models: Paginate<Model> | undefined =
     await this.repo.paginated({ ...req.query, include: { all: true } });
-    return res.json(models);
+    let ass;
+try {
+     ass=AssessmentApp.resultEnrollment(models?.data)
+}catch(e:any){
+  
+}
+    return res.json({...models, ass});
   };
 }
 

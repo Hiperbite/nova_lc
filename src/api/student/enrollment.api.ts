@@ -52,7 +52,7 @@ class EnrollmentApi {
     const {
       page,
       pageSize,
-      scope = 'full' } = req.query;
+      scope } = req.query;
     const include = [
       {
         model: Student,
@@ -68,7 +68,7 @@ class EnrollmentApi {
     const options: any = {
       where: query,
       scope,
-      //   include,
+      include: scope ? undefined : include,
       page,
       pageSize,
     }

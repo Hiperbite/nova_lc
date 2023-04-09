@@ -23,12 +23,11 @@ import { Assessment, Classe, ClasseRoom, Course, Model, Period, Person, Student,
     },
     full: {
         include: [
-
             Assessment, { model: Classe, include: [Course, Period, ClasseRoom] }]
     },
     students: {
-        include: [
-             { model: Student, include: [{ model: Person, }] }]
+        include: [Classe,
+            { model: Student, include: [{ model: Person, include: [{ model: User, as: 'user' }] }] }]
     }
 }))
 @Table({

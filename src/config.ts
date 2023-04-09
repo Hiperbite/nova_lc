@@ -78,7 +78,7 @@ const config = (app: Application, http: any) => {
 
   const limiter = rateLimit({
     windowMs: 10 * 1000, // 15 minutes
-    max: 10, // 1000 requests
+    max: 100, // 1000 requests
     standardHeaders: true,
     message: "You can only make {0} requests every minutes.",
     keyGenerator: (req: any, res: any) => req.ip,

@@ -9,6 +9,7 @@ import {
   BeforeSave,
   DefaultScope,
   AfterCreate,
+  Scopes,
 } from "sequelize-typescript";
 import {
   Model,
@@ -17,6 +18,10 @@ import {
   Person,
   Enrollment,
   Course,
+  Assessment,
+  Classe,
+  Period,
+  ClasseRoom,
 } from "../index";
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
@@ -24,9 +29,15 @@ import SequenceApp, { CODES } from "../../application/common/sequence.app";
 import { v4 as uuidv4 } from "uuid";
 
 import sendEmail, { mailServices } from "../../application/mailler/index";
-/*{@DefaultScope(() => ({
-  // include: [Person, Enrollment]
-}))*/
+
+@Scopes(() => ({
+  enrollment: {
+    include: [{
+      model: Enrollment, include: [
+        Assessment, { model: Classe, include: [Course, Period, ClasseRoom] }]
+    }]
+  },
+}))
 @Table({
   timestamps: true,
   tableName: "Students",

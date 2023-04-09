@@ -14,7 +14,8 @@ import {
     AfterCreate,
     AfterSave,
     AfterUpdate,
-    Unique
+    Unique,
+    BelongsTo
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 import { Classe, CurricularPlan, Model, Student } from "../index";
@@ -50,8 +51,8 @@ export default class Course extends Model {
     @HasMany(() => Classe)
     classes?: Classe[]
 
-    @HasMany(() => CurricularPlan)
-    curricularPlans?: CurricularPlan[];
+    @HasOne(() => CurricularPlan)
+    curricularPlan?: CurricularPlan;
 
     @ForeignKey(() => CurricularPlan)
     id?: string
@@ -74,10 +75,10 @@ export default class Course extends Model {
             let code = await SequenceApp.count(CODES.COURSE);
             course.code = uuidv4().substring(5, 9).toUpperCase() + String(code).padStart(2, '0');
         }
-        if (course.curricularPlans?.length === 0)
+        /*if (course.curricularPlans?.length === 0)
             try {
                 await CurricularPlan.create({ id: course?.id });
-            } catch (e) { }
+            } catch (e) { }*/
         // course.update({ curricularPlanId: curricularPlan?.id })
 
     };

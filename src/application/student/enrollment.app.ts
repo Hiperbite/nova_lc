@@ -1,14 +1,17 @@
 import { Op } from "sequelize"
 
 const filters = {
-    basicQuery: ({ code, name, classeId, periodId, year, studentId }: any) => {
+    basicQuery: ({ code, current, name, classeId, periodId, year, studentId }: any) => {
 
         const queryStudent: any = {}
 
         const queryStudentPerson: any = {}
 
-        const query: any = { current: true }
+        const query: any = {}
 
+        if (current)
+            query.current = current;
+            
         if (studentId)
             query.studentId = studentId;
 

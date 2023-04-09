@@ -45,7 +45,7 @@ class StudentApi {
     return res.json(student);
   };
   findBy = async (req: Request, res: Response): Promise<Response | void> => {
-    const { query, queryPerson } = StudentApp.filters.basicQuery(req.query?.where)
+    const { query, queryPerson } = StudentApp.filters.basicQuery(req.query?.where ?? {})
     const {
       page,
       pageSize,
@@ -59,7 +59,7 @@ class StudentApi {
       }]
     const options: any = {
       where: query,
-
+      scope,
       include,
       page,
       pageSize,

@@ -10,7 +10,7 @@ import {
 } from "../../service/auth.service";
 
 import { verifyJwt } from "../../application/jwt";
-import { User, sequelize, Person } from "../../models/index";
+import { User, sequelize, Person, Student, Staff } from "../../models/index";
 
 export async function createSessionHandler(
     req: Request<{}, {}, CreateSessionInput>,
@@ -20,7 +20,7 @@ export async function createSessionHandler(
     let status = 200;
     const { email, password } = req.body;
 
-    const user: User | null | any = await User.findOne({ where: { email }, include: [{model:Person}] });
+    const user: User | null | any = await User.scope('auth').findOne({ where: { email } });
 
     if (!user) {
 

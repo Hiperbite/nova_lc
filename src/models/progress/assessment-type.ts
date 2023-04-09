@@ -14,7 +14,7 @@ import { Model } from "../index";
 @Scopes(() => ({
     default: {
         include: [],
-        order: [["no", "ASC"]],
+        order: [["no", "DESC"]],
     }
 }))
 @Table({

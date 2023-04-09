@@ -1,7 +1,7 @@
 import { Op } from "sequelize"
 
 const filters = {
-    basicQuery: ({ entryCode, name, desiredCourseId, gender, createdAt }: any) => {
+    basicQuery: ({ entryCode, name, desiredCourseId, gender, createdAt , personId}: any) => {
 
         const queryPerson: any = {}
 
@@ -21,6 +21,9 @@ const filters = {
 
         if (desiredCourseId && desiredCourseId !== "*")
             query.desiredCourseId = desiredCourseId
+
+        if (personId)
+            query.personId = personId
 
         return { query, queryPerson }
 

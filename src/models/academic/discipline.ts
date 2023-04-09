@@ -10,13 +10,13 @@ import {
     Scopes
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
-import { Course, Model, PlanItem, Staff, StaffDiscipline, TimeTable } from "../index";
+import { Course, CurricularPlan, Model, PlanItem, Staff, StaffDiscipline, TimeTable } from "../index";
 
 import { v4 as uuidv4 } from "uuid";
 
 @Scopes(() => ({
     default: {
-        include: [Staff, PlanItem]
+        include: [Staff, { model: PlanItem, include: [{ model: CurricularPlan, include: [Course] }] }]
     }
 }))
 @Table({

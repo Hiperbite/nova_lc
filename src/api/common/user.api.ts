@@ -170,7 +170,7 @@ export async function getCurrent(
   req: Request,
   res: Response
 ) {
-  const user = await User.scope('full').findByPk(res?.locals?.user?.id, { include: { all: true, nested: true } });
+  const user = await User.scope('full').findByPk(res?.locals?.user?.id);
 
   return res.send(user);
 }
@@ -178,7 +178,7 @@ export async function updateAvatar(
   req: Request,
   res: Response
 ) {
-  const user = await User.findByPk(res?.locals?.user?.id, { include: { all: true, nested: true } });
+  const user = await User.scope('auth').findByPk(req?.body?.userId ?? res?.locals?.user?.id);
   if (user) {
     user.avatar = req.body.avatar
     user.save()

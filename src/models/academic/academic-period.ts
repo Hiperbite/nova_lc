@@ -34,7 +34,6 @@ import {
 
     @AfterUpdate
     static bf=(period:Period)=>{
-      console.log('--------------------')
       const before=period.previous()
       const after=Object.keys(before).map((k)=>({[k]:period.dataValues[k]}));
     }

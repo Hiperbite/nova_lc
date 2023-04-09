@@ -1,13 +1,12 @@
 import {
   Table,
-  AllowNull,
   Column,
   DataType,
   BelongsTo,
   ForeignKey,
-  HasMany,
   DefaultScope,
   Scopes,
+  AfterFind,
 } from "sequelize-typescript";
 import { Course, CurricularPlan, Discipline, Model, Semester, Staff } from "../index";
 
@@ -49,7 +48,7 @@ export default class PlanItem extends Model {
   get grade() {
     return Number(String(((this.semester ?? 1) / 2) + 0.5).split('.')[0])
   }
-  
+
   @Column({
     type: DataType.TEXT,
   })
@@ -73,4 +72,12 @@ export default class PlanItem extends Model {
   @ForeignKey(() => Staff)
   professorId?: string;
 
+  @AfterFind
+  static async fetchCourse(item: PlanItem[]) {
+    await item.forEach(async (i: PlanItem) => {
+      i.curricularPlan.course = await Course.findByPk(i.curricularPlanId ?? '') || undefined
+      const y = i.curricularPlan.course;
+    }
+    )
+  }
 }

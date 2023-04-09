@@ -60,6 +60,11 @@ export type PermissionsType =
   | "ADMIN_2"
   | "ADMIN_3"
   | "ADMIN_4"
+  | "ACADEMIC_1"
+  | "ACADEMIC_2"
+  | "ACADEMIC_3"
+  | "ACADEMIC_4"
+
 
 
 
@@ -75,6 +80,9 @@ const EmailIndex = createIndexDecorator({
       model: Person,
       include: [Student, Staff]
     }]
+  },
+  auth: {
+    include: [{ model: Person, include: [Student, Staff] }]
   },
   full: {
     include: [{

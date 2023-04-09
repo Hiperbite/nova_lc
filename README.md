@@ -18,38 +18,38 @@ https://www.indeed.com/hire/c/info/rejection-letter-samples
 
 Proximos passos
 -
-filtros,
-controlo de acesso,
++filtros,
++controlo de acesso,
 formulario publico de candidatura
 validacao de candidaturas
 
 
 
 
-definicao de acessos
++definicao de acessos
 
 
 
 TO ADD
-- Adicionar coluna de media das provas 1,2,...)
++- Adicionar coluna de media das provas 1,2,...)
 - aredondaras notas das medias 
-- calssificacao so quando tem todas as notas preenchidas
++- calssificacao so quando tem todas as notas preenchidas
 
-Resultado : -, Aprovado, Reprovado e Recurso
++Resultado : -, Aprovado, Reprovado e Recurso
 
 
 para pr1 e pr2
-se a media for  < 7 -> reporvado
-se a mdeia for de 7 a 14 -> exame
-se a media for >= 14 e cadeira for despensavel -> aprovado
++se a media for  < 7 -> reporvado
++se a mdeia for de 7 a 14 -> exame
++se a media for >= 14 e cadeira for despensavel -> aprovado
 
 para exames
-se a nota for < 10 -> recurso 
-se a nota for >= 10 -> aprovado
++se a nota for < 10 -> recurso 
++e a nota for >= 10 -> aprovado
 
 para recurso
-se a nota for < 10 -> reprovado 
-se a nota for >= 10 -> aprovado
++se a nota for < 10 -> reprovado 
++se a nota for >= 10 -> aprovado
 
 para Exames Melhora, estraordinario e Especial
 concorem ao resultado final
@@ -67,15 +67,19 @@ grau academic
 
 Lic, MsC, Dr
 
-ACL
++ACL
 -
 Professores
-lancar notas,
-imprimir as pautas,
++lancar notas,
++imprimir as pautas,
 
-Estudantes
-Tecnicos
-Gestor
-Chefe de departamento
++Estudantes
++Tecnicos
++Gestor
++Chefe de departamento
 
 email instituicional para todos
+
+
+#VER PEDFS
+https://www.npmjs.com/package/react-pdf

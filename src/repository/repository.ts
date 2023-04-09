@@ -38,33 +38,9 @@ export default class Repository<T extends M> {
   };
 
   public createOne = async (data: any, options: any = null): Promise<T | undefined | any> => {
-    try {
-      return await this.Model.create(data, options);
-    } catch (err: any) {
-      if (err.errors)
-        throw err.errors.map(
-          ({
-            message,
-            type,
-            path,
-            value,
-            origin,
-            validatorKey,
-            validatorName,
-            validatorArgs,
-          }: any) => ({
-            message,
-            type,
-            path,
-            value,
-            origin,
-            validatorKey,
-            validatorName,
-            validatorArgs,
-          })
-        );
-      else throw err;
-    }
+
+    return await this.Model.create(data, options);
+
   };
 
   public updateOne = async (data: any, options?: any): Promise<T | any> => {
@@ -138,10 +114,11 @@ export default class Repository<T extends M> {
           ? limit
           : (Number(page) - 1) * limit;
 
-    if (scope)
-      this.repo.scope(scope);
+
+    const fromScope = scope ?
+      this.repo.scope(scope) : this.repo;
     return new Paginate(
-      await this.repo.findAll({
+      await fromScope.findAll({
         where,
         attributes: attributes
           ? attributes
