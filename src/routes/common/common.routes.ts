@@ -3,6 +3,7 @@ import { ModelCtor } from "sequelize-typescript";
 import { ModelApi } from "../../api/common/common.api";
 
 import {
+  AcademicDegree,
   Address,
   Assessment,
   AssessmentType,
@@ -48,6 +49,7 @@ const models: modelsType[] = [
 
   { key: "assessments", model: Assessment },
   { key: "assessment-types", model: AssessmentType },
+  { key: "academic-degrees", model: AcademicDegree},
 ];
 
 models.forEach(({ model, key }: modelsType) => {

@@ -54,6 +54,8 @@ const router = (app: Application) => {
 
     if (err?.original?.code === "ER_NO_REFERENCED_ROW_2") {
       errors = [{ message: `${err.table} not founds`, fields: err.fields }];
+    } else if (err.errors?.length > 0) {
+      errors = err.errors;
     } else if (typeof err.message === "string") {
       errors = [{ message: err.message }];
     } else if (Array.isArray(err) && err.length > 0) {

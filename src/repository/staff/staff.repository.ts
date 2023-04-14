@@ -66,7 +66,7 @@ export default class StaffRepository
     data.person.user = {
       password: null,
       username: `${data.person.firstName.toLowerCase()}.${data.person.lastName.toLowerCase()}`,
-      email: data.person?.contacts[0].descriptions,
+      email: data.person?.contacts.filter(({type}:any)=>type==='EMAIL')[0].descriptions,
       role: "ROLE_STAFF",
     };
     const staff = await this.createOne(data, options);

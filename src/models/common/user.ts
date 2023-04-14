@@ -204,7 +204,7 @@ export default class User extends Model {
 
 
   @AfterCreate
-  static notifyUser = async (user: User) =>
+  static notifyUser = (user: User) =>
     sendEmail({
       service: mailServices["createUser"],
       data: user,
