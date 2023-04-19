@@ -89,6 +89,18 @@ const sequelize = new Sequelize({
 
 const Repo = sequelize.getRepository;
 //sequelize.sync({ alter: true, force: false })
+enum SPs {
+  GetStudentsCountOlder = 'GetStudentsCountOlder',
+  GetStudentsCountAge = 'GetStudentsCountAge',
+  GetStudentsCountNationality = 'GetStudentsCountNationality',
+  GetStudentsCountMaritalStatus = 'GetStudentsCountMaritalStatus',
+  GetStudentsCountGender = 'GetStudentsCountGender',
+  GetStudentsRegistered='GetStudentsRegistered'
+}
+const Procedure = async (procedure: SPs, opts: any = {}) =>
+  await sequelize
+    .query('CALL ' + procedure, {})
+
 
 export default sequelize;
 
@@ -128,5 +140,9 @@ export {
 
 
   AssessmentType,
-  Assessment
+  Assessment,
+
+
+  Procedure,
+  SPs
 };

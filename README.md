@@ -83,3 +83,15 @@ email instituicional para todos
 
 #VER PEDFS
 https://www.npmjs.com/package/react-pdf
+
+##Client request tracking by IP
+curl -s https://ipinfo.io/138.199.50.99?token=09d9b4517eabfa
+
+##PM2
+https://pm2.keymetrics.io/docs/usage/startup/
+https://github.com/Unitech/pm2
+https://blog.logrocket.com/top-tools-node-js-monitoring/
+
+##load balance
+https://www.geeksforgeeks.org/how-to-create-load-balancing-servers-using-node-js/
+https://thecodebarbarian.com/building-your-own-load-balancer-with-express-js

@@ -13,6 +13,7 @@ import enrollmentRoutes from "./student/enrollment.routes";
 import periodRoutes from "./academic/period.routes";
 import classRoomRoutes from "./academic/classe-room.routes";
 import classRoutes from "./academic/classe.routes";
+import dashboards from "./common/dashBoard.routes";
 
 const routes = Router();
 
@@ -21,6 +22,7 @@ routes.use('/auth', authRoutes)
 routes.use('/tracks', trackRoutes)
 routes.use('/commons/address', addressRoutes)
 routes.use('/commons/contacts', contactRoutes)
+routes.use('/commons/dashboards', dashboards)
 
 routes.use('/students/enrollments', enrollmentRoutes)
 routes.use('/students', studentRoutes)
@@ -30,6 +32,7 @@ routes.use('/academics/periods', periodRoutes)
 routes.use('/academics/class-rooms', classRoomRoutes)
 
 routes.use('/academics/class', classRoutes)
+
 
 
 routes.use(commonRoutes)

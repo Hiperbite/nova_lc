@@ -5,7 +5,7 @@ const requireAuthentication = (
   res: Response,
   next: NextFunction
 ) => {
-  const whiteList = ["/auth","/users/forgotpasswor", "/users/resetpassword", "/users/resetpassword"];
+  const whiteList = ["/auth",'/auth/refresh',"/users/forgotpasswor", "/users/resetpassword", "/users/resetpassword"];
 
   if (whiteList.includes(req.url.substring(0,20))) {
     return next();
