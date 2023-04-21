@@ -95,7 +95,8 @@ enum SPs {
   GetStudentsCountNationality = 'GetStudentsCountNationality',
   GetStudentsCountMaritalStatus = 'GetStudentsCountMaritalStatus',
   GetStudentsCountGender = 'GetStudentsCountGender',
-  GetStudentsRegistered='GetStudentsRegistered'
+  GetStudentsRegistered='GetStudentsRegistered',
+  GetStudentHonorRoll='GetStudentHonorRoll'
 }
 const Procedure = async (procedure: SPs, opts: any = {}) =>
   await sequelize

@@ -14,6 +14,10 @@ const router = express.Router()
     "/registered",
     // validateResource(createStudentSchema),
     asyncHandler(api.registered)
+  ).get(
+    "/get-student-honor-roll",
+    // validateResource(createStudentSchema),
+    asyncHandler(api.getStudentHonorRoll)
   )
   ;
 

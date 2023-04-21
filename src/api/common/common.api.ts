@@ -66,14 +66,18 @@ class ModelApi<Model> {
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
     const models: Paginate<Model> | undefined =
-    await this.repo.paginated({ ...req.query, include: { all: true } });
+      await this.repo.paginated({ ...req.query, include: { all: true } });
     let ass;
-try {
-     ass=AssessmentApp.resultEnrollment(models?.data)
-}catch(e:any){
-  
-}
-    return res.json({...models, ass});
+    try {
+      ass = AssessmentApp.resultEnrollment(models?.data)
+    } catch (e: any) {
+
+    }try {
+      ass = AssessmentApp.resultDiscipline(models?.data)
+    } catch (e: any) {
+
+    }
+    return res.json({ ...models, ass });
   };
 }
 

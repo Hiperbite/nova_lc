@@ -25,6 +25,13 @@ class DashBoardApi {
 
     return res.json({ registered });
   };
+  getStudentHonorRoll = async (req: Request, res: Response): Promise<Response> => {
+    const studentHonorRoll = {
+      students: await Procedure(SPs.GetStudentHonorRoll)
+    };
+
+    return res.json({ studentHonorRoll });
+  };
 }
 
 export default new DashBoardApi(new Repository(Track));

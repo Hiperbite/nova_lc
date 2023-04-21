@@ -71,12 +71,36 @@ END;
 
 DROP PROCEDURE GetStudentsRegistered;
 
-CREATE PROCEDURE GetStudentsRegistered()
-BEGIN 
+CREATE PROCEDURE GETSTUDENTSREGISTERED() BEGIN 
 	SELECT C.*, COUNT(*) count
 	from Students S
 	    INNER JOIN Courses as C ON C.id = S.desiredCourseId
 	where S.code is null
 	GROUP BY desiredCourseId
 	ORDER BY C.name;
+END; 
+
+DROP PROCEDURE GetStudentHonorRoll;
+
+CREATE PROCEDURE GetStudentHonorRoll() BEGIN 
+	select
+	    MAX(U.avatar) as avatar,
+	    C.code as classe,
+	    C.semester as semester,
+	    O.name as course,
+	    R.code as period,
+	    A.enrollmentId,
+	    avg(A.value) AS avareg,
+	    P.*
+	from Assessments as A
+	    INNER JOIN Enrollments as E on E.id = A.enrollmentId
+	    INNER JOIN Classes as C on C.id = E.classeId
+	    INNER JOIN Courses as O on O.id = C.courseId
+	    INNER JOIN Period as R on R.id = C.periodId
+	    LEFT JOIN Students as S on S.id = E.studentId
+	    LEFT JOIN Persons as P on P.id = S.personId
+	    LEFT JOIN Users as U on U.personId = P.id
+	group by A.enrollmentId
+	ORDER BY avareg DESC
+	LIMIT 3;
 END; 

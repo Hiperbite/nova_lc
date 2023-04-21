@@ -74,10 +74,11 @@ export default class PlanItem extends Model {
 
   @AfterFind
   static async fetchCourse(item: PlanItem[]) {
-    await item.forEach(async (i: PlanItem) => {
-      i.curricularPlan.course = await Course.findByPk(i.curricularPlanId ?? '') || undefined
-      const y = i.curricularPlan.course;
-    }
-    )
+    try {
+      await item.forEach(async (i: PlanItem) => {
+        i.curricularPlan.course = await Course.findByPk(i.curricularPlanId ?? '') || undefined
+        const y = i.curricularPlan.course;
+      })
+    } catch (err: any) { }
   }
 }
