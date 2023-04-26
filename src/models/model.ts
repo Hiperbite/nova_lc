@@ -15,10 +15,11 @@ import {
 import _ from "lodash";
 import { v4 as uuids4 } from "uuid";
 import { Track, User } from "./index";
+import { NotificationApp } from "../application/common/notification.app";
 
 @Scopes(() => ({
   default: {
-      include: []
+    include: []
   }
 }))
 export default class Model extends Main {
@@ -46,8 +47,11 @@ export default class Model extends Main {
     model.id = model.id ?? uuids4();
   };
 
-  @BeforeUpdate
-  static prepareUpdate = (model: Model) => { };
+  @AfterSave
+  @BeforeCreate
+  static prepareUpdate = (model: Model) => {
+    model.constructor.name !== 'Notification' ? NotificationApp.create(model) : null
+  };
 
   @AfterUpdate
   @AfterSave

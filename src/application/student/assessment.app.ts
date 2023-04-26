@@ -252,7 +252,7 @@ const resultDiscipline = (assess: any/*Assessment[]*/) => {
         values['FINAL'] = result.result
 
         const final = { normal: resultNormal, exam: resultExam, resource: resultResource, ...result, step }
-        return { key: newGroup[key][0].discipline, ass: newGroup[key], result: final, ...values }
+        return { key: newGroup[key][0].enrollment, ass: newGroup[key], result: final, ...values }
     })
     return myGroup;
 }

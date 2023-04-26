@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' localhost:7100 ">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script src="/socket.io.js"></script>
+
+    <script>
+        alert(2)
+        const socket = io('/');
+        socket.on("connection", (socket) => {
+            console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+
+            alert(socket.id)
+        });
+    </script>
+</body>
+
+</html>

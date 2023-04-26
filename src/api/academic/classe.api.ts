@@ -38,12 +38,12 @@ class ClasseApi {
 
     const classe: Classe | undefined = await this.repo.one(
       id,
-      { ...opts, include }
+      { ...opts, scope: 'default' }
     );
     return res.json(classe);
   };
   findBy = async (req: Request, res: Response): Promise<Response> => {
-    const include = [Period, ClasseRoom, {model:Course,include:[CurricularPlan]}, Enrollment];
+    const include = [Period, ClasseRoom, { model: Course, include: [CurricularPlan] }, Enrollment];
     const classes: Paginate<Classe> | undefined =
       await this.repo.paginated({ ...req.query, include });
     return res.json(classes);

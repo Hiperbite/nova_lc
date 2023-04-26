@@ -1,17 +1,12 @@
 import "reflect-metadata";
-import express, { Application } from "express";
 
 import router from "./routes";
 
-import config, { PORT } from "./config";
+import config from "./config";
 
-const app: Application = express();
-app.set("port", PORT );
-
-const http = require("http").Server(app);
-
-config(app, http);
+const { app } = config();
 router(app);
+
 
 process.on("uncaughtException", (err) => {
   console.error("There was an uncaught error", err);

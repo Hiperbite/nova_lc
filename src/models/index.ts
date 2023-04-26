@@ -37,6 +37,7 @@ import { logger } from "../config";
 import Category from "./staff/category";
 import Career from "./staff/career";
 import AcademicDegree from "./staff/academic-degree";
+import Notification from "./common/notification";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -83,7 +84,9 @@ const sequelize = new Sequelize({
     AcademicDegree,
 
     AssessmentType,
-    Assessment
+    Assessment,
+
+    Notification
   ],
 });
 
@@ -143,7 +146,7 @@ export {
   AssessmentType,
   Assessment,
 
-
+  Notification,
   Procedure,
   SPs
 };

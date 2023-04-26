@@ -1,3 +1,4 @@
+import { EnrollmentApp } from './../../application/student/enrollment.app';
 import { Request, Response } from "express";
 import { AssessmentApp } from "../../application/student/assessment.app";
 import IRepository from "../../repository/iRepository";
@@ -68,15 +69,20 @@ class ModelApi<Model> {
     const models: Paginate<Model> | undefined =
       await this.repo.paginated({ ...req.query, include: { all: true } });
     let ass;
-    try {
-      ass = AssessmentApp.resultEnrollment(models?.data)
-    } catch (e: any) {
+    const { enrollmentId, disciplineId }: any = req.query?.where??{}
+    if (enrollmentId)
+      try {
+        ass = AssessmentApp.resultEnrollment(models?.data)
+      } catch (e: any) {
 
-    }try {
-      ass = AssessmentApp.resultDiscipline(models?.data)
-    } catch (e: any) {
 
-    }
+      }
+    if (disciplineId)
+      try {
+        ass = AssessmentApp.resultDiscipline(models?.data)
+      } catch (e: any) {
+
+      }
     return res.json({ ...models, ass });
   };
 }

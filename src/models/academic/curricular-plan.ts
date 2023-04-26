@@ -1,22 +1,13 @@
 import {
     Table,
-    AllowNull,
     Column,
     DataType,
-    BelongsTo,
     ForeignKey,
     HasMany,
-    BeforeCreate,
-    BeforeSave,
     HasOne,
-    DefaultScope,
     Scopes,
-    Unique,
-    AfterFind
 } from "sequelize-typescript";
-import SequenceApp from "../../application/common/sequence.app";
 import { Course, Discipline, Model, PlanItem, Staff } from "../index";
-
 
 @Scopes(() => ({
     default: {

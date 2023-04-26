@@ -1,3 +1,4 @@
+import { uniqBy } from "lodash";
 import {
     Table,
     AllowNull,
@@ -9,7 +10,7 @@ import {
     DefaultScope,
     Scopes
 } from "sequelize-typescript";
-import { Period, ClasseRoom, Model, Course, TimeTable, Enrollment } from "../index";
+import { Period, ClasseRoom, Model, Course, TimeTable, Enrollment, PlanItem, CurricularPlan, Discipline, Staff } from "../index";
 
 @DefaultScope(() => ({
     //include: [Enrollment]
@@ -17,6 +18,10 @@ import { Period, ClasseRoom, Model, Course, TimeTable, Enrollment } from "../ind
 @Scopes(() => ({
     full: {
         include: [Course, Period, ClasseRoom]
+    },
+    default: {
+        include: [ClasseRoom,
+            { model: Course, include: [{ model: CurricularPlan, include: [{ model: PlanItem, include: [Staff, Discipline] }] }] }, TimeTable, Period, Enrollment]
     }
 }))
 @Table({
@@ -38,7 +43,6 @@ export default class Classe extends Model {
     })
     semester?: number;
 
-
     @Column({
         type: DataType.VIRTUAL,
     })
@@ -56,6 +60,18 @@ export default class Classe extends Model {
         type: DataType.STRING,
     })
     descriptions?: string
+    @Column({
+        type: DataType.VIRTUAL,
+    })
+    get authorizations() {
+        let auth: any[] = [];
+        try {
+            this.course?.curricularPlan?.items?.filter((item: PlanItem) => item?.semester === this.semester)
+                .forEach(({ professor, discipline }: PlanItem) => auth.push({ discipline, professor }))
+
+        } catch (err: any) { }
+        return auth
+    }
 
     @BelongsTo(() => ClasseRoom)
     classeRoom?: ClasseRoom;

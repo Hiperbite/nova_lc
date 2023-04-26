@@ -14,6 +14,7 @@ import {
   CurricularPlan,
   Discipline,
   Document,
+  Notification,
   Person,
   PlanItem,
   Semester,
@@ -50,6 +51,7 @@ const models: modelsType[] = [
   { key: "assessments", model: Assessment },
   { key: "assessment-types", model: AssessmentType },
   { key: "academic-degrees", model: AcademicDegree},
+  { key: "notifications", model: Notification},
 ];
 
 models.forEach(({ model, key }: modelsType) => {

@@ -1,9 +1,13 @@
 import dotenv from "dotenv";
 import errorHandler from "./routes/hendlers";
-import { log, logger, loggerOptions, errorLoggerOptions } from "./application/logger";
+import {
+  log,
+  logger,
+  loggerOptions,
+  errorLoggerOptions,
+} from "./application/logger";
 
 import { createServer } from "http";
-import express, { Application } from "express";
 import session, { MemoryStore } from "express-session";
 import bodyParser from "body-parser";
 import "reflect-metadata";
@@ -13,6 +17,10 @@ const rateLimit = require("express-rate-limit");
 import cors from "cors";
 import expressWinston from "express-winston";
 import path from "path";
+import socketIO from "socket.io";
+
+import express, { Application } from "express";
+import socketService from "./service/socket.service";
 
 dotenv.config({ path: __dirname + "/../.env" });
 
@@ -38,11 +46,15 @@ const {
   TOKEN_EXPIRE_IN,
 } = process.env;
 
-const logLevel = "info";
-const config = (app: Application, http: any) => {
+const app: Application = express();
+const httpServer = createServer(app);
 
+const logLevel = "info";
+const config = () => {
   app.use(expressWinston.logger(loggerOptions));
   app.use(expressWinston.errorLogger(errorLoggerOptions));
+  app.use(express.static('public'))
+  app.set("port", PORT);
 
   app.use(errorHandler);
   app.use(
@@ -68,9 +80,7 @@ const config = (app: Application, http: any) => {
   );
   app.set("views", path.resolve(__dirname + "/../helpers/mailer/templates/"));
 
-
   app.use((req: any, res: any, next: any) => {
-
     next();
   });
 
@@ -84,7 +94,9 @@ const config = (app: Application, http: any) => {
     keyGenerator: (req: any, res: any) => req.ip,
     //store: new MemoryStore(),
     handler: (req: any, res: any, next: any, opt: any) =>
-      res.status(opt.statusCode).send(`You can only make ${opt.max} requests every minutes.`),
+      res
+        .status(opt.statusCode)
+        .send(`You can only make ${opt.max} requests every minutes.`),
   });
 
   app.use(limiter);
@@ -117,11 +129,11 @@ const config = (app: Application, http: any) => {
   // parse requests of content-type - application/x-www-form-urlencoded
   app.use(express.urlencoded({ extended: true }));
 
-  const httpServer = createServer(app);
-
   const start = async (): Promise<any> => {
     try {
       return httpServer.listen(PORT, () => {
+
+        socketService.init(httpServer);
         console.log(
           `⚡️[server]: Server is running at https://localhost:${PORT}`
         );
@@ -132,12 +144,15 @@ const config = (app: Application, http: any) => {
   };
 
   const server = start();
+
+  return { server, app, httpServer };
 };
 export default config;
 
 const AUTHORIZED_CLIENTS = AUTHORIZED?.split(",").map((x: string) =>
   x.split(":")
 );
+
 const smtp = {
   user: MAILER_USER || "",
   pass: MAILER_PASSWORD || "",
@@ -151,9 +166,11 @@ const WEB_CLIENT_URL = {
   test: "http://localhost:3000",
   quality: "https://academic.app.hiperbite.com",
   production: "http://localhost:3000",
+}[MY_NODE_ENV ?? "development"];
 
-}[MY_NODE_ENV ?? 'development']
+const socket = socketService;
 export {
+  httpServer,
   DB_HOST,
   DB_USER,
   DB_PASSWORD,
@@ -176,5 +193,6 @@ export {
   refreshTokenPublicKey,
   smtp,
   logLevel,
-  logger
+  logger,
+  socket,
 };

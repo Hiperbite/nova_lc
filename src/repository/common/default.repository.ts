@@ -14,6 +14,8 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
 
   protected t: any;
   protected startTransaction = async () => this.t = this.t ?? await sequelize.transaction();
+
+
   private refactorOptions = async ({
     attributes: attr,
     exclude = [],
@@ -32,9 +34,11 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
       exclude,
     };
   };
+
+
   public one = async (id: string, opts: any = {}): Promise<T | undefined> => {
     const options = await this.refactorOptions(opts);
-    const data = await this.Model.findByPk(id, options);
+    const data = await this.Model.scope(opts?.scope ?? 'default').findByPk(id, options);
     if (data === null) {
       throw { code: 404, message: "Record not found" }
     }
@@ -54,9 +58,7 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
     if (model === null) {
       throw { code: 400, message: 'Resource not found to update' }
     }
-    await model?.update(d, { ...opts });
-    return model;
-
+    return await model?.update(d, { ...opts });
   };
 
   public delete = async (id: any | string): Promise<boolean> => {
@@ -120,7 +122,7 @@ export default class DefaultRepository<T extends M> implements IRepository<T> {
       Number(page) < 1
         ? 0
         : (Number(page) - 1) * limit;
-    
+
     return new Paginate(
       await this.Model.scope(scope).findAll({
         where,
