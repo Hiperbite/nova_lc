@@ -15,7 +15,8 @@ import {
     AfterSave,
     AfterUpdate,
     Unique,
-    BelongsTo
+    BelongsTo,
+    AfterFind
 } from "sequelize-typescript";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 import { Classe, CurricularPlan, Model, Student } from "../index";
@@ -68,6 +69,11 @@ export default class Course extends Model {
     }
 
     @AfterCreate
+    static initAfterCreateModel = async (course: Course) =>
+        await CurricularPlan.create({ id: course?.id });
+
+
+
     @AfterSave
     @AfterUpdate
     static initAfterSaveModel = async (course: Course) => {
@@ -75,11 +81,20 @@ export default class Course extends Model {
             let code = await SequenceApp.count(CODES.COURSE);
             course.code = uuidv4().substring(5, 9).toUpperCase() + String(code).padStart(2, '0');
         }
-        /*if (course.curricularPlans?.length === 0)
+        if (course.curricularPlan)
             try {
                 await CurricularPlan.create({ id: course?.id });
-            } catch (e) { }*/
-        // course.update({ curricularPlanId: curricularPlan?.id })
+            } catch (e) { }
+
+    };
+
+
+    @AfterFind
+    static initAfterFindModel = async (course: Course) => {
+        if (course.curricularPlan)
+            try {
+                await CurricularPlan.create({ id: course?.id });
+            } catch (e) { }
 
     };
 }

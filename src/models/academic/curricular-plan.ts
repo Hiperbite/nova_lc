@@ -6,6 +6,7 @@ import {
     HasMany,
     HasOne,
     Scopes,
+    BeforeFind,
 } from "sequelize-typescript";
 import { Course, Discipline, Model, PlanItem, Staff } from "../index";
 
@@ -41,4 +42,16 @@ export default class CurricularPlan extends Model {
     @HasMany(() => PlanItem)
     items?: PlanItem[]
 
+    @BeforeFind
+    static beforePlanFind = async (model: any) => {
+        try {
+            const course = await Course.findByPk(model?.where?.id)
+            if (course)
+                await CurricularPlan.create({ id: model?.where?.id })
+        } catch (e: any) {
+            const y = e
+        }
+
+
+    }
 }
