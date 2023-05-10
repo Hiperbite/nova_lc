@@ -32,6 +32,11 @@ class DashBoardApi {
 
     return res.json({ studentHonorRoll });
   };
+  getStudentCount = async (req: Request, res: Response): Promise<Response> => {
+    const studentsCount =(await Procedure(SPs.GetStudentCount))[0]
+    
+    return res.json({ studentsCount });
+  };
 }
 
 export default new DashBoardApi(new Repository(Track));

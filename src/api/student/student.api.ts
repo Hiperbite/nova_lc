@@ -21,6 +21,8 @@ class StudentApi {
     const student: Student | void = await this.repo.create(body);
     return res.json(student);
   };
+
+  
   update = async (req: Request, res: Response): Promise<Response | void> => {
     const { id } = req.params;
     const { body } = req;
@@ -33,6 +35,8 @@ class StudentApi {
 
     return res.json(updatedStudent);
   };
+
+
   find = async (req: Request, res: Response): Promise<Response | void> => {
     const { id } = req.params;
     const { query } = req;
@@ -44,6 +48,8 @@ class StudentApi {
 
     return res.json(student);
   };
+
+
   findBy = async (req: Request, res: Response): Promise<Response | void> => {
     const { query, queryPerson } = StudentApp.filters.basicQuery(req.query?.where ?? {})
     const {

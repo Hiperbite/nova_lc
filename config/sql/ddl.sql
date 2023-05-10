@@ -104,3 +104,20 @@ CREATE PROCEDURE GetStudentHonorRoll() BEGIN
 	ORDER BY avareg DESC
 	LIMIT 3;
 END; 
+
+
+
+DROP PROCEDURE GetStudentCount;
+CREATE  PROCEDURE GetStudentCount() BEGIN 
+	select 
+
+	(select count(*) from Enrollments where isActive is false) as inActiveEnrollments,
+		(select count(*) from Enrollments where isActive is false AND YEAR(createdAt)=YEAR(CURDATE())) as inActiveEnrollmentsThisYear,
+	(select count(*) from Enrollments) as enrollments,
+	(select count(*) from Enrollments where YEAR(createdAt)=YEAR(CURDATE())) as enrollmentsThisYear,
+	(select count(*) from Enrollments where YEAR(createdAt)=YEAR(CURDATE())-1) as enrollmentsLastYear,
+	(select count(*) from Students) as studets,
+	(select count(*) from Students where YEAR(createdAt)=YEAR(CURDATE())) studentsThisYear
+	from Period
+	LIMIT 1;
+END; 

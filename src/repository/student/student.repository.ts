@@ -9,6 +9,7 @@ import {
   Enrollment,
   Classe,
   Course,
+  Period,
 } from "../../models/index";
 import { UserRepository } from "../index";
 import IRepository from "../iRepository";
@@ -26,7 +27,7 @@ export default class StudentRepository
   private defaultOptions = async () => ({
     attributes: Object.keys(await Student.describe()),
     include: [Course,
-      { model: Enrollment, include: [Classe] },
+      { model: Enrollment, include: [{ model: Classe, include: [Course, Period] }] },
       {
         model: Person,
         include: [
@@ -119,7 +120,7 @@ export default class StudentRepository
         where = {
           ...where, ... {
             [Op.and]: [{
-              code:  {
+              code: {
                 [Op.eq]: null
               }
             }]
