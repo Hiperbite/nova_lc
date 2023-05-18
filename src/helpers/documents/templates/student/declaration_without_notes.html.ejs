@@ -1,0 +1,51 @@
+<% var student=data.student%>
+    <% var contacts=data.contacts%>
+        <% var CHEF_NAME='João Victor Oliveira'%>
+            <% var CHEF_TITLE='Anderson Lima'%>
+
+
+                <table border="0">
+                    <tr>
+                        <td style="height: 120px;">
+                            <%- include('../header.html.ejs',{logo}) %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                            <h1 style="text-align:  center ">DECLARAÇÃO</h1>
+                            <p>N/Ref: 00252/2023</p>
+                            <p>A faculdade acima citada do instituto Superior do Bengo declara que&nbsp; <b><%=student.fullName%>
+                </b> natural de
+                                <%=student?.person?.birthPlaceAddress?.city%>
+                                    <%=student?.person?.birthPlaceAddress?.province%> frequenta&nbsp; o
+                                        <%=student?.enrollment?.classe?.grade%>º Ano nesta faculdade o plano curicular&nbsp; da licenciatura do curso de '#AGRONOMIA' matriculado sob o numero de estudante
+                                            <%=student?.code%>
+                            </p>
+                            <p>É tudo que me compete informar</p>
+                            <p>Departamento de Assuntos academicos da faculdade do Instituto Superior do Bengo aos
+                                <%=moment().format('DD [de] MMMM [de] YYYY')%>
+                            </p>
+                            <p style="text-align:center ">&nbsp;</p>
+                            <p style="text-align:center ">&nbsp;</p>
+                            <p style="text-align:center ">O Chefe de departamento</p>
+                            <p style="text-align:center ">_____________________________</p>
+                            <p style="text-align:center ">
+                                <%=CHEF_NAME%><br />(
+                                    <%=CHEF_TITLE%>)</p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+
+                            <p style="text-align:  center ; font-size: 5 ">Instituto Superior do bengo, Avenida 22 de maio, Caxito, bengo - Angola
+                                <br /> Telefones n&ordm; 222 985 663, 222 985 236, E'mail: ispbengo@ispbengo.ao</p>
+                        </td>
+                    </tr>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #CCC
+            ;">
+
+                        </td>
+                    </tr>
+                </table>

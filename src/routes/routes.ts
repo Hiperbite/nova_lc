@@ -14,6 +14,7 @@ import periodRoutes from "./academic/period.routes";
 import classRoomRoutes from "./academic/classe-room.routes";
 import classRoutes from "./academic/classe.routes";
 import dashboards from "./common/dashBoard.routes";
+import helpers from "./common/helper.routes";
 
 const routes = Router();
 
@@ -23,6 +24,7 @@ routes.use('/tracks', trackRoutes)
 routes.use('/commons/address', addressRoutes)
 routes.use('/commons/contacts', contactRoutes)
 routes.use('/commons/dashboards', dashboards)
+routes.use('/commons/helpers', helpers)
 
 routes.use('/students/enrollments', enrollmentRoutes)
 routes.use('/students', studentRoutes)

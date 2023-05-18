@@ -91,7 +91,7 @@ export default class Course extends Model {
 
     @AfterFind
     static initAfterFindModel = async (course: Course) => {
-        if (course.curricularPlan)
+        if (course?.curricularPlan)
             try {
                 await CurricularPlan.create({ id: course?.id });
             } catch (e) { }

@@ -1,0 +1,100 @@
+<% var student=data.student%>
+    <% var contacts=data.contacts%>
+
+        <table border="0">
+            <tr>
+                <td style="height: 120px;">
+
+                    <%- include('../header.html.ejs',{logo}) %>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                    <table class="table">
+                        <tr>
+                            <td colSpan=2>
+                                <h1>FICHA DE
+                                    <%=student?.code ? 'ESTUDANTE': 'CANDIDATO' %>#
+                                        <%=student?.code ? student?.code: student?.entryCode%>
+                                </h1>
+                            </td>
+                            <td colSpan=1 style="text-align: right;"><small className='pull-right'>
+                            <%=moment().format(" dddd[,] DD [de] MMMM [de] YYYY, [as] HH:mm ")%><br/>
+                            <%=student?.id.slice(2,10).toUpperCase()%>
+                        
+                        </small></td>
+                        </tr>
+                        <tr>
+                            <th rowSpan=4>Dados Pessoais</th>
+                            <td colSpan=2>Primeiro Nome<br /><b><%=student?.person?.firstName%><%=student?.person?.otherNames%><%=student?.person?.lastName%></b></td>
+                        </tr>
+                        <tr>
+                            <td>Sexo<br /><b><%=student?.person?.gender%></b></td>
+                            <td>Estado Civil<br /><b><%=student?.person?.maritalStatus%></b></td>
+                        </tr>
+                        <tr>
+                            <td>Data de Nascimento<br /><b><%=moment(student?.person?.birthDate).format(" dddd[,] DD [de] MMMM [de] YYYY, [as] HH:mm ")%></b></td>
+                            <td>Idade<br /><b><%=moment(student?.person?.birthDate).fromNow()%></b></td>
+                        </tr>
+                        <tr>
+                            <td>Morada<br /><b><%=student?.person?.livingAddress?.address%><%=student?.person?.livingAddress?.city%></b>
+                                <br/>Provincia: <b><%=student?.person?.livingAddress?.province%></b></td>
+                            <td>Local de Nascimento<br /><b><%=student?.person?.birthPlaceAddress?.address%><%=student?.person?.birthPlaceAddress?.city%></b><br/>Provincia: <b><%=student?.person?.birthPlaceAddress?.province%></b></td>
+                        </tr>
+                        <% if(student?.code) {
+                        %>
+                            <tr>
+                                <th rowSpan=3>Dados Academicos</th>
+                                <td>Ano<br /><b><%=student?.enrollment?.classe?.grade%>º </b></td>
+                                <td>Semestre<br /><b><%=student?.enrollment?.classe?.semester%>º </b></td>
+                            </tr>
+                            <tr>
+                                <td>Turma<br /><b><%=student?.enrollment?.classe?.code%></b></td>
+                                <td>Periodo<br /><b><%=student?.enrollment?.classe?.period?.descriptions%></b></td>
+                            </tr>
+                            <tr>
+                                <td>Curso<br /><b><%=student?.enrollment?.classe?.course?.code%><%=student?.enrollment?.classe?.course?.name%></b></td>
+                                <td>Data de Matricula<br /><b><%=moment(student?.enrollment?.createdAt).format(" dddd[,] DD [de] MMMM [de] YYYY, [as] HH:mm ")%></b><br />Data de Registo<br /><b><%=moment(student?.createdAt).format(" dddd[,] DD [de] MMMM [de] YYYY, [as] HH:mm ")%></b></td>
+                            </tr>
+                            <%
+                    }
+                    
+                    %>
+                                <tr>
+                                    <th>Contactos</th>
+                                    <td colSpan=2>
+                                        <% for(var i=0;
+                    i<contacts.length;
+                    i++) {
+                        %>
+                                            <div style=" width: 50%; float: left">
+                                                <%=contacts[i].type%><br />
+                                                    <% for (var j=0;
+                        j<contacts[i].contacts.length;
+                        j++) {
+                            %><b><%=contacts[i].contacts[j].descriptions%></b><br />
+                                                        <%
+                        }
+                        %>
+                                            </div>
+                                            <%
+                    }
+                    
+                    %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th rowSpan=1>Curso desejado</th>
+                                    <td colSpan=2>Primeira Opção<br /><b><%=student?.desiredCourse?.code%>- <%=student?.desiredCourse?.name%></b></td>
+                                </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td style="background-color: #CCC
+            ;">
+
+                </td>
+            </tr>
+        </table>

@@ -37,6 +37,12 @@ import sendEmail, { mailServices } from "../../application/mailler/index";
         Assessment, { model: Classe, include: [Course, Period, ClasseRoom] }]
     }]
   },
+  master: {
+    include: [{
+      model: Enrollment, include: [
+        Assessment, { model: Classe, include: [Course, Period, ClasseRoom] }]
+    }]
+  },
 }))
 @Table({
   timestamps: true,
