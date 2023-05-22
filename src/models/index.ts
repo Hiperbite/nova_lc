@@ -38,6 +38,9 @@ import Category from "./staff/category";
 import Career from "./staff/career";
 import AcademicDegree from "./staff/academic-degree";
 import Notification from "./common/notification";
+import Ticket from "./help-desk/ticket";
+import TicketState from "./help-desk/ticket-state";
+import TicketType from "./help-desk/ticket-type";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -86,21 +89,25 @@ const sequelize = new Sequelize({
     AssessmentType,
     Assessment,
 
-    Notification
+    Notification,
+
+    Ticket,
+    TicketState,
+    TicketType
   ],
 });
 
 const Repo = sequelize.getRepository;
-//sequelize.sync({ alter: true, force: false })
+sequelize.sync({ alter: true, force: false })
 enum SPs {
   GetStudentsCountOlder = 'GetStudentsCountOlder',
   GetStudentsCountAge = 'GetStudentsCountAge',
   GetStudentsCountNationality = 'GetStudentsCountNationality',
   GetStudentsCountMaritalStatus = 'GetStudentsCountMaritalStatus',
   GetStudentsCountGender = 'GetStudentsCountGender',
-  GetStudentsRegistered='GetStudentsRegistered',
-  GetStudentHonorRoll='GetStudentHonorRoll',
-  GetStudentCount='GetStudentCount'
+  GetStudentsRegistered = 'GetStudentsRegistered',
+  GetStudentHonorRoll = 'GetStudentHonorRoll',
+  GetStudentCount = 'GetStudentCount'
 }
 const Procedure = async (procedure: SPs, opts: any = {}) =>
   await sequelize
@@ -149,5 +156,10 @@ export {
 
   Notification,
   Procedure,
-  SPs
+  SPs,
+
+
+  Ticket,
+  TicketState,
+  TicketType
 };

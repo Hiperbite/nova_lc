@@ -18,6 +18,9 @@ import {
   Person,
   PlanItem,
   Semester,
+  Ticket,
+  TicketState,
+  TicketType,
   TimeTable,
 } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
@@ -38,7 +41,7 @@ const models: modelsType[] = [
 
   { key: "categories", model: Category },
   { key: "careers", model: Career },
-  
+
   { key: "persons", model: Person },
   { key: "documents", model: Document },
   { key: "courses", model: Course },
@@ -50,8 +53,12 @@ const models: modelsType[] = [
 
   { key: "assessments", model: Assessment },
   { key: "assessment-types", model: AssessmentType },
-  { key: "academic-degrees", model: AcademicDegree},
-  { key: "notifications", model: Notification},
+  { key: "academic-degrees", model: AcademicDegree },
+  { key: "notifications", model: Notification },
+
+  { key: "tickets", model: Ticket },
+  { key: "ticket-states", model: TicketState },
+  { key: "ticket-types", model: TicketType },
 ];
 
 models.forEach(({ model, key }: modelsType) => {
