@@ -20,7 +20,8 @@ enum CODES {
   REGISTRATION = "REGISTRATION",
   COURSE = "COURSE",
   DISCIPLINE = "DISCIPLINE",
-  STAFF = "STAFF"
+  STAFF = "STAFF",
+  EVENT = "EVENT",
 }
 
 export default SequenceApp;
