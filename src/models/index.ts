@@ -41,6 +41,8 @@ import Notification from "./common/notification";
 import Ticket from "./help-desk/ticket";
 import TicketState from "./help-desk/ticket-state";
 import TicketType from "./help-desk/ticket-type";
+import Event from "./event/event";
+import EventType from "./event/event-type";
 dotenv.config();
 
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
@@ -93,10 +95,19 @@ const sequelize = new Sequelize({
 
     Ticket,
     TicketState,
-    TicketType
+    TicketType,
+    Event,
+    EventType
   ],
 });
 
+const initialData={
+  'EventType':[
+    {code:'Matricula',name:'Matricula'},
+    {code:'ConfirmacaoMatricula',name:'Confirmação de Matricula'},
+    {code:'Matricula',name:'Inscrição'},
+  ]
+}
 const Repo = sequelize.getRepository;
 sequelize.sync({ alter: true, force: false })
 enum SPs {
@@ -161,5 +172,8 @@ export {
 
   Ticket,
   TicketState,
-  TicketType
+  TicketType,
+
+  Event,
+  EventType
 };

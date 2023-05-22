@@ -3,7 +3,7 @@ import { Sequence } from "../../models/index";
 class SequenceApp {
   constructor() { }
 
-  public static count = async (code: string) => {
+  public static count = async (code: CODES) => {
     let sequence: any = await Sequence.findOne({ where: { code } });
     if (sequence === null) {
       sequence = await Sequence.create({ code })
@@ -21,7 +21,8 @@ enum CODES {
   COURSE = "COURSE",
   DISCIPLINE = "DISCIPLINE",
   STAFF = "STAFF",
-  TICKET = "TICKET"
+  TICKET = "TICKET",
+  EVENT = "EVENT",
 }
 
 export default SequenceApp;
