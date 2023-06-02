@@ -1,4 +1,4 @@
-import { Sequelize, Table } from "sequelize-typescript";
+import { createIndexDecorator, Sequelize, Table } from "sequelize-typescript";
 
 import Model from "./model";
 import User from "./common/user";
@@ -45,6 +45,8 @@ import Event from "./event/event";
 import EventType from "./event/event-type";
 dotenv.config();
 
+import { v4 as uuid } from "uuid";
+import EventSchedule from "./event/event-schedule";
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const sequelize = new Sequelize({
@@ -97,19 +99,50 @@ const sequelize = new Sequelize({
     TicketState,
     TicketType,
     Event,
-    EventType
+    EventType,
+    EventSchedule
   ],
 });
 
-const initialData={
-  'EventType':[
-    {code:'Matricula',name:'Matricula'},
-    {code:'ConfirmacaoMatricula',name:'Confirmação de Matricula'},
-    {code:'Matricula',name:'Inscrição'},
+
+
+
+const UniqIndex = createIndexDecorator({
+  name: uuid() + '-index',
+  type: 'UNIQUE',
+  unique: true,
+});
+
+const initialData = [{
+  model: EventType, data: [
+    { code: 'Matricula', name: 'Matricula' },
+    { code: 'ConfirmacaoMatricula', name: 'Confirmação de Matricula' },
+    { code: 'Inscricao', name: 'Inscrição' },
   ]
-}
+}, {
+  model: TicketType, data: [
+    { code: '9', descriptions: 'Cartão de Estudantes' },
+    { code: '8', descriptions: 'Declaração com Notas' },
+    { code: '7', descriptions: 'Declaração sem Notas' },
+    { code: '6', descriptions: 'Histórico de Estudantes' },
+  ]
+}, {
+  model: TicketState, data: [
+    { code: 'Opened', descriptions: 'Aberto' },
+    { code: 'Aproved', descriptions: 'Aprovado' },
+    { code: 'Done', descriptions: 'Resolvido' },
+    { code: 'Rejected', descriptions: 'Rejeitado' },
+  ]
+}]
 const Repo = sequelize.getRepository;
-sequelize.sync({ alter: true, force: false })
+sequelize.sync({ alter: true, force: false }).then(() =>
+  initialData.forEach(({ model, data }: any) => data.forEach(async (d: any) =>
+    model.findOne({ where: { code: d.code } }).then((f: any) => f
+      ? null
+      : model.create(d).catch(console.log))
+  ))
+)
+
 enum SPs {
   GetStudentsCountOlder = 'GetStudentsCountOlder',
   GetStudentsCountAge = 'GetStudentsCountAge',
@@ -173,7 +206,9 @@ export {
   Ticket,
   TicketState,
   TicketType,
-
+  EventSchedule,
   Event,
-  EventType
+  EventType,
+
+  UniqIndex
 };

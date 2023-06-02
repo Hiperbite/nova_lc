@@ -23,6 +23,7 @@ enum CODES {
   STAFF = "STAFF",
   TICKET = "TICKET",
   EVENT = "EVENT",
+  SCHEDULE="SCHEDULE"
 }
 
 export default SequenceApp;

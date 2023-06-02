@@ -5,10 +5,19 @@ import {
     Scopes,
     HasMany,
     Unique,
+    createIndexDecorator,
 } from "sequelize-typescript";
 
-import { Model, Event , UniqIndex} from "../index";
+import { Model, Event } from "../index";
 
+
+import { v4 as uuid } from "uuid";
+const UniqIndex = createIndexDecorator({
+    name: uuid()+'-index',
+    type: 'UNIQUE',
+    unique: true,
+  });
+  
 @Scopes(() => ({
     default: {
         include: []
@@ -20,7 +29,6 @@ import { Model, Event , UniqIndex} from "../index";
 })
 export default class EventType extends Model {
     @UniqIndex
-    @Unique({ name: "code", msg: "code_should_be_unique" }) // add this line
     @Column({
         type: DataType.STRING,
         allowNull: false,

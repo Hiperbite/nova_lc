@@ -9,6 +9,8 @@ const validateRequest = (
   const { where, order }: any = req.query
   if (where) {
     Object.keys(where).forEach((key: string) => {
+      if (where[key] && where[key].indexOf(',') > -1)
+        where[key] = where[key].split(',');
       if (where[key] === 'true' || where[key] === 'false')
         where[key] = where[key] === 'true' ? true : false;
     })

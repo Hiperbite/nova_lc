@@ -7,9 +7,10 @@ import {
     ForeignKey,
     BeforeCreate,
     BeforeSave,
+    HasMany,
 } from "sequelize-typescript";
 
-import { Model , EventType} from "../index";
+import { Model, EventType, EventSchedule } from "../index";
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 
@@ -31,9 +32,9 @@ export default class Event extends Model {
 
     @Column({
         type: DataType.STRING,
-        allowNull: false,
+        allowNull: true,
     })
-    code!: string;
+    code?: string;
 
     @Column({
         type: DataType.TEXT,
@@ -41,26 +42,42 @@ export default class Event extends Model {
     })
     descriptions?: string;
 
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-    })
-    starte!: Date;
+    get nextStates() {
 
-    @Column({
-        type: DataType.DATE,
-        allowNull: false,
-    })
-    end!: Date;
-
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: true,
-    })
-    privacity?: number;
-
+        const states: any = ['Agendar']/*{
+            'Opened': ['Aproved', 'Rejected'],
+            'Aproved': ['Done'],
+            'Done': ['Opened'],
+            'Rejected': ['Opened'],
+            '*': ['Opened']
+        }[this?.state?.code ?? '*']/**/
+        //Rejected,Opened, Aproved, Done
+        return states;
+    }
+    /*
+        @Column({
+            type: DataType.DATE,
+            allowNull: false,
+        })
+        start!: Date;
+    
+        @Column({
+            type: DataType.DATE,
+            allowNull: false,
+        })
+        end!: Date;
+    
+        @Column({
+            type: DataType.INTEGER,
+            allowNull: true,
+        })
+        privacity?: number;
+    */
     @BelongsTo(() => EventType)
     type!: EventType
+
+    @HasMany(() => EventSchedule)
+    schedules!: EventSchedule[]
 
     @ForeignKey(() => EventType)
     typeId!: string;

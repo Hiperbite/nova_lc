@@ -2,6 +2,7 @@ import express from "express";
 import { ModelCtor } from "sequelize-typescript";
 import { ModelApi } from "../../api/common/common.api";
 
+
 import {
   AcademicDegree,
   Address,
@@ -14,6 +15,7 @@ import {
   CurricularPlan,
   Discipline,
   Document,
+  EventType,
   Notification,
   Person,
   PlanItem,
@@ -22,6 +24,8 @@ import {
   TicketState,
   TicketType,
   TimeTable,
+  Event,
+  EventSchedule
 } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 
@@ -59,6 +63,10 @@ const models: modelsType[] = [
   { key: "tickets", model: Ticket },
   { key: "ticket-states", model: TicketState },
   { key: "ticket-types", model: TicketType },
+
+  { key: "events", model: Event },
+  { key: "event-schedules", model: EventSchedule },
+  { key: "event-types", model: EventType},
 ];
 
 models.forEach(({ model, key }: modelsType) => {

@@ -31,23 +31,42 @@ export default class Ticket extends Model {
         allowNull: true,
     })
     code?: string;
+
     @Column({
         type: DataType.TEXT,
         allowNull: true,
     })
     descriptions?: string;
 
+    @Column({
+        type: DataType.VIRTUAL
+    })
+    get  nextStates() {
+
+        const states = {
+            'Opened': ['Aproved', 'Rejected'],
+            'Aproved': ['Done'],
+            'Done': ['Opened'],
+            'Rejected': ['Opened'],
+            '*': ['Opened']
+        }[this?.state?.code ?? '*']
+        //Rejected,Opened, Aproved, Done
+        return states;
+    }
     @ForeignKey(() => User)
     userId?: string;
 
     @BelongsTo(() => User)
     user?: User;
 
+    @Column({
+        type: DataType.TEXT,
+        allowNull: true,
+    })
+    attendedById?: string;
+
     @BelongsTo(() => User)
     attendedBy?: User;
-
-    @ForeignKey(() => User)
-    attendedById?: string;
 
     @ForeignKey(() => TicketType)
     typeId?: string;

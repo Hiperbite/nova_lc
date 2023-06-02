@@ -24,6 +24,13 @@ import bcrypt from "bcrypt";
 import { UserApp } from "../../application/common/user.app";
 import sendEmail, { mailServices } from "../../application/mailler/index";
 
+import { v4 as uuid } from "uuid";
+
+const UniqIndex = createIndexDecorator({
+  name: 'Email-index',
+  type: 'UNIQUE',
+  unique: true,
+});
 export type ROLES =
   | 'ROLES_STUDENT'
   | 'ROLES_PROFESSOR'
@@ -67,13 +74,6 @@ export type PermissionsType =
 
 
 
-
-const EmailIndex = createIndexDecorator({
-  name: 'email-index',
-  type: 'UNIQUE',
-  unique: true,
-});
-
 @Scopes(() => ({
   main: {
     include: [{
@@ -105,7 +105,7 @@ export default class User extends Model {
   })
   username!: string;
 
-  @EmailIndex
+ // @UniqIndex
   @Column({
     type: DataType.STRING,
     allowNull: true

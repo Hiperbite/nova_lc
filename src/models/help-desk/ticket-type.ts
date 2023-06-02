@@ -4,9 +4,17 @@ import {
   DataType,
   Scopes,
   HasMany,
+  createIndexDecorator,
 } from "sequelize-typescript";
 
 import { Model, Ticket } from "../index";
+import { v4 as uuid } from "uuid";
+
+const UniqIndex = createIndexDecorator({
+  name: uuid()+'-index',
+  type: 'UNIQUE',
+  unique: true,
+});
 
 
 @Scopes(() => ({
@@ -31,6 +39,7 @@ export default class TicketType extends Model {
   })
   type?: string;
   
+//  @UniqIndex
   @Column({
     type: DataType.TEXT,
     allowNull: true,
