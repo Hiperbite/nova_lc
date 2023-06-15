@@ -9,7 +9,7 @@ import {
     BeforeSave,
     HasMany,
 } from "sequelize-typescript";
-
+import moment from "moment";
 import { Model, EventType, EventSchedule } from "../index";
 
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
@@ -41,7 +41,6 @@ export default class Event extends Model {
         allowNull: true,
     })
     descriptions?: string;
-
     get nextStates() {
 
         const states: any = ['Agendar']/*{
@@ -54,25 +53,14 @@ export default class Event extends Model {
         //Rejected,Opened, Aproved, Done
         return states;
     }
-    /*
-        @Column({
-            type: DataType.DATE,
-            allowNull: false,
-        })
-        start!: Date;
-    
-        @Column({
-            type: DataType.DATE,
-            allowNull: false,
-        })
-        end!: Date;
-    
-        @Column({
-            type: DataType.INTEGER,
-            allowNull: true,
-        })
-        privacity?: number;
-    */
+ 
+    @Column({
+        type: DataType.VIRTUAL,
+    })
+    get activeSchedules(): EventSchedule[] {
+        return this.schedules?.filter((s: EventSchedule) => moment(s.end) >= moment(moment().format('YYYY-MM-DD'))).sort((a: EventSchedule, b: EventSchedule)=>a.start>b.start ? 1 : -1)
+    }
+
     @BelongsTo(() => EventType)
     type!: EventType
 

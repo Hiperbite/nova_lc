@@ -20,4 +20,10 @@ router
     asyncHandler(api.fileDownload)
   )
 
+router
+  .get(
+    `/permissions`,
+    // validateResource(createStudentSchema),
+    asyncHandler(api.permissions)
+  )
 export default router;

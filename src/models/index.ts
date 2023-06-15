@@ -119,6 +119,12 @@ const initialData = [{
     { code: 'ConfirmacaoMatricula', name: 'Confirmação de Matricula' },
     { code: 'Inscricao', name: 'Inscrição' },
   ]
+},{
+  model: Event, data: [
+    { code: 'EVT00000013',isActive:false, name: 'Inscrição de Novos Estudantes' },
+    { code: 'EVT00000012',isActive:false, name: 'Matricula de Novos Inscritos' },
+    { code: 'EVT00000011',isActive:false, name: 'Inscrição de novos alunos' },
+  ]
 }, {
   model: TicketType, data: [
     { code: '9', descriptions: 'Cartão de Estudantes' },

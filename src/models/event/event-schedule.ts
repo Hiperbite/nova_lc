@@ -66,4 +66,5 @@ export default class EventSchedule extends Model {
         schedule.code = 'SDL' + String(code).padStart(8, '0');
 
     };
+
 }

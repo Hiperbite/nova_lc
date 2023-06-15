@@ -10,9 +10,10 @@ import {
     HasMany,
     Scopes
 } from "sequelize-typescript";
+import { canCreateEnrollment } from "../../application/business";
 import SequenceApp, { CODES } from "../../application/common/sequence.app";
 import sendEmail, { mailServices } from "../../application/mailler/index";
-import { Assessment, Classe, ClasseRoom, Course, Model, Period, Person, Student, User } from "../index";
+import { Assessment, Classe, ClasseRoom, Course, EventType, Model, Period, Person, Student, User } from "../index";
 
 @DefaultScope(() => ({
     // include: [Student, Classe]
@@ -94,6 +95,9 @@ export default class Enrollment extends Model {
 
         const student = await Student.findByPk(enrollment.studentId, { include: [Person] });
         if (student?.code === null) {
+            const can = await canCreateEnrollment(EventType.Matricula)
+            if (!can.success)
+                throw { code: 401, ...can }
 
             let code = await SequenceApp.count(CODES.ENROLLMENT);
             student.code = String(code).padStart(6, '0');
@@ -104,6 +108,11 @@ export default class Enrollment extends Model {
                     service: mailServices.createEnrollment,
                     data: { person: student?.person, student: student, to: student?.person?.user?.email }
                 })
+        }else{
+            const can = await canCreateEnrollment(EventType.ConfirmacaoMatricula)
+            if (!can.success)
+                throw { code: 401, ...can }
+                
         }
     };
 }
