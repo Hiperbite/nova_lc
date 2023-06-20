@@ -25,7 +25,14 @@ import {
   TicketType,
   TimeTable,
   Event,
-  EventSchedule
+  EventSchedule,
+
+  LocalSetting,
+  SystemSetting,
+  ClasseSetting,
+  DocumentSetting,
+  LicenseSetting,
+  Setting,
 } from "../../models/index";
 import { DefaultRepository as Repository } from "../../repository/index";
 
@@ -66,7 +73,14 @@ const models: modelsType[] = [
 
   { key: "events", model: Event },
   { key: "event-schedules", model: EventSchedule },
-  { key: "event-types", model: EventType},
+  { key: "event-types", model: EventType },
+
+  { key: "LocalSetting", model: LocalSetting },
+  { key: "SystemSetting", model: SystemSetting },
+  { key: "ClasseSetting", model: ClasseSetting },
+  { key: "DocumentSetting", model: DocumentSetting },
+  { key: "LicenseSetting", model: LicenseSetting },
+  { key: "Setting", model: Setting },
 ];
 
 models.forEach(({ model, key }: modelsType) => {

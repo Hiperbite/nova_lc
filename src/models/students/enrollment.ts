@@ -19,12 +19,14 @@ import { Assessment, Classe, ClasseRoom, Course, EventType, Model, Period, Perso
     // include: [Student, Classe]
 }))
 @Scopes(() => ({
+    default: {},
     withClassAndAssessment: {
         include: [Assessment, Classe]
     },
     full: {
         include: [
-            Assessment, { model: Classe, include: [Course, Period, ClasseRoom] }]
+            { model: User, as: 'updatedBy' },
+            { model: Assessment,include: [{ model: User, as: 'updatedBy' }]}, { model: Classe, include: [Course, Period, ClasseRoom] }]
     },
     students: {
         include: [Classe,
@@ -108,11 +110,11 @@ export default class Enrollment extends Model {
                     service: mailServices.createEnrollment,
                     data: { person: student?.person, student: student, to: student?.person?.user?.email }
                 })
-        }else{
+        } else {
             const can = await canCreateEnrollment(EventType.ConfirmacaoMatricula)
             if (!can.success)
                 throw { code: 401, ...can }
-                
+
         }
     };
 }

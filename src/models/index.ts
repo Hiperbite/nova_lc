@@ -4,22 +4,18 @@ import Model from "./model";
 import User from "./common/user";
 import Token from "./common/token";
 import Session from "./common/session";
-
 import Address from "./common/address";
 import Contact from "./common/contact";
 import Student from "./students/student";
 import Attachment from "./common/attachment";
-
 import dotenv from "dotenv";
 import Role from "./students/role";
-
 import Sequence from "./common/sequence";
 import Document from "./document/document";
 import Person from "./common/person";
 import Period from "./academic/academic-period";
 import ClasseRoom from "./academic/classe-room";
 import Classe from "./academic/classe";
-
 import Enrollment from "./students/enrollment";
 import Track from "./common/track";
 import Course from "./academic/course";
@@ -33,7 +29,6 @@ import StaffClasse from "./staff/staffClass";
 import StaffDiscipline from "./staff/staff-discipline";
 import AssessmentType from "./progress/assessment-type";
 import Assessment from "./progress/assessment";
-import { logger } from "../config";
 import Category from "./staff/category";
 import Career from "./staff/career";
 import AcademicDegree from "./staff/academic-degree";
@@ -43,10 +38,18 @@ import TicketState from "./help-desk/ticket-state";
 import TicketType from "./help-desk/ticket-type";
 import Event from "./event/event";
 import EventType from "./event/event-type";
-dotenv.config();
+import EventSchedule from "./event/event-schedule";
+import LocalSetting from "./Settings/local.settings";
+import SystemSetting from "./Settings/system.settings";
+import ClasseSetting from "./Settings/classe.settings";
+import DocumentSetting from "./Settings/document.settings";
+import Setting from "./Settings/Settings";
 
 import { v4 as uuid } from "uuid";
-import EventSchedule from "./event/event-schedule";
+import { logger } from "../config";
+import LicenseSetting from "./Settings/license.settings";
+
+dotenv.config();
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 const sequelize = new Sequelize({
@@ -100,12 +103,16 @@ const sequelize = new Sequelize({
     TicketType,
     Event,
     EventType,
-    EventSchedule
+    EventSchedule,
+
+    LocalSetting,
+    SystemSetting,
+    ClasseSetting,
+    DocumentSetting,
+    LicenseSetting,
+    Setting,
   ],
 });
-
-
-
 
 const UniqIndex = createIndexDecorator({
   name: uuid() + '-index',
@@ -119,11 +126,11 @@ const initialData = [{
     { code: 'ConfirmacaoMatricula', name: 'Confirmação de Matricula' },
     { code: 'Inscricao', name: 'Inscrição' },
   ]
-},{
+}, {
   model: Event, data: [
-    { code: 'EVT00000013',isActive:false, name: 'Inscrição de Novos Estudantes' },
-    { code: 'EVT00000012',isActive:false, name: 'Matricula de Novos Inscritos' },
-    { code: 'EVT00000011',isActive:false, name: 'Inscrição de novos alunos' },
+    { code: 'EVT00000013', isActive: false, name: 'Inscrição de Novos Estudantes' },
+    { code: 'EVT00000012', isActive: false, name: 'Matricula de Novos Inscritos' },
+    { code: 'EVT00000011', isActive: false, name: 'Inscrição de novos alunos' },
   ]
 }, {
   model: TicketType, data: [
@@ -139,13 +146,30 @@ const initialData = [{
     { code: 'Done', descriptions: 'Resolvido' },
     { code: 'Rejected', descriptions: 'Rejeitado' },
   ]
+}, {
+  model: Setting, data: [
+    {
+      code: 'NOVA',
+
+      system: SystemSetting.create({}),
+
+      documents: DocumentSetting.create({}),
+
+      local: LocalSetting.create({}),
+
+      classe: ClasseSetting.create({}),
+
+      license: LicenseSetting.create({})
+    },
+
+  ]
 }]
 const Repo = sequelize.getRepository;
 sequelize.sync({ alter: true, force: false }).then(() =>
   initialData.forEach(({ model, data }: any) => data.forEach(async (d: any) =>
     model.findOne({ where: { code: d.code } }).then((f: any) => f
       ? null
-      : model.create(d).catch(console.log))
+      : model.create(d, { include: { all: true } }).catch(console.log))
   ))
 )
 
@@ -162,7 +186,6 @@ enum SPs {
 const Procedure = async (procedure: SPs, opts: any = {}) =>
   await sequelize
     .query('CALL ' + procedure, {})
-
 
 export default sequelize;
 
@@ -200,14 +223,12 @@ export {
   StaffDiscipline,
   AcademicDegree,
 
-
   AssessmentType,
   Assessment,
 
   Notification,
   Procedure,
   SPs,
-
 
   Ticket,
   TicketState,
@@ -216,5 +237,12 @@ export {
   Event,
   EventType,
 
-  UniqIndex
+  UniqIndex,
+
+  LocalSetting,
+  SystemSetting,
+  ClasseSetting,
+  DocumentSetting,
+  LicenseSetting,
+  Setting,
 };

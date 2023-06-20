@@ -4,14 +4,14 @@ import { Model , User} from "../index";
 
 @Table({
   timestamps: true,
-  tableName: "Settings",
+  tableName: "SystemSettings",
 })
-export default class Setting {
+export default class SystemSetting extends Model {
 
   @Column({
     type: DataType.BOOLEAN,
     allowNull: true,
   })
-  classDuration: number = 6;
+  duration: number = 6;
 
 }
